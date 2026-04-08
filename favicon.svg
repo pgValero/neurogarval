@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   version="1.1"
+   id="svg1"
+   width="80"
+   height="80"
+   viewBox="0 0 80 80"
+   xml:space="preserve"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"><defs
+     id="defs1"><color-profile
+       name="Artifex-Software-A98-ICC-Profile"
+       xlink:href="file:///snap/inkscape/11364/usr/share/color/icc/ghostscript/a98.icc"
+       id="color-profile1" /></defs><g
+     id="g1"><rect
+       style="fill:#78a2d2;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none"
+       id="rect1"
+       width="79.470001"
+       height="79.4702"
+       x="0.26499939"
+       y="0.26490021"
+       rx="999"
+       ry="999" /><path
+       id="path8"
+       style="fill:none;stroke:#feffaf;stroke-width:2.03413;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+       d="m 22.683168,41.069673 h 4.116513 c 2.273476,0 4.116483,1.833941 4.116483,4.096257 v 2.016566 c 0,3.376005 -2.750326,6.112825 -6.143031,6.112825 h -4.048046 c -2.702838,0 -5.294964,-1.068417 -7.206181,-2.970227 -1.911185,-1.901812 -2.984888,-4.481193 -2.984888,-7.170762 v -7.927298 c 0,-6.72378 5.477612,-12.17447 12.234585,-12.17447 h 25.548558 c 6.756989,0 12.234605,5.45069 12.234605,12.17447 V 52.51222 c 0,1.176288 0.469596,2.30441 1.305458,3.136166 0.83587,0.831756 1.969547,1.29905 3.15165,1.29905 h 2.622036 c 1.013475,0 1.835072,-0.817572 1.835072,-1.826076 V 53.295321 M 50.698224,32.238454 c -0.641833,0.01104 -1.496992,0.833062 -3.275993,0.844831 -1.778968,0.01188 -2.949616,-0.821488 -3.800226,-0.827768" /></g></svg>

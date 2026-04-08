@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuroGarval | Psicología Sanitaria y Neuropsicología</title>
+
+    <!-- SEO Básico -->
+    <title>NeuroGarval | Psicología Sanitaria y Neuropsicología en Valdemoro</title>
+    <meta name="description" content="NeuroGarval, dirigida por la neuropsicóloga Teresa García Valero. Especialistas en psicología sanitaria y neuropsicología en Valdemoro, Madrid. Evaluación y rehabilitación personalizada.">
+    <meta name="keywords" content="NeuroGarval, Teresa García Valero, neuropsicología Valdemoro, psicología sanitaria Madrid, rehabilitación cognitiva, evaluación neuropsicológica">
+    <link rel="canonical" href="https://www.neurogarval.es/">
+    
+    <!-- Open Graph / Redes Sociales -->
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="es">
+    <meta property="og:title" content="NeuroGarval | Teresa García Valero - Neuropsicóloga">
+    <meta property="og:description" content="Centro especializado en Psicología Sanitaria y Neuropsicología en Valdemoro.">
+    <meta property="og:image" content="https://www.neurogarval.es/image.png">
+    <meta property="og:url" content="https://www.neurogarval.es/">
+
+    <!-- Datos Estructurados (Schema.org) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "MedicalBusiness",
+      "name": "NeuroGarval",
+      "alternateName": "Teresa García Valero Neuropsicóloga",
+      "image": "https://www.neurogarval.es/image.png",
+      "url": "https://www.neurogarval.es/",
+      "telephone": "+34711233888",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "C/ Diego de Almagro, 32",
+        "addressLocality": "Valdemoro",
+        "addressRegion": "Madrid",
+        "postalCode": "28342",
+        "addressCountry": "ES"
+      },
+      "priceRange": "$",
+      "founder": {
+        "@type": "Person",
+        "name": "Teresa García Valero"
+      }
+    }
+    </script>
+    
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+    <style>
+        :root {
+            --color-dark: #29335C;
+            --color-primary: #78A2D2;
+            --color-light: #DBEDFF;
+            --color-accent: #FEFFAF;
+            --color-whatsapp: #075E54;
+            --color-shadow: rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --max-width: 1100px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            line-height: 1.6;
+            color: var(--color-dark);
+            background-color: white;
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            transition: var(--transition);
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* --- Header & Nav --- */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: var(--color-primary); 
+            z-index: 1000;
+            box-shadow: 0 4px 20px var(--color-shadow);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+        }
+
+        .header-logo {
+            height: 45px;
+        }
+
+        .nav-links {
+            display: flex;
+            height: 100%;
+            align-items: center;
+        }
+
+        .nav-links a {
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: white;
+            padding: 0.75rem 0.5rem;
+            border-radius: 12px;
+        }
+
+        .nav-links a:hover {
+            color: var(--color-dark);
+        }
+
+        .menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 2rem;
+            color: white;
+            cursor: pointer;
+        }
+
+        /* --- Hero Section --- */
+        .hero {
+            padding: 160px 0 100px;
+            overflow: hidden;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            align-items: center;
+            gap: 4rem;
+        }
+
+        .badge {
+            display: inline-block;
+            background: var(--color-accent);
+            color: var(--color-dark);
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero h1 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero h1 i {
+            font-style: normal;
+            font-weight: 500;
+            color: var(--color-primary);
+        }
+
+        .modalities-text {
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: 1.5rem;
+            display: block;
+            font-size: 1.1rem;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            margin-bottom: 2.5rem;
+            max-width: 500px;
+            font-weight: 400;
+        }
+
+        #hero-promo {
+            background: var(--color-light);
+            display: inline-flex;
+            align-items: center;
+            padding: 1rem 1rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            font-weight: 600;
+            color: var(--color-dark);
+            width: 100%;
+            justify-content: center;
+        }
+
+        #hero-promo i {
+            margin-right: 12px;
+            color: var(--color-primary);
+        }
+
+        .btn-group {
+            display: grid;
+            gap: 1rem;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.2rem 2.2rem;
+            border-radius: 16px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            background-color: white;
+            border: 2px solid var(--color-light);
+            color: var(--color-dark);
+        }
+
+        .btn:hover {
+            border-color: var(--color-dark);
+        }
+
+        .btn-whatsapp {
+            color: var(--color-whatsapp);
+        }
+
+        .btn-whatsapp:hover {
+            border-color: var(--color-whatsapp);
+        }
+
+        /* --- Modalities Section --- */
+        .modalities-section {
+            text-align: center;
+        }
+
+        .modalities-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .modality-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 3rem 2rem;
+            border-radius: 30px;
+            background: white;
+            border: 1px solid var(--color-light);
+            transition: var(--transition);
+        }
+
+        .modality-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px var(--color-shadow);
+            border-color: var(--color-primary);
+        }
+
+        .modality-icon {
+            font-size: 2.5rem;
+            color: var(--color-primary);
+            margin-bottom: 1.5rem;
+            background: var(--color-light);
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 100%;
+        }
+
+        .modality-content h4 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: var(--color-dark);
+        }
+
+        /* --- Specialists --- */
+        #especialista {
+            background-color: var(--color-light);
+        }
+
+        .section-padding {
+            padding: 100px 0;
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 5rem;
+            align-items: center;
+        }
+
+        .about-image {
+            position: relative;
+        }
+
+        .about-image img {
+            border-radius: 40px;
+            width: 100%;
+        }
+
+        .col-card {
+            position: absolute;
+            bottom: -30px;
+            right: -30px;
+            background: var(--color-accent);
+            padding: 1.5rem 2rem;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px var(--color-shadow);
+            text-align: center;
+        }
+
+        .col-card .name {
+            font-weight: 600;
+            font-size: 1.2rem;
+            display: block;
+        }
+
+        .col-card .label {
+            font-size: 1rem;
+            color: var(--color-primary);
+            display: block;
+        }
+
+        .about-content h2 {
+            font-size: 1.5rem;
+            text-align: center;
+        }
+
+        .about-content p {
+            text-align: justify;
+        }
+
+        .check-list {
+            padding-top: 2rem;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            font-style: italic;
+        }
+
+        .check-icon {
+            width: 32px;
+            height: 32px;
+            min-width: 32px;
+            border-radius: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-dark);
+        }
+
+        /* --- Services --- */
+        .services {
+            background-color: var(--color-light);
+            text-align: center;
+        }
+
+        .section-header {
+            max-width: 700px;
+            margin: 0 auto 4rem;
+        }
+
+        .divider {
+            width: 60px;
+            height: 4px;
+            background: var(--color-accent);
+            margin: 1.5rem auto;
+            border-radius: 2px;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .service-card {
+            background: white;
+            padding: 3rem 2rem;
+            border-radius: 30px;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .service-card h3 {
+            padding-bottom: 1rem;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px var(--color-shadow);
+        }
+
+        .service-icon {
+            font-size: 2.5rem;
+            color: var(--color-primary);
+            margin-bottom: 1.5rem;
+        }
+
+        /* --- Contact --- */
+        .contact {
+            text-align: center;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-auto-columns: minmax(0, 1fr);
+            grid-auto-flow: column;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .contact-item {
+            background: white;
+            padding: 2rem;
+            border-radius: 30px;
+            border: 1px solid transparent;
+            border-color: var(--color-light);
+        }
+
+        .contact-item:hover {
+            border-color: var(--color-dark);
+        }
+
+        .contact-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--color-light);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 1.5rem;
+            box-shadow: 0 5px 15px var(--color-shadow);
+        }
+
+        /* --- Compact Map Styling --- */
+        .map-wrapper {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            padding-bottom: 20px;
+            padding-top: 3rem;
+        }
+
+        .map-container {
+            width: 100%;
+            max-width: 600px;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px var(--color-shadow);
+            border: 1px solid #f1f5f9;
+            height: 280px;
+            transition: var(--transition);
+        }
+
+        .map-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            filter: grayscale(10%) contrast(105%);
+        }
+
+        /* --- Footer --- */
+        footer {
+            background: var(--color-dark);
+            color: white;
+            padding: 80px 0 40px;
+        }
+
+        .footer-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 60px;
+        }
+
+        .footer-logo {
+            filter: brightness(0) invert(1);
+            height: 50px;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-links {
+            text-align: right;
+        }
+
+        .footer-links a {
+            display: block;
+            margin-bottom: 0.8rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .footer-links a:hover {
+            color: var(--color-accent);
+        }
+
+        .copyright {
+            padding-top: 40px;
+            border-top: 1px solid white;
+            text-align: center;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            font-weight: 600;
+        }
+
+        /* --- Mobile Overlay Menu --- */
+        .mobile-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--color-primary);
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transform: translateY(-100%);
+            transition: transform 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        .mobile-overlay.active {
+            transform: translateY(0);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 2.5rem;
+            cursor: pointer;
+        }
+
+        .mobile-links {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            text-align: center;
+        }
+
+        .mobile-links a {
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        /* --- Responsive --- */
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .menu-btn { display: block; }
+            
+            .hero-grid, .about-grid, .services-grid, .contact-grid, .modalities-grid {
+                grid-template-columns: 1fr;
+                grid-auto-flow: unset;
+            }
+
+            #hero-img-wrapper {
+                display: none;
+            }
+
+            .hero { padding-top: 130px; text-align: center; }
+            .hero p { margin-left: auto; margin-right: auto; }
+            .btn-group { justify-content: center; grid-template-columns: 1fr; }
+
+            .footer-top { flex-direction: column; gap: 3rem; text-align: center; align-items: center; }
+            .footer-info { display: flex; flex-direction: column; align-items: center; }
+            .footer-links { text-align: center; }
+
+            .map-container { height: 240px; margin: 0 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="mobile-overlay" id="mobileMenu">
+        <button class="close-btn" onclick="toggleMenu()">&times;</button>
+        <div class="mobile-links">
+            <a href="#inicio" onclick="toggleMenu()">Inicio</a>
+            <a href="#servicios" onclick="toggleMenu()">Servicios</a>
+            <a href="#modalidades" onclick="toggleMenu()">Modalidades</a>
+            <a href="#especialista" onclick="toggleMenu()">Especialista</a>
+            <a href="#contacto" onclick="toggleMenu()">Contacto</a>
+        </div>
+    </div>
+
+    <header>
+        <div class="container">
+            <nav>
+                <a href="#inicio">
+                    <img src="logo.svg" alt="NeuroGarval" class="header-logo neuro-logo">
+                </a>
+                
+                <ul class="nav-links">
+                    <li><a href="#inicio">Inicio</a></li>
+                    <li><a href="#servicios">Servicios</a></li>
+                    <li><a href="#modalidades">Modalidades</a></li>
+                    <li><a href="#especialista">Especialista</a></li>
+                    <li><a href="#contacto">Contacto</a></li>
+                </ul>
+
+                <button class="menu-btn" onclick="toggleMenu()">
+                    <i class="bi bi-list"></i>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- HERO -->
+        <section id="inicio" class="hero">
+            <div class="container hero-grid">
+                <div class="hero-text">
+                    <span class="badge">Psicología Sanitaria y Neuropsicología</span>
+                    <h1>Evaluación e intervención <i>personalizada</i>.</h1>
+                    <span class="modalities-text">Clínica en Valdemoro · Online <span style="white-space: nowrap;">· A domicilio</span></span>
+                    <p>Atención profesional centrada en las dificultades emocionales, cognitivas y del aprendizaje en el día a día.</p>
+                    
+                    <div id="hero-promo">
+                        <i class="bi bi-info-circle-fill"></i>
+                        <span>Primera consulta informativa gratuita</span>
+                    </div>
+
+                    <div class="btn-group">
+                        <a href="#" target="_blank" class="btn btn-whatsapp neuro-whatsapp-link">
+                            <i class="bi bi-whatsapp" style="margin-right: 10px;"></i>
+                            WhatsApp
+                        </a>
+                        <a href="#" class="btn neuro-phone-link">
+                            <i class="bi bi-telephone" style="margin-right: 10px;"></i>
+                            <span class="neuro-phone"></span>
+                        </a>
+                    </div>
+                </div>
+                <div id="hero-img-wrapper">
+                    <img src="hero-image.png" alt="Consulta Neuropsicológica">
+                </div>
+            </div>
+        </section>
+
+        <!-- SERVICIOS -->
+        <section id="servicios" class="section-padding services">
+            <div class="container">
+                <div class="section-header">
+                    <h2>¿En qué puedo ayudarte?</h2>
+                    <div class="divider"></div>
+                    <p>Trabajo en el ámbito de la neuropsicología y la psicología sanitaria, teniendo en cuenta las necesidades y el momento vital de cada persona.</p>
+                </div>
+
+                <div class="services-grid">
+                    <div class="service-card">
+                        <div class="service-icon"><i class="bi bi-lightbulb"></i></div>
+                        <h3>Neuropsicología</h3>
+                        <p>Evaluación e intervención en dificultades cognitivas, conductuales y emocionales relacionadas con el funcionamiento cerebral.</p>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon"><i class="bi bi-heart-pulse"></i></div>
+                        <h3>Psicología Sanitaria</h3>
+                        <p>Atención a dificultades emocionales y conductuales, proporcionando un espacio profesional y seguro donde poder abordalas.</p>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon"><i class="bi bi-lightning-charge"></i></div>
+                        <h3>Rehabilitación</h3>
+                        <p>Programas de intervención personalizados orientados a la rehabilitación, estimulación y mantenimiento de las funciones cognitivas.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MODALIDADES -->
+        <section id="modalidades" class="section-padding modalities-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Modalidades de atención</h2>
+                    <div class="divider"></div>
+                    <p>Elegir el entorno adecuado para tus sesiones es importante: facilita el trabajo terapéutico y tu comodidad durante el proceso.</p>
+                </div>
+
+                <div class="modalities-grid">
+                    <div class="modality-item">
+                        <div class="modality-icon"><i class="bi bi-building"></i></div>
+                        <div class="modality-content">
+                            <h4>Atención en Clínica</h4>
+                            <p>En consulta presencial, en un entorno profesional y tranquilo, pensado para que puedas sentirte cómodo/a durante las sesiones.</p>
+                        </div>
+                    </div>
+                    <div class="modality-item">
+                        <div class="modality-icon"><i class="bi bi-laptop"></i></div>
+                        <div class="modality-content">
+                            <h4>Terapia Online</h4>
+                            <p>Sesiones por videollamada, facilitando el acceso a la intervención sin necesidad de desplazamiento.</p>
+                        </div>
+                    </div>
+                    <div class="modality-item">
+                        <div class="modality-icon"><i class="bi bi-house-door"></i></div>
+                        <div class="modality-content">
+                            <h4>A Domicilio</h4>
+                            <p>Intervención en tu entorno cotidiano, ideal para pacientes con movilidad reducida o dificultades específicas.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ESPECIALISTA -->
+        <section id="especialista" class="section-padding">
+            <div class="container about-grid">
+                <div class="about-image">
+                    <img src="photo.jpeg" alt="Teresa García Valero">
+                    <div class="col-card">
+                        <span class="name">Teresa García Valero</span>
+                        <span class="label">Nº Colegiada: M-42858</span>
+                    </div>
+                </div>
+                <div class="about-content">
+                    <h2>Compromiso con tu salud mental</h2>
+                    <div class="divider"></div>
+
+                    <p>Bienvenido/a!</p><br>
+                    <p>
+                        Soy Teresa, neuropsicóloga y psicóloga general sanitaria. Estoy especializada en el trabajo con dificultades
+                        cognitivas, emocionales y del aprendizaje. Acompaño a niños, adolescentes y adultos en este proceso, adaptando
+                        cada intervención a sus necesidades.
+                    </p>
+                    <br>
+                    <p>Trabajo desde un enfoque cercano y personalizado, con el objetivo de mejorar el funcionamiento y el bienestar en el día a día.</p>
+                    <br>
+                    <p>Me mantengo en formación continua para ofrecer una atención actualizada y basada en la evidencia.</p>
+                    <br>
+                    <p>Algunas áreas que se trabajan en consulta:</p>
+                    <div class="check-list">
+                        <div class="check-item">
+                            <div class="check-icon"><i class="bi bi-check-lg"></i></div>
+                            <span>Evaluación neuropsicológica en niños y adultos.</span>
+                        </div>
+                        <div class="check-item">
+                            <div class="check-icon"><i class="bi bi-check-lg"></i></div>
+                            <span>Rehabilitación y estimulación cognitiva tras un daño cerebral: ictus, traumatismo craneoencefálico...</span>
+                        </div>
+                        <div class="check-item">
+                            <div class="check-icon"><i class="bi bi-check-lg"></i></div>
+                            <span>Trastornos del neurodesarrollo y dificultades de aprendizaje: TDAH, TEA...</span>
+                        </div>
+                        <div class="check-item">
+                            <div class="check-icon"><i class="bi bi-check-lg"></i></div>
+                            <span>Problemas de memoria y deterioro cognitivo (demencias, enfermedades neurodegenerativas).</span>
+                        </div>
+                        <div class="check-item">
+                            <div class="check-icon"><i class="bi bi-check-lg"></i></div>
+                            <span>Dificultades emocionales y conductuales: ansiedad, estado de ánimo, regulación emocional...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTACTO -->
+        <section id="contacto" class="section-padding contact">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Pide tu cita</h2>
+                    <div class="divider"></div>
+                    <strong>Primera consulta informativa para resolver dudas y valorar cada situación.</strong>
+                    <p>Puedes ponerte en contacto conmigo a través de cualquiera de los siguientes canales:</p>
+                </div>
+
+                <div class="contact-grid">
+                    <a href="#" target="_blank" class="contact-item neuro-phone-link">
+                        <div class="contact-icon"><i class="bi bi-telephone"></i></div>
+                        <h4>Teléfono</h4>
+                        <span class="neuro-phone"></span>
+                    </a>
+                    <a href="#" target="_blank" class="contact-item neuro-whatsapp-link">
+                        <div class="contact-icon"><i class="bi bi-whatsapp"></i></div>
+                        <h4>WhatsApp</h4>
+                        <span class="neuro-phone"></span>
+                    </a>
+                    <a href="https://instagram.com/neurogarval" target="_blank" class="contact-item">
+                        <div class="contact-icon"><i class="bi bi-instagram"></i></div>
+                        <h4>Instagram</h4>
+                        <span>@neurogarval</span>
+                    </a>
+                </div>
+                <div class="contact-grid">
+                    <a href="#" target="_blank" class="contact-item neuro-mail-link">
+                        <div class="contact-icon"><i class="bi bi-envelope"></i></div>
+                        <h4>Email</h4>
+                        <span class="neuro-mail"></span>
+                    </a>
+                    <a href="#" target="_blank" class="contact-item neuro-address-link">
+                        <div class="contact-icon"><i class="bi bi-geo-alt"></i></div>
+                        <h4>Dirección</h4>
+                        <span class="neuro-address"></span>
+                    </a>
+                </div>
+
+                <div class="map-wrapper">
+                    <div class="map-container">
+                        <iframe
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3047.4102062110496!2d-3.6931494!3d40.199937299999995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd421fc6ce867025%3A0x1abf8630d9ed5e9b!2sNeuroGarval%20%7C%20Psicolog%C3%ADa%20y%20Neuropsicolog%C3%ADa%20Cl%C3%ADnica!5e0!3m2!1sen!2ses!4v1774983440789!5m2!1sen!2ses"
+                            width="600"
+                            height="450"
+                            style="border:0;"
+                            allowfullscreen=""
+                            loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-top">
+                <div class="footer-info">
+                    <img src="logo.svg" alt="NeuroGarval" class="footer-logo neuro-logo">
+                    <p>Psicología Sanitaria y Neuropsicología.<br>Teresa García Valero (Col. M-42858).</p>
+                </div>
+                <div class="footer-links">
+                    <a href="#" class="neuro-address-link neuro-address"></a>
+                    <a href="#" class="neuro-phone-link neuro-phone"></a>
+                    <a href="#" class="neuro-mail-link neuro-mail"></a>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2026 NeuroGarval
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const config = {
+            phone: "+34 711 233 888",
+            mail: "teresa@neurogarval.es",
+            address: "C/ Diego de Almagro, 32,<br>28342, Valdemoro, Madrid",
+            mapsUrl: "https://maps.app.goo.gl/pwGjVP2YtA6mQypG9",
+            logo: "logo.svg"
+        };
+
+        function initData() {
+            const rawPhone = config.phone.replace(/\s/g, '');
+            document.querySelectorAll('.neuro-phone').forEach(el => el.innerText = config.phone);
+            document.querySelectorAll('.neuro-phone-link').forEach(el => el.href = `tel:${rawPhone}`);
+            document.querySelectorAll('.neuro-whatsapp-link').forEach(el => el.href = `https://wa.me/${rawPhone.replace('+', '')}`);
+            document.querySelectorAll('.neuro-mail').forEach(el => el.innerText = config.mail);
+            document.querySelectorAll('.neuro-mail-link').forEach(el => el.href = `mailto:${config.mail}`);
+            document.querySelectorAll('.neuro-address').forEach(el => el.innerHTML = config.address);
+            document.querySelectorAll('.neuro-address-link').forEach(el => el.href = config.mapsUrl);
+            document.querySelectorAll('.neuro-logo').forEach(el => el.src = config.logo);
+        }
+
+        function toggleMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('active');
+            document.body.style.overflow = menu.classList.contains('active') ? 'hidden' : 'auto';
+        }
+
+        window.addEventListener('DOMContentLoaded', initData);
+    </script>
+</body>
+</html>
