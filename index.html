@@ -432,6 +432,14 @@
             margin-bottom: 1.5rem;
         }
 
+        /* Iconos SVG (cerebro, corazón, rayo): heredan tamaño y color de los iconos de fuente */
+        .service-icon svg {
+            width: 1em;
+            height: 1em;
+            display: inline-block;
+            vertical-align: -0.125em;
+        }
+
         /* --- Contact --- */
         .contact {
             text-align: center;
@@ -942,19 +950,19 @@
 
                 <div class="services-grid">
                     <div class="service-card" role="button" tabindex="0" aria-haspopup="dialog" data-service="neuro" onclick="openServiceModal('neuro')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openServiceModal('neuro')}">
-                        <div class="service-icon"><i class="bi bi-lightbulb"></i></div>
+                        <div class="service-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><!-- icono de cerebro, estilo Lucide (ISC) --><path d="M12 18V5"/><path d="M15 13a4.17 4.17 0 0 1-3-4 4.17 4.17 0 0 1-3 4"/><path d="M17.598 6.5A3 3 0 1 0 12 5a3 3 0 1 0-5.598 1.5"/><path d="M17.997 5.125a4 4 0 0 1 2.526 5.77"/><path d="M18 18a4 4 0 0 0 2-7.464"/><path d="M19.967 17.483A4 4 0 1 1 12 18a4 4 0 1 1-7.967-.517"/><path d="M6 18a4 4 0 0 1-2-7.464"/><path d="M6.003 5.125a4 4 0 0 0-2.526 5.77"/></svg></div>
                         <h3>Neuropsicología</h3>
                         <p>Evaluación e intervención en dificultades cognitivas, conductuales y emocionales relacionadas con el funcionamiento cerebral.</p>
                         <span class="service-more">Más información <i class="bi bi-arrow-right"></i></span>
                     </div>
                     <div class="service-card" role="button" tabindex="0" aria-haspopup="dialog" data-service="psico" onclick="openServiceModal('psico')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openServiceModal('psico')}">
-                        <div class="service-icon"><i class="bi bi-heart-pulse"></i></div>
+                        <div class="service-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><!-- icono de corazón con pulso, estilo Lucide (ISC) --><path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5"/><path d="M3.22 13H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/></svg></div>
                         <h3>Psicología Sanitaria</h3>
                         <p>Atención a dificultades emocionales y conductuales, proporcionando un espacio profesional y seguro donde poder abordalas.</p>
                         <span class="service-more">Más información <i class="bi bi-arrow-right"></i></span>
                     </div>
                     <div class="service-card" role="button" tabindex="0" aria-haspopup="dialog" data-service="rehab" onclick="openServiceModal('rehab')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openServiceModal('rehab')}">
-                        <div class="service-icon"><i class="bi bi-lightning-charge"></i></div>
+                        <div class="service-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><!-- icono de rayo, estilo Lucide (ISC) --><path d="M15.914 4a1.5 1.5 0 0 0-2.474-1.561l-9 9A1.5 1.5 0 0 0 5.5 14h4.002a.5.5 0 0 1 .471.666L8.086 20a1.5 1.5 0 0 0 2.475 1.56l9-9A1.5 1.5 0 0 0 18.5 10h-3.997a.5.5 0 0 1-.472-.667z"/></svg></div>
                         <h3>Rehabilitación</h3>
                         <p>Programas de intervención personalizados orientados a la rehabilitación, estimulación y mantenimiento de las funciones cognitivas.</p>
                         <span class="service-more">Más información <i class="bi bi-arrow-right"></i></span>
@@ -1293,9 +1301,14 @@
             logo: "logo.svg"
         };
 
+        // Iconos en SVG (Bootstrap Icons no incluye cerebro/rayo de este estilo), trazo y color como los bi-*
+        const brainIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 18V5"/><path d="M15 13a4.17 4.17 0 0 1-3-4 4.17 4.17 0 0 1-3 4"/><path d="M17.598 6.5A3 3 0 1 0 12 5a3 3 0 1 0-5.598 1.5"/><path d="M17.997 5.125a4 4 0 0 1 2.526 5.77"/><path d="M18 18a4 4 0 0 0 2-7.464"/><path d="M19.967 17.483A4 4 0 1 1 12 18a4 4 0 1 1-7.967-.517"/><path d="M6 18a4 4 0 0 1-2-7.464"/><path d="M6.003 5.125a4 4 0 0 0-2.526 5.77"/></svg>`;
+        const heartIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5"/><path d="M3.22 13H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/></svg>`;
+        const zapIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.914 4a1.5 1.5 0 0 0-2.474-1.561l-9 9A1.5 1.5 0 0 0 5.5 14h4.002a.5.5 0 0 1 .471.666L8.086 20a1.5 1.5 0 0 0 2.475 1.56l9-9A1.5 1.5 0 0 0 18.5 10h-3.997a.5.5 0 0 1-.472-.667z"/></svg>`;
+
         const serviceInfo = {
             neuro: {
-                icon: "bi-lightbulb",
+                icon: brainIcon,
                 title: "Neuropsicología",
                 html: `<p>La neuropsicología estudia la relación entre el funcionamiento del cerebro y la conducta: atención, memoria, lenguaje, funciones ejecutivas, visopercepción y velocidad de procesamiento, entre otras.</p>
                     <p>El objetivo es comprender cómo estas funciones influyen en el día a día y diseñar una intervención ajustada a cada persona.</p>
@@ -1308,7 +1321,7 @@
                     <p>Dirigido a niños, adolescentes y adultos con TDAH, TEA, dificultades de aprendizaje, daño cerebral adquirido o deterioro cognitivo, entre otros.</p>`
             },
             psico: {
-                icon: "bi-heart-pulse",
+                icon: heartIcon,
                 title: "Psicología Sanitaria",
                 html: `<p>Un espacio profesional y seguro para atender dificultades emocionales y conductuales, entendiendo el momento vital de cada persona.</p>
                     <p>Se trabaja desde un enfoque cercano y basado en la evidencia, con objetivos claros y revisables.</p>
@@ -1321,7 +1334,7 @@
                     <p>Atención a niños, adolescentes y adultos, de forma individual o con la familia cuando es necesario.</p>`
             },
             rehab: {
-                icon: "bi-lightning-charge",
+                icon: zapIcon,
                 title: "Rehabilitación",
                 html: `<p>Programas personalizados orientados a rehabilitar, estimular y mantener las funciones cognitivas, partiendo de los objetivos y la rutina de cada persona.</p>
                     <ul>
@@ -1337,7 +1350,7 @@
         function openServiceModal(key) {
             const info = serviceInfo[key];
             if (!info) return;
-            document.getElementById('modalIcon').innerHTML = `<i class="bi ${info.icon}"></i>`;
+            document.getElementById('modalIcon').innerHTML = info.icon;
             document.getElementById('modalTitle').textContent = info.title;
             document.getElementById('modalBody').innerHTML = info.html;
             document.getElementById('serviceModal').showModal();
