@@ -1,9 +1,5 @@
-- En todos los sitios donde ponga Psicología sanitaria y Neuropsicología, ponerlo al revés.
 - Los modales que se abran en una página a parte.
 - Quitar apartado de rehabilitación y meterlo en el de Neuropsicología.
 - Apartado: principales áreas que se trabajan...: Quitar
 - En el timeline añadir emoticonos + números.
-- FAQ:
-    - Tiempo de las sesiones: entre 45 y 60 minutos dependiendo del caso.
 - En qué puedo ayudarte: Cambiar icono de bombilla por el de un cerebro.
-- Quitar el punto de título.
