@@ -1,5 +1,3 @@
 - Los modales que se abran en una página a parte.
 - Quitar apartado de rehabilitación y meterlo en el de Neuropsicología.
 - Apartado: principales áreas que se trabajan...: Quitar
-- En el timeline añadir emoticonos + números.
-- En qué puedo ayudarte: Cambiar icono de bombilla por el de un cerebro.

@@ -680,6 +680,7 @@
         }
 
         .process-num {
+            position: relative;
             width: 60px;
             height: 60px;
             margin: 0 auto 1.25rem;
@@ -689,8 +690,39 @@
             display: flex;
             align-items: center;
             justify-content: center;
+        }
+
+        /* Icono del paso (estilo Lucide, hereda tamaño y color) */
+        .process-icon {
+            font-size: 1.6rem;
+            display: flex;
+            color: white;
+        }
+
+        .process-icon svg {
+            width: 1em;
+            height: 1em;
+            display: block;
+        }
+
+        /* Número del paso: badge abajo a la izquierda del círculo del icono */
+        .process-index {
+            position: absolute;
+            bottom: -6px;
+            left: -6px;
+            width: 24px;
+            height: 24px;
+            border-radius: 100%;
+            background: white;
+            border: 2px solid var(--color-dark);
+            color: var(--color-dark);
+            font-size: 0.75rem;
             font-weight: 800;
-            font-size: 1.2rem;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px var(--color-shadow);
         }
 
         .process-step h4 {
@@ -1048,27 +1080,42 @@
 
                 <div class="process-grid">
                     <div class="process-step">
-                        <div class="process-num">1</div>
+                        <div class="process-num">
+                            <span class="process-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><!-- icono de burbuja de mensaje, estilo Lucide (ISC) --><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg></span>
+                            <span class="process-index">1</span>
+                        </div>
                         <h4>Contacto</h4>
                         <p>Escríbeme por WhatsApp, teléfono o email y cuéntame brevemente qué necesitas.</p>
                     </div>
                     <div class="process-step">
-                        <div class="process-num">2</div>
+                        <div class="process-num">
+                            <span class="process-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><!-- icono de calendario, estilo Lucide (ISC) --><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg></span>
+                            <span class="process-index">2</span>
+                        </div>
                         <h4>Primera consulta</h4>
                         <p>Una entrevista informativa y gratuita para conocernos y resolver tus dudas.</p>
                     </div>
                     <div class="process-step">
-                        <div class="process-num">3</div>
+                        <div class="process-num">
+                            <span class="process-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><!-- icono de portapapeles, estilo Lucide (ISC) --><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg></span>
+                            <span class="process-index">3</span>
+                        </div>
                         <h4>Evaluación</h4>
                         <p>Valoración de la situación y, cuando procede, pruebas para conocer el punto de partida.</p>
                     </div>
                     <div class="process-step">
-                        <div class="process-num">4</div>
+                        <div class="process-num">
+                            <span class="process-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><!-- icono de diana/objetivo, estilo Lucide (ISC) --><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span>
+                            <span class="process-index">4</span>
+                        </div>
                         <h4>Plan de intervención</h4>
                         <p>Propuesta personalizada con objetivos concretos y revisables.</p>
                     </div>
                     <div class="process-step">
-                        <div class="process-num">5</div>
+                        <div class="process-num">
+                            <span class="process-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><!-- icono de gráfico ascendente, estilo Lucide (ISC) --><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></span>
+                            <span class="process-index">5</span>
+                        </div>
                         <h4>Seguimiento</h4>
                         <p>Sesiones periódicas y revisiones para ajustar el trabajo a los avances.</p>
                     </div>
