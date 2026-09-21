@@ -1,0 +1,46 @@
+# Configuración de hooks para usar con prek (compatible también con pre-commit).
+# Instalar los hooks:   prek install
+# Ejecutar a mano:      prek run --all-files
+repos:
+  # Linters locales: HTML, CSS y JavaScript
+  - repo: local
+    hooks:
+      # 1) Linter de HTML
+      - id: htmlhint
+        name: HTMLHint (HTML)
+        language: node
+        entry: htmlhint
+        files: \.html?$
+        additional_dependencies: [htmlhint]
+        args:
+          - --rules
+          - tag-pair,tagname-lowercase,attr-no-duplication,attr-value-double-quotes,id-unique
+
+      # 2) Linter de CSS (lee .stylelintrc.json)
+      - id: stylelint
+        name: Stylelint (CSS)
+        language: node
+        entry: stylelint
+        files: \.css$
+        additional_dependencies: [stylelint]
+
+      # 3) Linter de JavaScript (lee eslint.config.js)
+      - id: eslint
+        name: ESLint (JavaScript)
+        language: node
+        entry: eslint
+        files: \.m?js$
+        additional_dependencies: [eslint]
+
+  # 4) Validador de URLs rotas (HTML, enlaces locales y externos)
+  - repo: https://github.com/lycheeverse/lychee
+    rev: lychee-v0.24.2
+    hooks:
+      - id: lychee
+        name: Lychee (URLs rotas)
+        files: \.html?$
+        args:
+          - --no-progress
+          - "--exclude=^tel:"
+          # Excluir temporalmente placeholders (imágenes de la galería aún no añadidas):
+          - "--exclude=sala-[0-9]\\.jpg"
