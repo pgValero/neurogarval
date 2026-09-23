@@ -1,18 +1,10 @@
 # ============================================================
-# AJUSTES GLOBALES DEL SITIO (edición en Pages CMS)
-# Fuente única de verdad de: dominio, contacto, menú, SEO/JSON-LD y footer.
-# build.py lee este archivo, genera las regiones <head>, los menús y el
-# footer, y escribe el contacto en los huecos .neuro-* de index.html
-# (sin JavaScript). Logo, teléfono, dirección y mapa alimentan también
-# la firma de email.
+# CONTACTO Y FOOTER DEL SITIO (edición en Pages CMS)
+# Fuente única de verdad del contacto y del contenido editable del pie.
+# El dominio, el logo, el SEO, los datos estructurados y los menús son
+# parte fija de index.html. build.py usa este archivo para escribir el
+# contacto en los huecos .neuro-* (sin JavaScript) y alimentar la firma.
 # ============================================================
-
-site:
-  # URL base del sitio (sin barra final). Se usa para canonical, Open Graph
-  # y JSON-LD. Cambiar solo si el dominio cambia.
-  base_url: "https://www.neurogarval.es"
-  # Logo de cabecera, footer y firma (ruta de la carpeta media/).
-  logo: /media/logo.svg
 
 contact:
   # build.py lo escribe en index.html (hero, sección Contacto y footer)
@@ -27,60 +19,6 @@ contact:
   instagram:
     url: "https://instagram.com/neurogarval"
     handle: "@neurogarval"
-
-# Menú de navegación (una sola lista para cabecera y menú móvil).
-# desktop: false => el elemento solo aparece en el menú móvil.
-# El orden de esta lista es el orden de ambos menús.
-menu:
-  - label: Inicio
-    href: "#inicio"
-    desktop: true
-  - label: Servicios
-    href: "#servicios"
-    desktop: true
-  - label: Modalidades
-    href: "#modalidades"
-    desktop: true
-  - label: Proceso
-    href: "#proceso"
-    desktop: false
-  - label: Especialista
-    href: "#especialista"
-    desktop: true
-  - label: Blog
-    href: "#blog"
-    desktop: true
-  - label: FAQ
-    href: "#faq"
-    desktop: true
-  - label: Contacto
-    href: "#contacto"
-    desktop: true
-
-seo:
-  # Nota: había dos <title> en el HTML; se unificó este (el más completo).
-  title: "NeuroGarval | Neuropsicología y Psicología Sanitaria en Valdemoro"
-  description: "NeuroGarval, dirigida por la neuropsicóloga Teresa García Valero. Especialistas en neuropsicología y psicología sanitaria en Valdemoro, Madrid. Evaluación y rehabilitación personalizada."
-  keywords: "NeuroGarval, Teresa García Valero, neuropsicología Valdemoro, psicología sanitaria Madrid, rehabilitación cognitiva, evaluación neuropsicológica"
-  og_title: "NeuroGarval | Teresa García Valero - Neuropsicóloga"
-  og_description: "Centro especializado en Neuropsicología y Psicología Sanitaria en Valdemoro."
-  # Imagen compartida en redes (og:image) y del JSON-LD. Subirla desde el CMS.
-  og_image: /media/image.png
-
-# Datos estructurados Schema.org (MedicalBusiness) del <head>.
-# El teléfono y la imagen no se repiten aquí: se derivan de contact.phone
-# y de seo.og_image en build.py (así no hay duplicados que se desincronicen).
-jsonld:
-  name: NeuroGarval
-  alternate_name: Teresa García Valero Neuropsicóloga
-  price_range: "$"
-  founder: Teresa García Valero
-  address:
-    street: C/ Diego de Almagro, 32
-    locality: Valdemoro
-    region: Madrid
-    postal_code: "28342"
-    country: "ES"
 
 footer:
   # Dos líneas de texto bajo el logo (se unen con <br>).

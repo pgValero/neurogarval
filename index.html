@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- pages:begin head-seo -->
     <!-- SEO Básico -->
     <title>NeuroGarval | Neuropsicología y Psicología Sanitaria en Valdemoro</title>
     <meta name="description" content="NeuroGarval, dirigida por la neuropsicóloga Teresa García Valero. Especialistas en neuropsicología y psicología sanitaria en Valdemoro, Madrid. Evaluación y rehabilitación personalizada.">
@@ -43,7 +42,6 @@
       }
     }
     </script>
-    <!-- pages:end head-seo -->
 
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -53,16 +51,17 @@
 </head>
 <body>
 
-    <!-- PLANTILLA DEL SITIO. Las regiones pages:begin/pages:end se
-         regeneran desde content/*.yml (Pages CMS) al ejecutar build.py.
-         Los huecos .neuro-* (teléfono, WhatsApp, email, dirección, logo)
-         se rellenan con content/settings.yml; no hay JS de por medio.
-         No editar los textos de aqui a mano: editar en Pages CMS. -->
+    <!-- PLANTILLA DEL SITIO. El dominio, el logo, el SEO, los datos
+         estructurados y los menús son configuración fija de esta plantilla.
+         Las regiones pages:begin/pages:end se regeneran desde content/*.yml
+         (Pages CMS) al ejecutar build.py. Los huecos .neuro-* (teléfono,
+         WhatsApp, email, dirección y Maps) se rellenan con
+         content/settings.yml; no hay JS de por medio. No editar los textos
+         dentro de las regiones a mano: editar en Pages CMS. -->
 
     <div class="mobile-overlay" id="mobileMenu">
         <button class="close-btn" onclick="toggleMenu()">&times;</button>
         <div class="mobile-links">
-            <!-- pages:begin mobile-menu -->
             <a href="#inicio" onclick="toggleMenu()">Inicio</a>
             <a href="#servicios" onclick="toggleMenu()">Servicios</a>
             <a href="#modalidades" onclick="toggleMenu()">Modalidades</a>
@@ -71,7 +70,6 @@
             <a href="#blog" onclick="toggleMenu()">Blog</a>
             <a href="#faq" onclick="toggleMenu()">FAQ</a>
             <a href="#contacto" onclick="toggleMenu()">Contacto</a>
-            <!-- pages:end mobile-menu -->
         </div>
     </div>
 
@@ -79,11 +77,10 @@
         <div class="container">
             <nav>
                 <a href="#inicio">
-                    <img src="media/logo.svg" alt="NeuroGarval" class="header-logo neuro-logo">
+                    <img src="media/logo.svg" alt="NeuroGarval" class="header-logo">
                 </a>
 
                 <ul class="nav-links">
-                    <!-- pages:begin nav-desktop -->
                     <li><a href="#inicio">Inicio</a></li>
                     <li><a href="#servicios">Servicios</a></li>
                     <li><a href="#modalidades">Modalidades</a></li>
@@ -91,7 +88,6 @@
                     <li><a href="#blog">Blog</a></li>
                     <li><a href="#faq">FAQ</a></li>
                     <li><a href="#contacto">Contacto</a></li>
-                    <!-- pages:end nav-desktop -->
                 </ul>
 
                 <button class="menu-btn" onclick="toggleMenu()">
@@ -494,8 +490,8 @@
         <div class="container">
             <div class="footer-top">
                 <div class="footer-info">
+                    <img src="media/logo.svg" alt="NeuroGarval" class="footer-logo">
                     <!-- pages:begin footer-info -->
-                    <img src="media/logo.svg" alt="NeuroGarval" class="footer-logo neuro-logo">
                     <p>Neuropsicología y Psicología Sanitaria.<br>Teresa García Valero (Col. M-42858).</p>
                     <br>
                     <a href="aviso_legal.pdf">Información legal</a>

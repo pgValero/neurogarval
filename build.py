@@ -7,11 +7,11 @@ Qué hace
 2. Convierte a HTML los campos de texto largo escritos en Markdown.
 3. Regenera las regiones delimitadas por
       <!-- pages:begin NOMBRE -->  ...  <!-- pages:end NOMBRE -->
-   en index.html (22) y firma.html (4); el resto de la plantilla
+   en index.html (19) y firma.html (3); el resto de la plantilla
    HTML/CSS se queda intacto.
 4. Escribe el contacto de content/settings.yml directamente en
    index.html: los huecos .neuro-* (teléfono, WhatsApp, email,
-   dirección, Maps y logo) quedan resueltos en el HTML, sin JavaScript.
+   dirección y Maps) quedan resueltos en el HTML, sin JavaScript.
 5. Genera _site/data.js (window.SITE_DATA: servicios, modalidades e iconos),
    que script.js usa al abrir sus respectivos modales.
 6. Copia los estáticos (CSS, JS, CNAME, favicons, PDFs) y media/ a _site/.
@@ -165,15 +165,6 @@ def media_url(path: str | None) -> str:
     return p
 
 
-def abs_url(base: str, path: str) -> str:
-    """URL absoluta (para meta tags): base + ruta normalizada."""
-    if not path:
-        return ""
-    if path.startswith(("http://", "https://")):
-        return path
-    return base.rstrip("/") + "/" + path.lstrip("/")
-
-
 def icon_html(key: str | None) -> str:
     if key and key not in ICONS:
         sys.exit(f"Icono desconocido en content/*.yml: {key!r} "
@@ -201,71 +192,9 @@ def section_header(heading: str, lead: str) -> str:
     )
 
 
-def menu_items(settings: dict, desktop: bool) -> str:
-    parts = []
-    for item in settings.get("menu", []):
-        if bool(item.get("desktop")) != desktop:
-            continue
-        label, href = esc(item["label"]), esc(item["href"])
-        if desktop:
-            parts.append(f'<li><a href="{href}">{label}</a></li>')
-        else:
-            parts.append(f'<a href="{href}" onclick="toggleMenu()">{label}</a>')
-    return "\n".join(parts)
-
-
 # ---------------------------------------------------------------------------
 # Regiones de index.html
 # ---------------------------------------------------------------------------
-def r_head_seo(c: dict) -> str:
-    s, seo, jl = c["settings"], c["settings"]["seo"], c["settings"]["jsonld"]
-    base = s["site"]["base_url"].rstrip("/")
-    canonical = base + "/"
-    og_image = abs_url(base, media_url(seo.get("og_image")))
-    addr = jl["address"]
-    jsonld = {
-        "@context": "https://schema.org",
-        "@type": "MedicalBusiness",
-        "name": jl.get("name"),
-        "alternateName": jl.get("alternate_name") or None,
-        "image": og_image,
-        "url": canonical,
-        "telephone": re.sub(r"[\s()\-]", "", s["contact"]["phone"]),
-        "address": {
-            "@type": "PostalAddress",
-            "streetAddress": addr.get("street"),
-            "addressLocality": addr.get("locality"),
-            "addressRegion": addr.get("region"),
-            "postalCode": addr.get("postal_code"),
-            "addressCountry": addr.get("country"),
-        },
-        "priceRange": jl.get("price_range"),
-        "founder": {"@type": "Person", "name": jl.get("founder")},
-    }
-    jsonld = {k: v for k, v in jsonld.items() if v is not None}
-    lines = [
-        "<!-- SEO Básico -->",
-        f"<title>{esc(seo['title'])}</title>",
-        f'<meta name="description" content="{esc(seo["description"])}">',
-        f'<meta name="keywords" content="{esc(seo["keywords"])}">',
-        f'<link rel="canonical" href="{esc(canonical)}">',
-        "",
-        "<!-- Open Graph / Redes Sociales -->",
-        '<meta property="og:type" content="website">',
-        '<meta property="og:locale" content="es">',
-        f'<meta property="og:title" content="{esc(seo["og_title"])}">',
-        f'<meta property="og:description" content="{esc(seo["og_description"])}">',
-        f'<meta property="og:image" content="{esc(og_image)}">',
-        f'<meta property="og:url" content="{esc(canonical)}">',
-        "",
-        "<!-- Datos Estructurados (Schema.org) -->",
-        '<script type="application/ld+json">',
-        json.dumps(jsonld, ensure_ascii=False, indent=2),
-        "</script>",
-    ]
-    return "\n".join(lines)
-
-
 def r_hero(c: dict) -> str:
     h = c["home"]["hero"]
     accent = str(h.get("title_accent") or "").strip()
@@ -523,12 +452,9 @@ def r_contact_map(c: dict) -> str:
 
 
 def r_footer_info(c: dict) -> str:
-    s = c["settings"]
-    f = s["footer"]
+    f = c["settings"]["footer"]
     lines = "<br>".join(esc(line) for line in f["lines"])
     return "\n".join([
-        f'<img src="{media_url(s["site"]["logo"])}" alt="NeuroGarval" '
-        'class="footer-logo neuro-logo">',
         f"<p>{lines}</p>",
         "<br>",
         f'<a href="{esc(f["legal_file"])}">{esc(f["legal_label"])}</a>',
@@ -540,9 +466,6 @@ def r_footer_copyright(c: dict) -> str:
 
 
 INDEX_REGIONS: dict[str, "callable"] = {
-    "head-seo": r_head_seo,
-    "mobile-menu": lambda c: menu_items(c["settings"], desktop=False),
-    "nav-desktop": lambda c: menu_items(c["settings"], desktop=True),
     "hero": r_hero,
     "hero-img": r_hero_img,
     "services-header": lambda c: section_header(
@@ -614,9 +537,9 @@ def apply_regions(source: str, renderers: dict, fname: str) -> str:
 def fill_contact(doc: str, settings: dict) -> str:
     """Resuelve en el HTML todos los huecos .neuro-* de la plantilla.
 
-    Atributos: href de teléfono/WhatsApp/email/Maps y src del logo.
-    Texto:     teléfono, email y dirección. Cabecera, hero, sección de
-               contacto y footer salen todos del mismo settings.yml.
+    Atributos: href de teléfono/WhatsApp/email/Maps.
+    Texto:     teléfono, email y dirección. Hero, sección de contacto y
+               footer salen todos del mismo settings.yml.
     """
     c = settings["contact"]
     raw_phone = re.sub(r"[\s()\-]", "", c["phone"])
@@ -625,7 +548,6 @@ def fill_contact(doc: str, settings: dict) -> str:
         "neuro-whatsapp-link": ("href", f"https://wa.me/{raw_phone.lstrip('+')}"),
         "neuro-mail-link": ("href", f"mailto:{c['mail']}"),
         "neuro-address-link": ("href", c["maps_url"]),
-        "neuro-logo": ("src", media_url(settings["site"]["logo"])),
     }
     texts = {
         "neuro-phone": esc(c["phone"]),
@@ -666,19 +588,8 @@ def fill_contact(doc: str, settings: dict) -> str:
 
 # ---------------------------------------------------------------------------
 # Regiones de firma.html (contacto desde settings.yml; texto propio de la
-# firma desde content/firma.yml)
+# firma desde content/firma.yml). El logo y su URL son fijos en la plantilla.
 # ---------------------------------------------------------------------------
-def r_firma_logo(c: dict) -> str:
-    web = c["firma"]["web_url"].rstrip("/")
-    logo = media_url(c["settings"]["site"]["logo"])
-    return "\n".join([
-        '<td style="padding: 10px; vertical-align: middle; text-align: center; '
-        'background-color: #78A2D2; width: fit-content;">',
-        f'  <img src="{web}/{logo}" alt="NeuroGarval" width="150px" '
-        'style="display: block;">',
-    ])
-
-
 def r_firma_identity(c: dict) -> str:
     f = c["firma"]
     return "\n".join([
@@ -716,7 +627,6 @@ def r_firma_legal(c: dict) -> str:
 
 
 FIRMA_REGIONS: dict[str, "callable"] = {
-    "firma-logo": r_firma_logo,
     "firma-identity": r_firma_identity,
     "firma-contact": r_firma_contact,
     "firma-legal": r_firma_legal,

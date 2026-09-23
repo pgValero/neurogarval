@@ -20,7 +20,9 @@
 #   Markdown. Escribe párrafos, énfasis y listas en un único campo; build.py
 #   los convierte a HTML. No escribas HTML en esos campos. Títulos, botones,
 #   etiquetas y metadatos siguen siendo campos simples. Las listas
-#   estructurales (menús, pasos, tarjetas, fotos, etc.) conservan sus campos.
+#   estructurales (pasos, tarjetas, fotos, etc.) conservan sus campos.
+#   Dominio, logo, SEO/JSON-LD y navegación son parte fija de index.html y
+#   no se editan desde el CMS.
 #
 # NOTA SOBRE RAMAS: Pages CMS lee este archivo por rama; se usa la rama
 # por defecto del repositorio (main). develop queda para trabajo técnico.
@@ -84,32 +86,16 @@ components:
 # ---------------------------------------------------------------------------
 content:
   # ---------------------------------------------------------------------
-  # 1) Ajustes globales: dominio, contacto, menú, SEO/JSON-LD y footer.
+  # 1) Contacto y contenido editable del footer.
   # ---------------------------------------------------------------------
   - name: ajustes
-    label: Ajustes del sitio
+    label: Contacto y footer
     type: file
     path: content/settings.yml
     format: yaml
     operations:
       delete: false
     fields:
-      - name: site
-        label: Dominio y logo
-        type: object
-        fields:
-          - name: base_url
-            label: URL base
-            type: string
-            required: true
-            pattern: "^https://[^/\\s]+$"
-            description: Dominio del sitio sin barra final (usado en canonical, Open Graph y schema.org).
-          - name: logo
-            label: Logo
-            type: image
-            required: true
-            description: Cabecera, footer y firma de email.
-
       - name: contact
         label: Contacto
         type: object
@@ -148,107 +134,6 @@ content:
                 type: string
                 required: true
                 pattern: "^@[A-Za-z0-9._]+$"
-
-      - name: menu
-        label: Menú de navegación
-        type: object
-        description: Una sola lista para cabecera y menú móvil. "Escritorio" desactivado = solo menú móvil.
-        list:
-          collapsible:
-            collapsed: true
-            summary: "{label}"
-        fields:
-          - name: label
-            label: Texto
-            type: string
-            required: true
-          - name: href
-            label: Enlace
-            type: string
-            required: true
-            pattern: "^#[a-z0-9-]+$"
-            description: "Anclaje interno, p. ej. #servicios."
-          - name: desktop
-            label: Visible en escritorio
-            type: boolean
-            required: true
-
-      - name: seo
-        label: SEO y redes sociales
-        type: object
-        fields:
-          - name: title
-            label: Título (pestaña)
-            type: string
-            required: true
-            description: Máximo ~60 caracteres para que Google no lo corte.
-          - name: description
-            label: Meta descripción
-            type: text
-            required: true
-            options:
-              maxlength: 160
-          - name: keywords
-            label: Palabras clave
-            type: text
-          - name: og_title
-            label: Título al compartir (Open Graph)
-            type: string
-            required: true
-          - name: og_description
-            label: Descripción al compartir
-            type: text
-            required: true
-          - name: og_image
-            label: Imagen al compartir
-            type: image
-            required: true
-            description: También se usa como imagen del schema.org.
-
-      - name: jsonld
-        label: Datos estructurados (schema.org)
-        type: object
-        description: Telephone e imagen se generan solos desde Contacto y SEO.
-        fields:
-          - name: name
-            label: Nombre del negocio
-            type: string
-            required: true
-          - name: alternate_name
-            label: Nombre alternativo
-            type: string
-          - name: price_range
-            label: Rango de precios
-            type: string
-            description: Texto de schema.org (p. ej. "$", "€" o vacío).
-          - name: founder
-            label: Fundador/a
-            type: string
-            required: true
-          - name: address
-            label: Dirección (schema.org)
-            type: object
-            fields:
-              - name: street
-                label: Calle y número
-                type: string
-                required: true
-              - name: locality
-                label: Ciudad
-                type: string
-                required: true
-              - name: region
-                label: Provincia / región
-                type: string
-              - name: postal_code
-                label: Código postal
-                type: string
-                required: true
-              - name: country
-                label: País (código ISO)
-                type: string
-                required: true
-                pattern: "^[A-Z]{2}$"
 
       - name: footer
         label: Footer

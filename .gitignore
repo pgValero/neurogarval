@@ -1,3 +1,5 @@
 # Artefacto generado por build.py (el build canónico lo hace la GitHub
 # Action .github/workflows/deploy.yml al hacer push a main).
 _site/
+
+__pycache__
