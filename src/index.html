@@ -53,13 +53,13 @@
 
     <!-- PLANTILLA DEL SITIO. El dominio, el logo, el SEO, los datos
          estructurados y los menús son configuración fija de esta plantilla.
-         Las regiones pages:begin/pages:end se regeneran desde content/*.yml
-         (Pages CMS, un fichero por sección) al ejecutar build.py. Los huecos
-         .neuro-* (teléfono, WhatsApp, email, dirección y Maps) se rellenan
-         con content/common.yml; no hay JS de por medio. No editar los textos
-         dentro de las regiones a mano: editar en Pages CMS. Los textos que
-         regenera build.py se marcan aquí con __archivo.campo__ (p. ej.
-         __hero.badge__) para distinguirlos de la parte fija. -->
+         Los marcadores que rellena build.py (formato: archivo.ruta.campo,
+         sin los guiones bajos aquí para no confundir al build) se leen de
+         content/*.yml (Pages CMS, un fichero por sección), usando los tipos
+         declarados en .pages.yml. Los huecos .neuro-* (teléfono, WhatsApp,
+         email, dirección y Maps) se rellenan con content/common.yml; no hay
+         JS de por medio. No editar los textos marcados a mano: editar en
+         Pages CMS. -->
 
     <div class="mobile-overlay" id="mobileMenu">
         <button class="close-btn" onclick="toggleMenu()">&times;</button>
@@ -104,17 +104,15 @@
         <section id="inicio" class="hero">
             <div class="container hero-grid">
                 <div class="hero-text">
-                    <!-- pages:begin hero -->
                     <span class="badge">__hero.badge__</span>
                     <h1>__hero.title__ <i>__hero.title_accent__</i></h1>
                     <span class="modalities-text">__hero.modalities__</span>
-                    <p>__hero.paragraph__</p>
+                    <div class="markdown-content">__hero.paragraph__</div>
 
                     <div id="hero-promo">
                         <i class="bi bi-info-circle-fill"></i>
                         <span>__hero.promo__</span>
                     </div>
-                    <!-- pages:end hero -->
 
                     <div class="btn-group">
                         <a href="__common.contact.phone__" target="_blank" class="btn btn-whatsapp neuro-whatsapp-link">
@@ -129,9 +127,7 @@
                     </div>
                 </div>
                 <div id="hero-img-wrapper">
-                    <!-- pages:begin hero-img -->
                     <img src="__hero.image__" alt="__hero.image_alt__">
-                    <!-- pages:end hero-img -->
                 </div>
             </div>
         </section>
@@ -140,42 +136,36 @@
         <section id="servicios" class="section-padding services">
             <div class="container">
                 <div class="section-header">
-                    <!-- pages:begin services-header -->
                     <h2>__servicios.heading__</h2>
                     <div class="divider"></div>
-                    <p>__servicios.lead__</p>
-                    <!-- pages:end services-header -->
+                    <div class="markdown-content">__servicios.lead__</div>
                 </div>
 
                 <div class="services-grid">
-                    <!-- pages:begin services-grid -->
                     <div class="service-card" role="button" tabindex="0" aria-haspopup="dialog" data-service="neuro" onclick="openServiceModal('neuro')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openServiceModal('neuro')}">
                         <div class="service-icon">__servicios.items.0.icon__</div>
                         <h3>__servicios.items.0.title__</h3>
-                        <p>__servicios.items.0.card_text__</p>
+                        <div class="markdown-content">__servicios.items.0.card_text__</div>
                         <span class="service-more">__servicios.more_label__ <i class="bi bi-arrow-right"></i></span>
                     </div>
                     <div class="service-card" role="button" tabindex="0" aria-haspopup="dialog" data-service="psico" onclick="openServiceModal('psico')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openServiceModal('psico')}">
                         <div class="service-icon">__servicios.items.1.icon__</div>
                         <h3>__servicios.items.1.title__</h3>
-                        <p>__servicios.items.1.card_text__</p>
+                        <div class="markdown-content">__servicios.items.1.card_text__</div>
                         <span class="service-more">__servicios.more_label__ <i class="bi bi-arrow-right"></i></span>
                     </div>
                     <div class="service-card" role="button" tabindex="0" aria-haspopup="dialog" data-service="rehab" onclick="openServiceModal('rehab')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openServiceModal('rehab')}">
                         <div class="service-icon">__servicios.items.2.icon__</div>
                         <h3>__servicios.items.2.title__</h3>
-                        <p>__servicios.items.2.card_text__</p>
+                        <div class="markdown-content">__servicios.items.2.card_text__</div>
                         <span class="service-more">__servicios.more_label__ <i class="bi bi-arrow-right"></i></span>
                     </div>
-                    <!-- pages:end services-grid -->
                 </div>
                 <div class="section-header">
                     <div class="divider"></div>
-                    <!-- pages:begin services-areas -->
                     <div class="check-list markdown-content">
                         __servicios.areas__
                     </div>
-                    <!-- pages:end services-areas -->
                 </div>
             </div>
         </section>
@@ -184,20 +174,17 @@
         <section id="modalidades" class="section-padding modalities-section">
             <div class="container">
                 <div class="section-header">
-                    <!-- pages:begin modalities-header -->
                     <h2>__modalidades.heading__</h2>
                     <div class="divider"></div>
-                    <p>__modalidades.lead__</p>
-                    <!-- pages:end modalities-header -->
+                    <div class="markdown-content">__modalidades.lead__</div>
                 </div>
 
                 <div class="modalities-grid">
-                    <!-- pages:begin modalities-grid -->
                     <div class="modality-item" role="button" tabindex="0" aria-haspopup="dialog" data-modality="0" onclick="openModalityModal(0)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openModalityModal(0)}">
                         <div class="modality-icon">__modalidades.items.0.icon__</div>
                         <div class="modality-content">
                             <h4>__modalidades.items.0.title__</h4>
-                            <p>__modalidades.items.0.text__</p>
+                            <div class="markdown-content">__modalidades.items.0.text__</div>
                             <span class="service-more">__modalidades.more_label__ <i class="bi bi-arrow-right"></i></span>
                         </div>
                     </div>
@@ -205,7 +192,7 @@
                         <div class="modality-icon">__modalidades.items.1.icon__</div>
                         <div class="modality-content">
                             <h4>__modalidades.items.1.title__</h4>
-                            <p>__modalidades.items.1.text__</p>
+                            <div class="markdown-content">__modalidades.items.1.text__</div>
                             <span class="service-more">__modalidades.more_label__ <i class="bi bi-arrow-right"></i></span>
                         </div>
                     </div>
@@ -213,11 +200,10 @@
                         <div class="modality-icon">__modalidades.items.2.icon__</div>
                         <div class="modality-content">
                             <h4>__modalidades.items.2.title__</h4>
-                            <p>__modalidades.items.2.text__</p>
+                            <div class="markdown-content">__modalidades.items.2.text__</div>
                             <span class="service-more">__modalidades.more_label__ <i class="bi bi-arrow-right"></i></span>
                         </div>
                     </div>
-                    <!-- pages:end modalities-grid -->
                 </div>
             </div>
         </section>
@@ -226,22 +212,19 @@
         <section id="proceso" class="section-padding">
             <div class="container">
                 <div class="section-header">
-                    <!-- pages:begin process-header -->
                     <h2>__proceso.heading__</h2>
                     <div class="divider"></div>
-                    <p>__proceso.lead__</p>
-                    <!-- pages:end process-header -->
+                    <div class="markdown-content">__proceso.lead__</div>
                 </div>
 
                 <div class="process-grid">
-                    <!-- pages:begin process-grid -->
                     <div class="process-step">
                         <div class="process-num">
                             <span class="process-icon">__proceso.steps.0.icon__</span>
                             <span class="process-index">1</span>
                         </div>
                         <h4>__proceso.steps.0.title__</h4>
-                        <p>__proceso.steps.0.text__</p>
+                        <div class="markdown-content">__proceso.steps.0.text__</div>
                     </div>
                     <div class="process-step">
                         <div class="process-num">
@@ -249,7 +232,7 @@
                             <span class="process-index">2</span>
                         </div>
                         <h4>__proceso.steps.1.title__</h4>
-                        <p>__proceso.steps.1.text__</p>
+                        <div class="markdown-content">__proceso.steps.1.text__</div>
                     </div>
                     <div class="process-step">
                         <div class="process-num">
@@ -257,7 +240,7 @@
                             <span class="process-index">3</span>
                         </div>
                         <h4>__proceso.steps.2.title__</h4>
-                        <p>__proceso.steps.2.text__</p>
+                        <div class="markdown-content">__proceso.steps.2.text__</div>
                     </div>
                     <div class="process-step">
                         <div class="process-num">
@@ -265,7 +248,7 @@
                             <span class="process-index">4</span>
                         </div>
                         <h4>__proceso.steps.3.title__</h4>
-                        <p>__proceso.steps.3.text__</p>
+                        <div class="markdown-content">__proceso.steps.3.text__</div>
                     </div>
                     <div class="process-step">
                         <div class="process-num">
@@ -273,9 +256,8 @@
                             <span class="process-index">5</span>
                         </div>
                         <h4>__proceso.steps.4.title__</h4>
-                        <p>__proceso.steps.4.text__</p>
+                        <div class="markdown-content">__proceso.steps.4.text__</div>
                     </div>
-                    <!-- pages:end process-grid -->
                 </div>
             </div>
         </section>
@@ -283,7 +265,6 @@
         <!-- ESPECIALISTA -->
         <section id="especialista" class="section-padding">
             <div class="container about-grid">
-                <!-- pages:begin about -->
                 <div class="about-image">
                     <img src="__especialista.image__" alt="__especialista.image_alt__">
                     <div class="col-card">
@@ -295,9 +276,8 @@
                     <h2>__especialista.heading__</h2>
                     <div class="divider"></div>
 
-                    <p>__especialista.content__</p>
+                    <div class="markdown-content">__especialista.content__</div>
                 </div>
-                <!-- pages:end about -->
             </div>
         </section>
 
@@ -305,21 +285,18 @@
         <section id="blog" class="section-padding">
             <div class="container">
                 <div class="section-header">
-                    <!-- pages:begin blog-header -->
                     <h2>__blog.heading__</h2>
                     <div class="divider"></div>
-                    <p>__blog.lead__</p>
-                    <!-- pages:end blog-header -->
+                    <div class="markdown-content">__blog.lead__</div>
                 </div>
 
                 <div class="blog-grid">
-                    <!-- pages:begin blog-grid -->
                     <article class="blog-card">
                         <div class="blog-thumb">__blog.posts.0.image__</div>
                         <div class="blog-content">
                             <span class="blog-date">__blog.posts.0.date__</span>
                             <h4>__blog.posts.0.title__</h4>
-                            <p>__blog.posts.0.excerpt__</p>
+                            <div class="markdown-content">__blog.posts.0.excerpt__</div>
                             <a href="__blog.posts.0.url__" class="read-more">__blog.read_more__ <i class="bi bi-arrow-right"></i></a>
                         </div>
                     </article>
@@ -328,7 +305,7 @@
                         <div class="blog-content">
                             <span class="blog-date">__blog.posts.1.date__</span>
                             <h4>__blog.posts.1.title__</h4>
-                            <p>__blog.posts.1.excerpt__</p>
+                            <div class="markdown-content">__blog.posts.1.excerpt__</div>
                             <a href="__blog.posts.1.url__" class="read-more">__blog.read_more__ <i class="bi bi-arrow-right"></i></a>
                         </div>
                     </article>
@@ -337,11 +314,10 @@
                         <div class="blog-content">
                             <span class="blog-date">__blog.posts.2.date__</span>
                             <h4>__blog.posts.2.title__</h4>
-                            <p>__blog.posts.2.excerpt__</p>
+                            <div class="markdown-content">__blog.posts.2.excerpt__</div>
                             <a href="__blog.posts.2.url__" class="read-more">__blog.read_more__ <i class="bi bi-arrow-right"></i></a>
                         </div>
                     </article>
-                    <!-- pages:end blog-grid -->
                 </div>
             </div>
         </section>
@@ -350,44 +326,40 @@
         <section id="faq" class="section-padding">
             <div class="container">
                 <div class="section-header">
-                    <!-- pages:begin faq-header -->
                     <h2>__faq.heading__</h2>
                     <div class="divider"></div>
-                    <p>__faq.lead__</p>
-                    <!-- pages:end faq-header -->
+                    <div class="markdown-content">__faq.lead__</div>
                 </div>
 
                 <div class="faq-list">
-                    <!-- pages:begin faq-list -->
                     <details class="faq-item">
                         <summary>__faq.items.0.question__</summary>
-                        <p>__faq.items.0.answer__</p>
+                        <div class="markdown-content">__faq.items.0.answer__</div>
                     </details>
                     <details class="faq-item">
                         <summary>__faq.items.1.question__</summary>
-                        <p>__faq.items.1.answer__</p>
+                        <div class="markdown-content">__faq.items.1.answer__</div>
                     </details>
                     <details class="faq-item">
                         <summary>__faq.items.2.question__</summary>
-                        <p>__faq.items.2.answer__</p>
+                        <div class="markdown-content">__faq.items.2.answer__</div>
                     </details>
                     <details class="faq-item">
                         <summary>__faq.items.3.question__</summary>
-                        <p>__faq.items.3.answer__</p>
+                        <div class="markdown-content">__faq.items.3.answer__</div>
                     </details>
                     <details class="faq-item">
                         <summary>__faq.items.4.question__</summary>
-                        <p>__faq.items.4.answer__</p>
+                        <div class="markdown-content">__faq.items.4.answer__</div>
                     </details>
                     <details class="faq-item">
                         <summary>__faq.items.5.question__</summary>
-                        <p>__faq.items.5.answer__</p>
+                        <div class="markdown-content">__faq.items.5.answer__</div>
                     </details>
                     <details class="faq-item">
                         <summary>__faq.items.6.question__</summary>
-                        <p>__faq.items.6.answer__</p>
+                        <div class="markdown-content">__faq.items.6.answer__</div>
                     </details>
-                    <!-- pages:end faq-list -->
                 </div>
             </div>
         </section>
@@ -396,12 +368,10 @@
         <section id="contacto" class="section-padding contact">
             <div class="container">
                 <div class="section-header">
-                    <!-- pages:begin contact-header -->
                     <h2>__contacto.heading__</h2>
                     <div class="divider"></div>
                     <strong>__contacto.highlight__</strong>
-                    <p>__contacto.lead__</p>
-                    <!-- pages:end contact-header -->
+                    <div class="markdown-content">__contacto.lead__</div>
                 </div>
 
                 <div class="contact-grid">
@@ -417,13 +387,11 @@
                         <!-- __common.contact.phone__ -->
                         <span class="neuro-phone"></span>
                     </a>
-                    <!-- pages:begin contact-instagram -->
                     <a href="__contacto.instagram.url__" target="_blank" class="contact-item">
                         <div class="contact-icon"><i class="bi bi-instagram"></i></div>
                         <h4>Instagram</h4>
                         <span>__contacto.instagram.handle__</span>
                     </a>
-                    <!-- pages:end contact-instagram -->
                 </div>
                 <div class="contact-grid">
                     <a href="__common.contact.mail__" target="_blank" class="contact-item neuro-mail-link">
@@ -442,7 +410,6 @@
 
                 <div class="map-wrapper">
                     <div class="map-container">
-                        <!-- pages:begin contact-map -->
                         <iframe
                             src="__contacto.map_embed__"
                             width="600"
@@ -452,7 +419,6 @@
                             loading="lazy"
                             referrerpolicy="no-referrer-when-downgrade">
                         </iframe>
-                        <!-- pages:end contact-map -->
                     </div>
                 </div>
             </div>
@@ -464,11 +430,9 @@
             <div class="footer-top">
                 <div class="footer-info">
                     <img src="media/logo.svg" alt="NeuroGarval" class="footer-logo">
-                    <!-- pages:begin footer-info -->
                     <p>__footer.lines__</p>
                     <br>
                     <a href="__footer.legal_file__">__footer.legal_label__</a>
-                    <!-- pages:end footer-info -->
                 </div>
                 <div class="footer-links">
                     <!-- __common.contact.address_lines__ -->
@@ -480,9 +444,7 @@
                 </div>
             </div>
             <div class="copyright">
-                <!-- pages:begin footer-copyright -->
                 &copy; __footer.copyright__
-                <!-- pages:end footer-copyright -->
             </div>
         </div>
     </footer>

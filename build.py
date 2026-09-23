@@ -1,35 +1,50 @@
 #!/usr/bin/env python3
-"""build.py — build mínimo del sitio estático neurogarval.es.
+"""build.py — generador del sitio estático neurogarval.es.
 
 Qué hace
 --------
-1. Lee el contenido editable de Pages CMS:  content/*.yml (un fichero por
-   sección más common.yml, footer.yml y firma.yml).
-2. Convierte a HTML los campos de texto largo escritos en Markdown.
-3. Regenera las regiones delimitadas por
-      <!-- pages:begin NOMBRE -->  ...  <!-- pages:end NOMBRE -->
-   en src/index.html (19) y src/firma.html (3); el resto de la plantilla
-   HTML/CSS se queda intacto.
-4. Escribe el contacto de content/common.yml (fuente única, repetida en
-   varios sitios) directamente en el HTML generado: los huecos .neuro-*
-   (teléfono, WhatsApp, email, dirección y Maps) quedan resueltos en el
-   HTML, sin JavaScript.
-5. Genera _site/data.js (window.SITE_DATA: servicios, modalidades e iconos),
+1. Lee el contenido editable de Pages CMS: content/*.yml (un fichero por
+   sección más common.yml, footer.yml y firma.yml) y el registro de tipos
+   .pages.yml.
+2. Recorre las plantillas src/index.html y src/firma.html sustituyendo los
+   marcadores __archivo.ruta.campo__ (p. ej. __hero.badge__,
+   __servicios.items.0.title__ o __common.contact.phone__) por el contenido
+   de cada fichero. La ruta se resuelve en el YAML del archivo indicado; el
+   tipo del campo se lee de .pages.yml y decide cómo se renderiza:
+     - rich-text (Markdown)  -> se convierte a HTML
+     - image                 -> ruta normalizada media/...
+     - component icono       -> HTML del icono (ICONS)
+     - lista de cadenas      -> se une con <br>
+     - el resto              -> texto plano escapado
+   Si un marcador no se encuentra en el contenido o su campo no está
+   registrado en .pages.yml, el build falla indicando exactamente qué campo
+   se buscó y en qué plantilla.
+3. Escribe el contacto de content/common.yml (fuente única) directamente en
+   el index.html generado: los huecos .neuro-* (teléfono, WhatsApp, email,
+   dirección y Maps) quedan resueltos sin JavaScript.
+4. Genera _site/data.js (window.SITE_DATA: servicios, modalidades e iconos),
    que script.js usa al abrir sus respectivos modales.
-6. Copia los estáticos (CSS, JS, CNAME, favicon y PDFs) y las imágenes de
+5. Copia los estáticos (CSS, JS, CNAME, favicon y PDFs) y las imágenes de
    media/ a _site/, manteniendo la estructura pública actual.
 
 Uso
 ---
     pip install pyyaml markdown  # dependencias del generador
     python build.py              # genera ./_site
+    # Sin pip (p. ej. entorno aislado):
+    uv run --with pyyaml --with markdown python build.py
 
 La GitHub Action (.github/workflows/deploy.yml) hace exactamente esto en
 cada push a main y publica _site/ en GitHub Pages. No hay framework ni
 generador de sitio: solo este script.
 
-Contrato de regiones (nombre -> fichero de datos) en INDEX_REGIONS y
-FIRMA_REGIONS más abajo; si añades una región al HTML, regístrala ahí.
+Marcadores
+----------
+Formato: __archivo.ruta.campo__ (el primer segmento es el nombre del fichero
+de content/, p. ej. __servicios.items.0.title__). Los índices numéricos
+recorren listas. Si el archivo, la ruta o el campo no existen en
+content/*.yml o el campo no está declarado en .pages.yml, se lanza
+CampoAusenteError con el nombre del campo buscado.
 """
 
 from __future__ import annotations
@@ -39,6 +54,7 @@ import json
 import re
 import shutil
 import sys
+from fnmatch import fnmatch
 from pathlib import Path
 
 try:
@@ -52,6 +68,12 @@ ROOT = Path(__file__).resolve().parent
 SRC = ROOT / "src"
 CONTENT = ROOT / "content"
 OUT = ROOT / "_site"
+
+# Plantillas que procesa build.py: (clave para mensajes, ruta al fichero).
+TEMPLATES = {
+    "src/index.html": SRC / "index.html",
+    "src/firma.html": SRC / "firma.html",
+}
 
 # ---------------------------------------------------------------------------
 # ICONOS — única fuente de verdad (claves = values del campo "icono" en
@@ -137,9 +159,8 @@ def esc(value) -> str:
 def markdown_html(value) -> str:
     """Convierte un valor de Pages CMS en Markdown a HTML.
 
-    Los campos de contenido largo se guardan como Markdown. Esta función es
-    el único punto por el que ese texto entra en el HTML: los títulos,
-    botones y metadatos siguen usando ``esc`` porque son texto plano.
+    Los campos declarados como rich-text en .pages.yml pasan por aquí; el
+    resto de campos (títulos, botones, metadatos) siguen usando ``esc``.
     """
     if isinstance(value, (list, tuple)):
         # Permite que una versión anterior del contenido (párrafos o áreas
@@ -155,12 +176,6 @@ def markdown_html(value) -> str:
         extensions=["extra"],
         output_format="html5",
     ).strip()
-
-
-def ind(text: str, spaces: int) -> str:
-    """Sangría adicional para bloques anidados dentro de una región."""
-    pad = " " * spaces
-    return "\n".join(pad + line if line else line for line in text.split("\n"))
 
 
 def media_url(path: str | None) -> str:
@@ -195,357 +210,206 @@ def load_yaml(name: str) -> dict:
     return data
 
 
-def section_header(heading: str, lead: str) -> str:
-    return (
-        f"<h2>{esc(heading)}</h2>\n"
-        '<div class="divider"></div>\n'
-        '<div class="markdown-content">\n'
-        f"{ind(markdown_html(lead), 4)}\n"
-        "</div>"
-    )
+def raw_phone(phone: str) -> str:
+    """Teléfono sin espacios/paréntesis/giones para enlaces tel: y wa.me."""
+    return re.sub(r"[\s()\-]", "", phone)
 
 
 # ---------------------------------------------------------------------------
-# Regiones de src/index.html
+# Resolución de marcadores __archivo.ruta.campo__
 # ---------------------------------------------------------------------------
-def r_hero(c: dict) -> str:
-    h = c["hero"]
-    accent = str(h.get("title_accent") or "").strip()
-    title = esc(h["title"]) + (f" <i>{esc(accent)}</i>" if accent else "")
-    parts = [p.strip() for p in str(h["modalities"]).split("·")]
+# Formato: primer segmento = fichero de content/ (sin .yml), el resto es la
+# ruta dentro del YAML (los números recorren listas).
+PLACEHOLDER_RE = re.compile(r"__(?P<ref>[a-z0-9]+(?:\.[a-z0-9_]+)+)__")
+
+
+class CampoAusenteError(Exception):
+    """Campo referenciado en una plantilla que no se encuentra ni en el
+    contenido (content/*.yml) ni en el registro de tipos (.pages.yml).
+
+    El build aborta mostrando qué campo se buscó, en qué plantilla y por qué
+    no se encontró.
+    """
+
+    def __init__(self, plantilla: str, ruta: str, motivo: str):
+        self.plantilla = plantilla
+        self.ruta = ruta
+        self.motivo = motivo
+        super().__init__(
+            f"Campo no encontrado: {ruta} (plantilla {plantilla}) — {motivo}."
+        )
+
+
+# Campos derivados: no existen en content/*.yml ni en .pages.yml; los calcula
+# build.py a partir de otros campos (p. ej. __common.contact.phone_tel__ en la
+# firma de email). Estos marcadores no pasan por el registro de .pages.yml.
+DERIVED_FIELDS = frozenset({"common.contact.phone_tel"})
+
+
+def resolve_data(plantilla: str, ref: str, file: str, route: list[str],
+                 context: dict) -> tuple:
+    """Busca el valor de un marcador en el YAML cargado.
+
+    Devuelve (valor, contenedor): el valor del campo y el nodo que lo
+    contiene (para los renderizadores especiales que necesitan datos
+    hermanos, p. ej. el alt de una miniatura).
+    """
+    data = context.get(file)
+    if data is None:
+        raise CampoAusenteError(
+            plantilla, ref,
+            f"no existe content/{file}.yml (revisa el nombre del archivo)")
+    node = data
+    parent = data
+    for seg in route:
+        parent = node
+        if seg.isdigit():
+            if not isinstance(node, (list, tuple)):
+                raise CampoAusenteError(
+                    plantilla, ref,
+                    f"'{seg}' no es un índice de lista en content/{file}.yml")
+            idx = int(seg)
+            if idx >= len(node):
+                raise CampoAusenteError(
+                    plantilla, ref,
+                    f"el índice {idx} supera las {len(node)} entradas de "
+                    f"content/{file}.yml")
+            node = node[idx]
+        else:
+            if not isinstance(node, dict) or seg not in node:
+                raise CampoAusenteError(
+                    plantilla, ref,
+                    f"no existe '{'.'.join(route)}' en content/{file}.yml")
+            node = node[seg]
+    return node, parent
+
+
+def resolve_type(plantilla: str, ref: str, file: str, route: list[str],
+                 fields_by_file: dict) -> dict:
+    """Busca el campo en el registro de tipos (.pages.yml).
+
+    Devuelve la definición del campo (type, component, list...). Si el campo
+    no está declarado, el build falla: es un error de configuración.
+    """
+    fields = fields_by_file.get(file)
+    if fields is None:
+        raise CampoAusenteError(
+            plantilla, ref,
+            f"no existe la colección '{file}' en .pages.yml (¿la has añadido "
+            "al registro de tipos?)")
+    node = fields
+    for i, seg in enumerate(route):
+        if seg.isdigit():
+            continue  # índice de lista: el tipo está en los subcampos
+        field = next((f for f in node if f.get("name") == seg), None)
+        if field is None:
+            raise CampoAusenteError(
+                plantilla, ref,
+                f"el campo '{seg}' no está declarado en .pages.yml "
+                f"(colección '{file}': {', '.join(f.get('name') or '?' for f in node)})")
+        if i == len(route) - 1:
+            return field
+        sub = field.get("fields")
+        if not sub:
+            raise CampoAusenteError(
+                plantilla, ref,
+                f"el campo '{seg}' de .pages.yml no tiene subcampos para "
+                f"sostener la ruta '{ref}'")
+        node = sub
+    raise CampoAusenteError(plantilla, ref, "ruta vacía en .pages.yml")
+
+
+def render_field(value, field: dict) -> str:
+    """Renderiza un valor según el tipo declarado en .pages.yml."""
+    if field.get("component") == "icono":
+        return icon_html(value)
+    if field.get("type") == "rich-text":
+        return markdown_html(value)
+    if field.get("type") == "image":
+        return media_url(value)
+    if isinstance(value, list):
+        return "<br>".join(esc(v) for v in value)
+    return esc(value)
+
+
+# ---------------------------------------------------------------------------
+# Renderizadores especiales (casos que un tipo de .pages.yml no puede
+# expresar solo). Clave de plantilla -> ruta exacta o patrón con "*" ->
+# función (valor, contenedor) -> HTML.
+# ---------------------------------------------------------------------------
+def render_modalities(value, parent: dict) -> str:
+    """Hero: une las modalidades con "·" y protege la última de partirse."""
+    parts = [p.strip() for p in str(value).split("·")]
     if len(parts) > 1:
         head = " · ".join(esc(p) for p in parts[:-1])
-        modalities = (f'{head} <span style="white-space: nowrap;">'
-                      f"· {esc(parts[-1])}</span>")
-    else:
-        modalities = esc(parts[0])
-    return "\n".join([
-        f'<span class="badge">{esc(h["badge"])}</span>',
-        f"<h1>{title}</h1>",
-        f'<span class="modalities-text">{modalities}</span>',
-        '<div class="markdown-content">',
-        ind(markdown_html(h["paragraph"]), 4),
-        "</div>",
-        "",
-        '<div id="hero-promo">'
-        f'<i class="bi bi-info-circle-fill"></i><span>{esc(h["promo"])}</span>'
-        "</div>",
-    ])
+        return (f'{head} <span style="white-space: nowrap;">'
+                f"· {esc(parts[-1])}</span>")
+    return esc(parts[0])
 
 
-def r_hero_img(c: dict) -> str:
-    h = c["hero"]
-    return f'<img src="{media_url(h.get("image"))}" alt="{esc(h.get("image_alt"))}">'
+def render_blog_thumb(value, parent: dict) -> str:
+    """Miniatura del blog: <img> con la foto o icono de reserva si no hay."""
+    src = media_url(value)
+    if not src:
+        return icon_html("journal")
+    return f'<img src="{esc(src)}" alt="{esc(parent.get("title"))}" loading="lazy">'
 
 
-def r_services_grid(c: dict) -> str:
-    sv = c["servicios"]
-    chunks = []
-    for i, item in enumerate(sv["items"]):
-        onkeydown = (
-            f"if(event.key==='Enter'||event.key===' '){{event.preventDefault();"
-            f"openServiceModal({i})}}"
-        )
-        chunks.append("\n".join([
-            f'<div class="service-card" role="button" tabindex="0" '
-            f'aria-haspopup="dialog" data-service="{i}" '
-            f'onclick="openServiceModal({i})" onkeydown="{onkeydown}">',
-            f'    <div class="service-icon">{icon_html(item.get("icon"))}</div>',
-            f'    <h3>{esc(item["title"])}</h3>',
-            '    <div class="markdown-content">',
-            ind(markdown_html(item["card_text"]), 8),
-            "    </div>",
-            f'    <span class="service-more">{esc(sv["more_label"])} '
-            '<i class="bi bi-arrow-right"></i></span>',
-            "</div>",
-        ]))
-    return "\n".join(chunks)
-
-
-def r_services_areas(c: dict) -> str:
-    sv = c["servicios"]
-    # La introducción y las áreas viven en un único campo Markdown. El
-    # contenedor conserva el estilo de lista con check del bloque original.
-    areas = sv.get("areas", "")
-    if isinstance(areas, (list, tuple)):
-        # Compatibilidad con el esquema anterior, que separaba cada área.
-        intro = sv.get("areas_intro", "")
-        items = "\n".join(f"- {area}" for area in areas)
-        areas = f"{intro}\n\n{items}".strip()
-    elif not areas and sv.get("areas_intro"):
-        areas = sv["areas_intro"]
-    content = markdown_html(areas)
-    if not content:
-        return ""
-    return (
-        '<div class="check-list markdown-content">\n'
-        + ind(content, 4)
-        + "\n</div>"
-    )
-
-
-def r_modalities_grid(c: dict) -> str:
-    modalities = c["modalidades"]
-    chunks = []
-    for i, item in enumerate(modalities["items"]):
-        onkeydown = (
-            f"if(event.key==='Enter'||event.key===' '){{event.preventDefault();"
-            f"openModalityModal({i})}}"
-        )
-        chunks.append("\n".join([
-            f'<div class="modality-item" role="button" tabindex="0" '
-            f'aria-haspopup="dialog" data-modality="{i}" '
-            f'onclick="openModalityModal({i})" onkeydown="{onkeydown}">',
-            f'    <div class="modality-icon">{icon_html(item.get("icon"))}</div>',
-            '    <div class="modality-content">',
-            f'        <h4>{esc(item["title"])}</h4>',
-            '        <div class="markdown-content">',
-            ind(markdown_html(item["text"]), 12),
-            "        </div>",
-            f'        <span class="service-more">{esc(modalities["more_label"])} '
-            '<i class="bi bi-arrow-right"></i></span>',
-            "    </div>",
-            "</div>",
-        ]))
-    return "\n\n".join(chunks)
-
-
-def modality_gallery(images: list[dict]) -> str:
-    """Genera la cuadrícula opcional de fotos dentro de un modal."""
-    figures = []
-    for image in images:
-        src = media_url(image.get("image"))
-        alt = esc(image.get("alt"))
-        if src:
-            figures.append(
-                f'<figure class="modality-gallery-item">'
-                '<i class="bi bi-camera"></i>'
-                f'<img src="{esc(src)}" alt="{alt}" loading="lazy" '
-                'onerror="this.remove()"></figure>'
-            )
-        else:
-            figures.append(
-                '<figure class="modality-gallery-item">'
-                '<i class="bi bi-camera"></i></figure>'
-            )
-    if not figures:
-        return ""
-    return ('<div class="modality-gallery">\n'
-            + ind("\n".join(figures), 4)
-            + "\n</div>")
-
-
-def modality_modal_html(item: dict) -> str:
-    """Convierte a HTML el Markdown y añade las fotos de la modalidad."""
-    content = markdown_html(item.get("modal_content", ""))
-    gallery = modality_gallery(item.get("images") or [])
-    return f"{content}\n{gallery}" if gallery else content
-
-
-def r_process_grid(c: dict) -> str:
-    chunks = []
-    for n, step in enumerate(c["proceso"]["steps"], start=1):
-        chunks.append("\n".join([
-            '<div class="process-step">',
-            '    <div class="process-num">',
-            f'        <span class="process-icon">{icon_html(step.get("icon"))}</span>',
-            f'        <span class="process-index">{n}</span>',
-            "    </div>",
-            f'    <h4>{esc(step["title"])}</h4>',
-            '    <div class="markdown-content">',
-            ind(markdown_html(step["text"]), 8),
-            "    </div>",
-            "</div>",
-        ]))
-    return "\n\n".join(chunks)
-
-
-def r_about(c: dict) -> str:
-    a = c["especialista"]
-    # Todo el texto de la especialista se edita en un único campo Markdown.
-    content = markdown_html(a.get("content", a.get("paragraphs", "")))
-    return "\n".join([
-        '<div class="about-image">',
-        f'    <img src="{media_url(a.get("image"))}" alt="{esc(a.get("image_alt"))}">',
-        '    <div class="col-card">',
-        f'        <span class="name">{esc(a["name"])}</span>',
-        f'        <span class="label">{esc(a["license"])}</span>',
-        "    </div>",
-        "</div>",
-        '<div class="about-content">',
-        f'    <h2>{esc(a["heading"])}</h2>',
-        '    <div class="divider"></div>',
-        '    <div class="markdown-content">',
-        ind(content, 8),
-        "    </div>",
-        "</div>",
-    ])
-
-
-def r_blog_grid(c: dict) -> str:
-    b = c["blog"]
-    cards = []
-    for post in b["posts"]:
-        img = media_url(post.get("image"))
-        if img:
-            thumb = (f'<img src="{img}" alt="{esc(post["title"])}" '
-                     'loading="lazy">')
-        else:
-            thumb = icon_html("journal")
-        # El texto visible de cada artículo se escribe como un único campo
-        # Markdown y se convierte aquí antes de insertarlo en la tarjeta.
-        article = markdown_html(post.get("excerpt", post.get("content", "")))
-        cards.append("\n".join([
-            '<article class="blog-card">',
-            f'    <div class="blog-thumb">{thumb}</div>',
-            '    <div class="blog-content">',
-            f'        <span class="blog-date">{esc(post["date"])}</span>',
-            f'        <h4>{esc(post["title"])}</h4>',
-            '        <div class="markdown-content">',
-            ind(article, 12),
-            "        </div>",
-            f'        <a href="{esc(post.get("url") or "#")}" class="read-more">'
-            f'{esc(b["read_more"])} <i class="bi bi-arrow-right"></i></a>',
-            "    </div>",
-            "</article>",
-        ]))
-    return "\n".join(cards)
-
-
-def r_faq_list(c: dict) -> str:
-    items = []
-    for item in c["faq"]["items"]:
-        items.append("\n".join([
-            '<details class="faq-item">',
-            f'    <summary>{esc(item["question"])}</summary>',
-            '    <div class="markdown-content">',
-            ind(markdown_html(item["answer"]), 8),
-            "    </div>",
-            "</details>",
-        ]))
-    return "\n\n".join(items)
-
-
-def r_contact_header(c: dict) -> str:
-    k = c["contacto"]
-    return "\n".join([
-        f'<h2>{esc(k["heading"])}</h2>',
-        '<div class="divider"></div>',
-        f'<strong>{esc(k["highlight"])}</strong>',
-        '<div class="markdown-content">',
-        ind(markdown_html(k["lead"]), 4),
-        "</div>",
-    ])
-
-
-def r_contact_instagram(c: dict) -> str:
-    ig = c["contacto"]["instagram"]
-    return "\n".join([
-        f'<a href="{esc(ig["url"])}" target="_blank" class="contact-item">',
-        '    <div class="contact-icon"><i class="bi bi-instagram"></i></div>',
-        '    <h4>Instagram</h4>',
-        f'    <span>{esc(ig["handle"])}</span>',
-        "</a>",
-    ])
-
-
-def r_contact_map(c: dict) -> str:
-    src = esc(c["contacto"]["map_embed"])
-    return "\n".join([
-        "<iframe",
-        f'    src="{src}"',
-        '    width="600"',
-        '    height="450"',
-        '    style="border:0;"',
-        '    allowfullscreen=""',
-        '    loading="lazy"',
-        '    referrerpolicy="no-referrer-when-downgrade">',
-        "</iframe>",
-    ])
-
-
-def r_footer_info(c: dict) -> str:
-    f = c["footer"]
-    lines = "<br>".join(esc(line) for line in f["lines"])
-    return "\n".join([
-        f"<p>{lines}</p>",
-        "<br>",
-        f'<a href="{esc(f["legal_file"])}">{esc(f["legal_label"])}</a>',
-    ])
-
-
-def r_footer_copyright(c: dict) -> str:
-    return f'&copy; {esc(c["footer"]["copyright"])}'
-
-
-INDEX_REGIONS: dict[str, "callable"] = {
-    "hero": r_hero,
-    "hero-img": r_hero_img,
-    "services-header": lambda c: section_header(
-        c["servicios"]["heading"], c["servicios"]["lead"]),
-    "services-grid": r_services_grid,
-    "services-areas": r_services_areas,
-    "modalities-header": lambda c: section_header(
-        c["modalidades"]["heading"], c["modalidades"]["lead"]),
-    "modalities-grid": r_modalities_grid,
-    "process-header": lambda c: section_header(
-        c["proceso"]["heading"], c["proceso"]["lead"]),
-    "process-grid": r_process_grid,
-    "about": r_about,
-    "blog-header": lambda c: section_header(
-        c["blog"]["heading"], c["blog"]["lead"]),
-    "blog-grid": r_blog_grid,
-    "faq-header": lambda c: section_header(
-        c["faq"]["heading"], c["faq"]["lead"]),
-    "faq-list": r_faq_list,
-    "contact-header": r_contact_header,
-    "contact-instagram": r_contact_instagram,
-    "contact-map": r_contact_map,
-    "footer-info": r_footer_info,
-    "footer-copyright": r_footer_copyright,
+SPECIALS: dict[str, dict] = {
+    "src/index.html": {
+        "hero.modalities": render_modalities,
+        "blog.posts.*.image": render_blog_thumb,
+    },
+    "src/firma.html": {
+        # La firma muestra la dirección en una sola línea.
+        "common.contact.address_lines": lambda v, parent: " - ".join(
+            esc(line) for line in v),
+    },
 }
 
-# ---------------------------------------------------------------------------
-# Inyección de regiones
-# ---------------------------------------------------------------------------
-REGION_RE = re.compile(
-    r"(?P<indent>[ \t]*)<!--\s*pages:begin\s+(?P<name>[a-z0-9\-]+)\s*-->"
-    r"(?P<body>.*?)"
-    r"<!--\s*pages:end\s+(?P=name)\s*-->",
-    re.DOTALL,
-)
+
+def apply_template(template_key: str, source: str, context: dict,
+                   fields_by_file: dict) -> str:
+    """Sustituye los marcadores __archivo.ruta.campo__ de una plantilla."""
+    specials = SPECIALS.get(template_key, {})
+
+    def repl(m: "re.Match") -> str:
+        ref = m.group("ref")
+        file, _, route_str = ref.partition(".")
+        route = route_str.split(".")
+        value, parent = resolve_data(template_key, ref, file, route, context)
+        if ref in DERIVED_FIELDS:
+            return esc(value)
+        field = resolve_type(template_key, ref, file, route, fields_by_file)
+        if ref in specials:
+            return specials[ref](value, parent)
+        for pattern, fn in specials.items():
+            if "*" in pattern and fnmatch(ref, pattern):
+                return fn(value, parent)
+        return render_field(value, field)
+
+    return PLACEHOLDER_RE.sub(repl, source)
 
 
-def apply_regions(source: str, renderers: dict, fname: str) -> str:
-    found: set[str] = set()
-
-    def repl(match: "re.Match") -> str:
-        name = match.group("name")
-        if name not in renderers:
-            sys.exit(f"{fname}: la región '{name}' no tiene renderer en build.py.")
-        found.add(name)
-        indent = match.group("indent")
-        body = renderers[name](CONTEXT)
-        inner = "\n".join(
-            (indent + line) if line.strip() else ""
-            for line in body.split("\n")
-        )
-        return (f"{indent}<!-- pages:begin {name} -->\n"
-                f"{inner}\n"
-                f"{indent}<!-- pages:end {name} -->")
-
-    result = REGION_RE.sub(repl, source)
-    missing = set(renderers) - found
-    if missing:
-        sys.exit(f"{fname}: faltan regiones en la plantilla: {sorted(missing)}")
-    return result
+def load_pages_types() -> dict[str, list]:
+    """Índice .pages.yml -> {nombre de colección: lista de campos}."""
+    path = ROOT / ".pages.yml"
+    if not path.exists():
+        sys.exit(f"Falta el registro de tipos: {path}")
+    cfg = yaml.safe_load(path.read_text(encoding="utf-8"))
+    content = (cfg or {}).get("content")
+    if not isinstance(content, list):
+        sys.exit(f"{path}: no se encuentra la lista 'content'.")
+    return {col["name"]: col.get("fields") or []
+            for col in content if col.get("name")}
 
 
 # ---------------------------------------------------------------------------
 # Contacto — content/common.yml -> huecos .neuro-* del index.html generado.
 # Fuente única: el contacto se escribe aquí, en el HTML; script.js no lo
 # toca (su único trabajo con datos es rellenar los modales de servicios y
-# modalidades).
+# modalidades). Los enlaces tel:/wa.me de la firma usan la clave derivada
+# __common.contact.phone_tel__ (ver DERIVED_FIELDS).
 # ---------------------------------------------------------------------------
 def fill_contact(doc: str, contact: dict) -> str:
     """Resuelve en el HTML todos los huecos .neuro-* de la plantilla.
@@ -555,10 +419,9 @@ def fill_contact(doc: str, contact: dict) -> str:
                footer salen todos del mismo common.yml.
     """
     c = contact
-    raw_phone = re.sub(r"[\s()\-]", "", c["phone"])
     attrs = {
-        "neuro-phone-link": ("href", f"tel:{raw_phone}"),
-        "neuro-whatsapp-link": ("href", f"https://wa.me/{raw_phone.lstrip('+')}"),
+        "neuro-phone-link": ("href", f"tel:{raw_phone(c['phone'])}"),
+        "neuro-whatsapp-link": ("href", f"https://wa.me/{raw_phone(c['phone']).lstrip('+')}"),
         "neuro-mail-link": ("href", f"mailto:{c['mail']}"),
         "neuro-address-link": ("href", c["maps_url"]),
     }
@@ -600,65 +463,20 @@ def fill_contact(doc: str, contact: dict) -> str:
 
 
 # ---------------------------------------------------------------------------
-# Regiones de src/firma.html (contacto desde common.yml; texto propio de la
-# firma desde content/firma.yml). El logo y su URL son fijos en la plantilla.
-# ---------------------------------------------------------------------------
-def r_firma_identity(c: dict) -> str:
-    f = c["firma"]
-    return "\n".join([
-        f'<div style="font-size: 18px; font-weight: bold; color: #29335C;">'
-        f'{esc(f["name"])}</div>',
-        f'<div style="font-size: 16px; color: #333333;">{esc(f["license"])}</div>',
-        f'<div style="font-size: 14px; color: #29335C; font-weight: 600; '
-        f'margin-bottom: 5px;">{esc(f["role"])}</div>',
-    ])
-
-
-def r_firma_contact(c: dict) -> str:
-    f = c["firma"]
-    contact = c["common"]["contact"]
-    raw_phone = re.sub(r"[\s()\-]", "", contact["phone"])
-    address = " - ".join(contact["address_lines"])
-    a = 'style="color: #666666; text-decoration: none;"'
-    return "\n".join([
-        '<div style="font-size: 13px; color: #666666;">',
-        f'  <a href="tel:{raw_phone}" {a}>{esc(contact["phone"])}</a> |',
-        f'  <a href="{esc(f["web_url"])}" {a}>{esc(f["web_label"])}</a><br>',
-        f'  <a href="{esc(contact["maps_url"])}" {a}>{esc(address)}</a>',
-        "</div>",
-    ])
-
-
-def r_firma_legal(c: dict) -> str:
-    f = c["firma"]
-    return "\n".join([
-        '<td colspan="2" style="padding-top: 20px; font-size: 10px; '
-        'color: #999999; line-height: 1.2; text-align: justify;">',
-        f'  {esc(f["legal_aviso"])}<br><br>',
-        f'  {esc(f["legal_proteccion"])}',
-    ])
-
-
-FIRMA_REGIONS: dict[str, "callable"] = {
-    "firma-identity": r_firma_identity,
-    "firma-contact": r_firma_contact,
-    "firma-legal": r_firma_legal,
-}
-
-# ---------------------------------------------------------------------------
-# data.js — puente con script.js (solo modales: servicios, modalidades e iconos).
-# El contacto NO viaja aquí: se escribe en el index.html generado con
-# fill_contact().
+# data.js — puente con script.js (solo modales: servicios, modalidades e
+# iconos). Los servicios se indexan por su campo "id" (los onclick de la
+# plantilla pasan ese id, p. ej. openServiceModal('neuro')). El contacto NO
+# viaja aquí: se escribe en el index.html generado con fill_contact().
 # ---------------------------------------------------------------------------
 def write_data_js(c: dict) -> None:
-    services = [
-        {
+    services = {
+        item["id"]: {
             "title": item["title"],
             "icon": item.get("icon", ""),
             "html": markdown_html(item["modal_content"]),
         }
         for item in c["servicios"]["items"]
-    ]
+    }
     modalities = [
         {
             "title": item["title"],
@@ -675,44 +493,65 @@ def write_data_js(c: dict) -> None:
     (OUT / "data.js").write_text(js, encoding="utf-8")
 
 
+def modality_gallery(images: list[dict]) -> str:
+    """Genera la cuadrícula opcional de fotos dentro de un modal."""
+    figures = []
+    for image in images:
+        src = media_url(image.get("image"))
+        alt = esc(image.get("alt"))
+        if src:
+            figures.append(
+                f'<figure class="modality-gallery-item">'
+                '<i class="bi bi-camera"></i>'
+                f'<img src="{esc(src)}" alt="{alt}" loading="lazy" '
+                'onerror="this.remove()"></figure>'
+            )
+        else:
+            figures.append(
+                '<figure class="modality-gallery-item">'
+                '<i class="bi bi-camera"></i></figure>'
+            )
+    if not figures:
+        return ""
+    return ('<div class="modality-gallery">\n'
+            + "\n".join(f"    {f}" for f in figures)
+            + "\n</div>")
+
+
+def modality_modal_html(item: dict) -> str:
+    """Convierte a HTML el Markdown y añade las fotos de la modalidad."""
+    content = markdown_html(item.get("modal_content", ""))
+    gallery = modality_gallery(item.get("images") or [])
+    return f"{content}\n{gallery}" if gallery else content
+
+
 # ---------------------------------------------------------------------------
 # Build
 # ---------------------------------------------------------------------------
-CONTEXT: dict = {}
+def build_context() -> dict:
+    """Carga content/*.yml y añade los campos derivados (DERIVED_FIELDS)."""
+    context = {p.stem: load_yaml(p.stem) for p in sorted(CONTENT.glob("*.yml"))}
+    contact = context["common"]["contact"]
+    contact["phone_tel"] = f"tel:{raw_phone(contact['phone'])}"
+    return context
 
 
 def main() -> None:
-    global CONTEXT
-    CONTEXT = {
-        # Datos compartidos (contacto repetido en hero, contacto, footer y firma).
-        "common": load_yaml("common"),
-        # Una sección por fichero, con el mismo nombre que en .pages.yml.
-        "hero": load_yaml("hero"),
-        "servicios": load_yaml("servicios"),
-        "modalidades": load_yaml("modalidades"),
-        "proceso": load_yaml("proceso"),
-        "especialista": load_yaml("especialista"),
-        "blog": load_yaml("blog"),
-        "faq": load_yaml("faq"),
-        "contacto": load_yaml("contacto"),
-        "footer": load_yaml("footer"),
-        "firma": load_yaml("firma"),
-    }
+    context = build_context()
+    fields_by_file = load_pages_types()
 
     if OUT.exists():
         shutil.rmtree(OUT)
     OUT.mkdir()
 
-    index_src = (SRC / "index.html").read_text(encoding="utf-8")
-    index_doc = apply_regions(index_src, INDEX_REGIONS, "index.html")
-    index_doc = fill_contact(index_doc, CONTEXT["common"]["contact"])
-    (OUT / "index.html").write_text(index_doc, encoding="utf-8")
+    for key, path in TEMPLATES.items():
+        source = path.read_text(encoding="utf-8")
+        doc = apply_template(key, source, context, fields_by_file)
+        if key == "src/index.html":
+            doc = fill_contact(doc, context["common"]["contact"])
+        (OUT / path.name).write_text(doc, encoding="utf-8")
 
-    firma_src = (SRC / "firma.html").read_text(encoding="utf-8")
-    (OUT / "firma.html").write_text(
-        apply_regions(firma_src, FIRMA_REGIONS, "firma.html"), encoding="utf-8")
-
-    write_data_js(CONTEXT)
+    write_data_js(context)
 
     for src, name in STATIC_FILES:
         if not src.exists():
@@ -735,5 +574,5 @@ def main() -> None:
 if __name__ == "__main__":
     try:
         main()
-    except KeyError as exc:
-        sys.exit(f"Falta un campo en content/*.yml: {exc}")
+    except CampoAusenteError as exc:
+        sys.exit(str(exc))

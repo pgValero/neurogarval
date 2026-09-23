@@ -1,6 +1,6 @@
 # ============================================================
 # SECCIÓN BLOG (tarjetas) — edición en Pages CMS
-# Corresponde a las regiones "blog-header" y "blog-grid" de src/index.html.
+# Sus campos se insertan en src/index.html mediante marcadores archivo.ruta.campo.
 # El texto de cada artículo se escribe en un único campo Markdown.
 # ============================================================
 

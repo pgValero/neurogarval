@@ -1,7 +1,7 @@
 # ============================================================
 # SECCIÓN PROCESO — edición en Pages CMS
-# Corresponde a las regiones "process-header" y "process-grid" de
-# src/index.html. Los textos largos se escriben en Markdown.
+# Sus campos se insertan en src/index.html mediante marcadores archivo.ruta.campo.
+# Los textos largos se escriben en Markdown.
 # ============================================================
 
 heading: Cómo empezar la terapia

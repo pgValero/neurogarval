@@ -1,6 +1,6 @@
 # ============================================================
 # SECCIÓN HERO (cabecera) — edición en Pages CMS
-# Corresponde a las regiones "hero" y "hero-img" de src/index.html.
+# Sus campos se insertan en src/index.html mediante marcadores archivo.ruta.campo.
 # Los textos largos se escriben en Markdown; build.py los convierte a HTML.
 # Los títulos, botones y metadatos siguen siendo campos de texto simple.
 # ============================================================

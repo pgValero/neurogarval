@@ -1,7 +1,7 @@
 # ============================================================
 # SECCIÓN MODALIDADES — edición en Pages CMS
-# Corresponde a las regiones "modalities-header" y "modalities-grid" de
-# src/index.html, y al contenido de los modales en _site/data.js.
+# Sus campos se insertan en src/index.html (marcadores archivo.ruta.campo) y
+# en los modales vía _site/data.js.
 # Los textos largos se escriben en Markdown; build.py los convierte a HTML.
 # ============================================================
 
