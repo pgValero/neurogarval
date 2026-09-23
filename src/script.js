@@ -1,9 +1,9 @@
 // Modales de servicios y modalidades: el contenido lo genera build.py desde
-// content/home.yml (edición en Pages CMS) y se publica como _site/data.js,
-// que se carga antes que este archivo. Sin data.js (preview sin build) la
-// página carga, pero los modales no tienen contenido.
+// content/servicios.yml y content/modalidades.yml (edición en Pages CMS) y se
+// publica como _site/data.js, que se carga antes que este archivo. Sin data.js
+// (preview sin build) la página carga, pero los modales no tienen contenido.
 // El contacto NO se gestiona aquí: build.py lo escribe directamente en
-// index.html (huecos .neuro-*) desde content/settings.yml.
+// index.html (huecos .neuro-*) desde content/common.yml.
 const siteData = window.SITE_DATA || {};
 
 function openServiceModal(key) {

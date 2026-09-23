@@ -3,15 +3,17 @@
 
 Qué hace
 --------
-1. Lee el contenido editable de Pages CMS:  content/*.yml
+1. Lee el contenido editable de Pages CMS:  content/*.yml (un fichero por
+   sección más common.yml, footer.yml y firma.yml).
 2. Convierte a HTML los campos de texto largo escritos en Markdown.
 3. Regenera las regiones delimitadas por
       <!-- pages:begin NOMBRE -->  ...  <!-- pages:end NOMBRE -->
    en src/index.html (19) y src/firma.html (3); el resto de la plantilla
    HTML/CSS se queda intacto.
-4. Escribe el contacto de content/settings.yml directamente en el HTML
-   generado: los huecos .neuro-* (teléfono, WhatsApp, email,
-   dirección y Maps) quedan resueltos en el HTML, sin JavaScript.
+4. Escribe el contacto de content/common.yml (fuente única, repetida en
+   varios sitios) directamente en el HTML generado: los huecos .neuro-*
+   (teléfono, WhatsApp, email, dirección y Maps) quedan resueltos en el
+   HTML, sin JavaScript.
 5. Genera _site/data.js (window.SITE_DATA: servicios, modalidades e iconos),
    que script.js usa al abrir sus respectivos modales.
 6. Copia los estáticos (CSS, JS, CNAME, favicon y PDFs) y las imágenes de
@@ -207,7 +209,7 @@ def section_header(heading: str, lead: str) -> str:
 # Regiones de src/index.html
 # ---------------------------------------------------------------------------
 def r_hero(c: dict) -> str:
-    h = c["home"]["hero"]
+    h = c["hero"]
     accent = str(h.get("title_accent") or "").strip()
     title = esc(h["title"]) + (f" <i>{esc(accent)}</i>" if accent else "")
     parts = [p.strip() for p in str(h["modalities"]).split("·")]
@@ -232,12 +234,12 @@ def r_hero(c: dict) -> str:
 
 
 def r_hero_img(c: dict) -> str:
-    h = c["home"]["hero"]
+    h = c["hero"]
     return f'<img src="{media_url(h.get("image"))}" alt="{esc(h.get("image_alt"))}">'
 
 
 def r_services_grid(c: dict) -> str:
-    sv = c["home"]["services"]
+    sv = c["servicios"]
     chunks = []
     for i, item in enumerate(sv["items"]):
         onkeydown = (
@@ -261,7 +263,7 @@ def r_services_grid(c: dict) -> str:
 
 
 def r_services_areas(c: dict) -> str:
-    sv = c["home"]["services"]
+    sv = c["servicios"]
     # La introducción y las áreas viven en un único campo Markdown. El
     # contenedor conserva el estilo de lista con check del bloque original.
     areas = sv.get("areas", "")
@@ -283,7 +285,7 @@ def r_services_areas(c: dict) -> str:
 
 
 def r_modalities_grid(c: dict) -> str:
-    modalities = c["home"]["modalities"]
+    modalities = c["modalidades"]
     chunks = []
     for i, item in enumerate(modalities["items"]):
         onkeydown = (
@@ -342,7 +344,7 @@ def modality_modal_html(item: dict) -> str:
 
 def r_process_grid(c: dict) -> str:
     chunks = []
-    for n, step in enumerate(c["home"]["process"]["steps"], start=1):
+    for n, step in enumerate(c["proceso"]["steps"], start=1):
         chunks.append("\n".join([
             '<div class="process-step">',
             '    <div class="process-num">',
@@ -359,7 +361,7 @@ def r_process_grid(c: dict) -> str:
 
 
 def r_about(c: dict) -> str:
-    a = c["home"]["about"]
+    a = c["especialista"]
     # Todo el texto de la especialista se edita en un único campo Markdown.
     content = markdown_html(a.get("content", a.get("paragraphs", "")))
     return "\n".join([
@@ -381,7 +383,7 @@ def r_about(c: dict) -> str:
 
 
 def r_blog_grid(c: dict) -> str:
-    b = c["home"]["blog"]
+    b = c["blog"]
     cards = []
     for post in b["posts"]:
         img = media_url(post.get("image"))
@@ -412,7 +414,7 @@ def r_blog_grid(c: dict) -> str:
 
 def r_faq_list(c: dict) -> str:
     items = []
-    for item in c["home"]["faq"]["items"]:
+    for item in c["faq"]["items"]:
         items.append("\n".join([
             '<details class="faq-item">',
             f'    <summary>{esc(item["question"])}</summary>',
@@ -425,7 +427,7 @@ def r_faq_list(c: dict) -> str:
 
 
 def r_contact_header(c: dict) -> str:
-    k = c["home"]["contact"]
+    k = c["contacto"]
     return "\n".join([
         f'<h2>{esc(k["heading"])}</h2>',
         '<div class="divider"></div>',
@@ -437,7 +439,7 @@ def r_contact_header(c: dict) -> str:
 
 
 def r_contact_instagram(c: dict) -> str:
-    ig = c["settings"]["contact"]["instagram"]
+    ig = c["contacto"]["instagram"]
     return "\n".join([
         f'<a href="{esc(ig["url"])}" target="_blank" class="contact-item">',
         '    <div class="contact-icon"><i class="bi bi-instagram"></i></div>',
@@ -448,7 +450,7 @@ def r_contact_instagram(c: dict) -> str:
 
 
 def r_contact_map(c: dict) -> str:
-    src = esc(c["home"]["contact"]["map_embed"])
+    src = esc(c["contacto"]["map_embed"])
     return "\n".join([
         "<iframe",
         f'    src="{src}"',
@@ -463,7 +465,7 @@ def r_contact_map(c: dict) -> str:
 
 
 def r_footer_info(c: dict) -> str:
-    f = c["settings"]["footer"]
+    f = c["footer"]
     lines = "<br>".join(esc(line) for line in f["lines"])
     return "\n".join([
         f"<p>{lines}</p>",
@@ -473,28 +475,28 @@ def r_footer_info(c: dict) -> str:
 
 
 def r_footer_copyright(c: dict) -> str:
-    return f'&copy; {esc(c["settings"]["footer"]["copyright"])}'
+    return f'&copy; {esc(c["footer"]["copyright"])}'
 
 
 INDEX_REGIONS: dict[str, "callable"] = {
     "hero": r_hero,
     "hero-img": r_hero_img,
     "services-header": lambda c: section_header(
-        c["home"]["services"]["heading"], c["home"]["services"]["lead"]),
+        c["servicios"]["heading"], c["servicios"]["lead"]),
     "services-grid": r_services_grid,
     "services-areas": r_services_areas,
     "modalities-header": lambda c: section_header(
-        c["home"]["modalities"]["heading"], c["home"]["modalities"]["lead"]),
+        c["modalidades"]["heading"], c["modalidades"]["lead"]),
     "modalities-grid": r_modalities_grid,
     "process-header": lambda c: section_header(
-        c["home"]["process"]["heading"], c["home"]["process"]["lead"]),
+        c["proceso"]["heading"], c["proceso"]["lead"]),
     "process-grid": r_process_grid,
     "about": r_about,
     "blog-header": lambda c: section_header(
-        c["home"]["blog"]["heading"], c["home"]["blog"]["lead"]),
+        c["blog"]["heading"], c["blog"]["lead"]),
     "blog-grid": r_blog_grid,
     "faq-header": lambda c: section_header(
-        c["home"]["faq"]["heading"], c["home"]["faq"]["lead"]),
+        c["faq"]["heading"], c["faq"]["lead"]),
     "faq-list": r_faq_list,
     "contact-header": r_contact_header,
     "contact-instagram": r_contact_instagram,
@@ -540,19 +542,19 @@ def apply_regions(source: str, renderers: dict, fname: str) -> str:
 
 
 # ---------------------------------------------------------------------------
-# Contacto — content/settings.yml -> huecos .neuro-* del index.html generado.
+# Contacto — content/common.yml -> huecos .neuro-* del index.html generado.
 # Fuente única: el contacto se escribe aquí, en el HTML; script.js no lo
 # toca (su único trabajo con datos es rellenar los modales de servicios y
 # modalidades).
 # ---------------------------------------------------------------------------
-def fill_contact(doc: str, settings: dict) -> str:
+def fill_contact(doc: str, contact: dict) -> str:
     """Resuelve en el HTML todos los huecos .neuro-* de la plantilla.
 
     Atributos: href de teléfono/WhatsApp/email/Maps.
     Texto:     teléfono, email y dirección. Hero, sección de contacto y
-               footer salen todos del mismo settings.yml.
+               footer salen todos del mismo common.yml.
     """
-    c = settings["contact"]
+    c = contact
     raw_phone = re.sub(r"[\s()\-]", "", c["phone"])
     attrs = {
         "neuro-phone-link": ("href", f"tel:{raw_phone}"),
@@ -598,7 +600,7 @@ def fill_contact(doc: str, settings: dict) -> str:
 
 
 # ---------------------------------------------------------------------------
-# Regiones de src/firma.html (contacto desde settings.yml; texto propio de la
+# Regiones de src/firma.html (contacto desde common.yml; texto propio de la
 # firma desde content/firma.yml). El logo y su URL son fijos en la plantilla.
 # ---------------------------------------------------------------------------
 def r_firma_identity(c: dict) -> str:
@@ -614,7 +616,7 @@ def r_firma_identity(c: dict) -> str:
 
 def r_firma_contact(c: dict) -> str:
     f = c["firma"]
-    contact = c["settings"]["contact"]
+    contact = c["common"]["contact"]
     raw_phone = re.sub(r"[\s()\-]", "", contact["phone"])
     address = " - ".join(contact["address_lines"])
     a = 'style="color: #666666; text-decoration: none;"'
@@ -655,7 +657,7 @@ def write_data_js(c: dict) -> None:
             "icon": item.get("icon", ""),
             "html": markdown_html(item["modal_content"]),
         }
-        for item in c["home"]["services"]["items"]
+        for item in c["servicios"]["items"]
     ]
     modalities = [
         {
@@ -663,7 +665,7 @@ def write_data_js(c: dict) -> None:
             "icon": item.get("icon", ""),
             "html": modality_modal_html(item),
         }
-        for item in c["home"]["modalities"]["items"]
+        for item in c["modalidades"]["items"]
     ]
     payload = {"services": services, "modalities": modalities, "icons": ICONS}
     js = ("// Generado por build.py desde content/*.yml — NO editar a mano.\n"
@@ -682,8 +684,18 @@ CONTEXT: dict = {}
 def main() -> None:
     global CONTEXT
     CONTEXT = {
-        "settings": load_yaml("settings"),
-        "home": load_yaml("home"),
+        # Datos compartidos (contacto repetido en hero, contacto, footer y firma).
+        "common": load_yaml("common"),
+        # Una sección por fichero, con el mismo nombre que en .pages.yml.
+        "hero": load_yaml("hero"),
+        "servicios": load_yaml("servicios"),
+        "modalidades": load_yaml("modalidades"),
+        "proceso": load_yaml("proceso"),
+        "especialista": load_yaml("especialista"),
+        "blog": load_yaml("blog"),
+        "faq": load_yaml("faq"),
+        "contacto": load_yaml("contacto"),
+        "footer": load_yaml("footer"),
         "firma": load_yaml("firma"),
     }
 
@@ -693,7 +705,7 @@ def main() -> None:
 
     index_src = (SRC / "index.html").read_text(encoding="utf-8")
     index_doc = apply_regions(index_src, INDEX_REGIONS, "index.html")
-    index_doc = fill_contact(index_doc, CONTEXT["settings"])
+    index_doc = fill_contact(index_doc, CONTEXT["common"]["contact"])
     (OUT / "index.html").write_text(index_doc, encoding="utf-8")
 
     firma_src = (SRC / "firma.html").read_text(encoding="utf-8")

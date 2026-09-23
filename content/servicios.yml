@@ -1,0 +1,68 @@
+# ============================================================
+# SECCIÓN SERVICIOS — edición en Pages CMS
+# Corresponde a las regiones "services-header", "services-grid" y
+# "services-areas" de src/index.html.
+# Los textos largos se escriben en Markdown; build.py los convierte a HTML.
+# ============================================================
+
+heading: ¿En qué puedo ayudarte?
+lead: |-
+  Trabajo en el ámbito de la neuropsicología y la psicología sanitaria, teniendo en cuenta las necesidades y el momento vital de cada persona.
+# Texto del enlace de cada tarjeta.
+more_label: Más información
+# Introducción y lista de áreas en un único campo Markdown.
+areas: |-
+  Principales áreas que se trabajan en consulta:
+
+  - Dificultades de aprendizaje.
+  - Trastorno por Déficit de Atención e Hiperactividad (TDAH).
+  - Trastorno del Espectro Autista (TEA).
+  - Deterioro cognitivo.
+  - Daño Cerebral Adquirido (DCA).
+  - Dificultades emocionales y conductuales.
+# Cada servicio conserva sus datos de tarjeta y tiene un único contenido
+# Markdown para el modal.
+items:
+  - icon: brain
+    title: Neuropsicología
+    card_text: |-
+      Evaluación e intervención en dificultades cognitivas, conductuales y emocionales relacionadas con el funcionamiento cerebral.
+    modal_content: |-
+      La neuropsicología estudia la relación entre el funcionamiento del cerebro y la conducta: atención, memoria, lenguaje, funciones ejecutivas, visopercepción y velocidad de procesamiento, entre otras.
+
+      El objetivo es comprender cómo estas funciones influyen en el día a día y diseñar una intervención ajustada a cada persona.
+
+      - Entrevista inicial con la persona y/o la familia.
+      - Evaluación con pruebas estandarizadas.
+      - Devolución de resultados y orientaciones.
+      - Plan de intervención personalizado.
+
+      Dirigido a niños, adolescentes y adultos con TDAH, TEA, dificultades de aprendizaje, daño cerebral adquirido o deterioro cognitivo, entre otros.
+  - icon: heart
+    title: Psicología Sanitaria
+    card_text: |-
+      Atención a dificultades emocionales y conductuales, proporcionando un espacio profesional y seguro donde poder abordarlas.
+    modal_content: |-
+      Un espacio profesional y seguro para atender dificultades emocionales y conductuales, entendiendo el momento vital de cada persona.
+
+      Se trabaja desde un enfoque cercano y basado en la evidencia, con objetivos claros y revisables.
+
+      - Ansiedad, estrés y estado de ánimo.
+      - Autoestima y gestión emocional.
+      - Habilidades sociales y pautas para la familia.
+      - Duelo y procesos de adaptación.
+
+      Atención a niños, adolescentes y adultos, de forma individual o con la familia cuando es necesario.
+  - icon: zap
+    title: Rehabilitación
+    card_text: |-
+      Programas de intervención personalizados orientados a la rehabilitación, estimulación y mantenimiento de las funciones cognitivas.
+    modal_content: |-
+      Programas personalizados orientados a rehabilitar, estimular y mantener las funciones cognitivas, partiendo de los objetivos y la rutina de cada persona.
+
+      - Estimulación cognitiva individual.
+      - Entrenamiento en estrategias y compensación.
+      - Asesoramiento a familiares y cuidadores.
+      - Seguimiento periódico de avances.
+
+      Disponible en clínica, online o a domicilio, según las necesidades.

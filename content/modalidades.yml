@@ -1,0 +1,72 @@
+# ============================================================
+# SECCIÓN MODALIDADES — edición en Pages CMS
+# Corresponde a las regiones "modalities-header" y "modalities-grid" de
+# src/index.html, y al contenido de los modales en _site/data.js.
+# Los textos largos se escriben en Markdown; build.py los convierte a HTML.
+# ============================================================
+
+heading: Modalidades de atención
+lead: |-
+  Elegir el entorno adecuado para tus sesiones es importante: facilita el trabajo terapéutico y tu comodidad durante el proceso.
+# Texto del enlace de cada tarjeta.
+more_label: Más información
+# Cada modalidad conserva sus datos de tarjeta, su contenido Markdown y las
+# fotos opcionales del modal.
+items:
+  - icon: building
+    title: Atención en Clínica
+    text: |-
+      En consulta presencial, en un entorno profesional y tranquilo, pensado para que puedas sentirte cómodo/a durante las sesiones.
+    modal_content: |-
+      La atención en clínica se realiza de forma presencial, en un entorno profesional y tranquilo pensado para que puedas sentirte cómodo/a durante las sesiones.
+
+      Este formato dispone de un espacio adecuado para la evaluación y las sesiones, con la presencia de la profesional durante todo el proceso.
+
+      - Realizar evaluaciones neuropsicológicas con las pruebas necesarias.
+      - Trabajar las dificultades del día a día en un entorno adecuado.
+      - Compartir con la persona y, cuando corresponda, con su familia las orientaciones del plan de intervención.
+
+      El ambiente de consulta está pensado para recibirte con calma, cuidar tu privacidad y favorecer un trabajo cercano y personalizado.
+    images:
+      # Sube las fotos de la consulta desde el CMS (media/).
+      # Mientras "image" esté vacío se muestra el icono de cámara de reserva.
+      - image: ""
+        alt: Consulta NeuroGarval
+      - image: ""
+        alt: Sala de terapia NeuroGarval
+      - image: ""
+        alt: Zona de evaluación NeuroGarval
+      - image: ""
+        alt: Despacho NeuroGarval
+      - image: ""
+        alt: Sala de espera NeuroGarval
+      - image: ""
+        alt: Material de consulta NeuroGarval
+  - icon: laptop
+    title: Terapia Online
+    text: |-
+      Sesiones por videollamada, facilitando el acceso a la intervención sin necesidad de desplazamiento.
+    modal_content: |-
+      La terapia online se realiza mediante videollamada, lo que permite mantener el proceso terapéutico sin tener que desplazarse a la consulta.
+
+      Antes de empezar se comprobará la disponibilidad de los medios necesarios y se organizará un espacio adecuado para favorecer la confidencialidad y la concentración.
+
+      - Evita desplazamientos y facilita el acceso para quien tenga horarios limitados o dificultad para desplazarse.
+      - Ofrece mayor flexibilidad para organizar las sesiones.
+      - Permite mantener la continuidad de la intervención desde un lugar cómodo.
+
+      El acompañamiento y los objetivos del plan de intervención se adaptan a esta modalidad, manteniendo un contacto directo y personalizado.
+  - icon: house
+    title: A Domicilio
+    text: |-
+      Intervención en tu entorno cotidiano, ideal para pacientes con movilidad reducida o dificultades específicas.
+    modal_content: |-
+      La atención a domicilio realiza la intervención en el lugar donde vives, siempre que esta modalidad sea adecuada para tu situación y exista un espacio suficiente para trabajar con comodidad.
+
+      Este formato permite conocer mejor el contexto cotidiano y las rutinas de la persona, para adaptar la intervención a sus necesidades reales.
+
+      - Evita desplazamientos y permite realizar la sesión en casa.
+      - Permite conocer mejor las rutinas y las estrategias que necesitarás en tu día a día.
+      - Facilita la intervención cuando existen dificultades de movilidad o para desplazarse.
+
+      La idoneidad de esta modalidad y las condiciones del espacio se valoran previamente para acordar el plan de trabajo más adecuado.

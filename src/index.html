@@ -54,12 +54,12 @@
     <!-- PLANTILLA DEL SITIO. El dominio, el logo, el SEO, los datos
          estructurados y los menús son configuración fija de esta plantilla.
          Las regiones pages:begin/pages:end se regeneran desde content/*.yml
-         (Pages CMS) al ejecutar build.py. Los huecos .neuro-* (teléfono,
-         WhatsApp, email, dirección y Maps) se rellenan con
-         content/settings.yml; no hay JS de por medio. No editar los textos
+         (Pages CMS, un fichero por sección) al ejecutar build.py. Los huecos
+         .neuro-* (teléfono, WhatsApp, email, dirección y Maps) se rellenan
+         con content/common.yml; no hay JS de por medio. No editar los textos
          dentro de las regiones a mano: editar en Pages CMS. Los textos que
          regenera build.py se marcan aquí con __archivo.campo__ (p. ej.
-         __home.hero.badge__) para distinguirlos de la parte fija. -->
+         __hero.badge__) para distinguirlos de la parte fija. -->
 
     <div class="mobile-overlay" id="mobileMenu">
         <button class="close-btn" onclick="toggleMenu()">&times;</button>
@@ -105,32 +105,32 @@
             <div class="container hero-grid">
                 <div class="hero-text">
                     <!-- pages:begin hero -->
-                    <span class="badge">__home.hero.badge__</span>
-                    <h1>__home.hero.title__ <i>__home.hero.title_accent__</i></h1>
-                    <span class="modalities-text">__home.hero.modalities__</span>
-                    <p>__home.hero.paragraph__</p>
+                    <span class="badge">__hero.badge__</span>
+                    <h1>__hero.title__ <i>__hero.title_accent__</i></h1>
+                    <span class="modalities-text">__hero.modalities__</span>
+                    <p>__hero.paragraph__</p>
 
                     <div id="hero-promo">
                         <i class="bi bi-info-circle-fill"></i>
-                        <span>__home.hero.promo__</span>
+                        <span>__hero.promo__</span>
                     </div>
                     <!-- pages:end hero -->
 
                     <div class="btn-group">
-                        <a href="__settings.contact.phone__" target="_blank" class="btn btn-whatsapp neuro-whatsapp-link">
+                        <a href="__common.contact.phone__" target="_blank" class="btn btn-whatsapp neuro-whatsapp-link">
                             <i class="bi bi-whatsapp" style="margin-right: 10px;"></i>
                             WhatsApp
                         </a>
-                        <a href="__settings.contact.phone__" class="btn neuro-phone-link">
+                        <a href="__common.contact.phone__" class="btn neuro-phone-link">
                             <i class="bi bi-telephone" style="margin-right: 10px;"></i>
-                            <!-- __settings.contact.phone__ -->
+                            <!-- __common.contact.phone__ -->
                             <span class="neuro-phone"></span>
                         </a>
                     </div>
                 </div>
                 <div id="hero-img-wrapper">
                     <!-- pages:begin hero-img -->
-                    <img src="__home.hero.image__" alt="__home.hero.image_alt__">
+                    <img src="__hero.image__" alt="__hero.image_alt__">
                     <!-- pages:end hero-img -->
                 </div>
             </div>
@@ -141,31 +141,31 @@
             <div class="container">
                 <div class="section-header">
                     <!-- pages:begin services-header -->
-                    <h2>__home.services.heading__</h2>
+                    <h2>__servicios.heading__</h2>
                     <div class="divider"></div>
-                    <p>__home.services.lead__</p>
+                    <p>__servicios.lead__</p>
                     <!-- pages:end services-header -->
                 </div>
 
                 <div class="services-grid">
                     <!-- pages:begin services-grid -->
                     <div class="service-card" role="button" tabindex="0" aria-haspopup="dialog" data-service="neuro" onclick="openServiceModal('neuro')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openServiceModal('neuro')}">
-                        <div class="service-icon">__home.services.items.0.icon__</div>
-                        <h3>__home.services.items.0.title__</h3>
-                        <p>__home.services.items.0.card_text__</p>
-                        <span class="service-more">__home.services.more_label__ <i class="bi bi-arrow-right"></i></span>
+                        <div class="service-icon">__servicios.items.0.icon__</div>
+                        <h3>__servicios.items.0.title__</h3>
+                        <p>__servicios.items.0.card_text__</p>
+                        <span class="service-more">__servicios.more_label__ <i class="bi bi-arrow-right"></i></span>
                     </div>
                     <div class="service-card" role="button" tabindex="0" aria-haspopup="dialog" data-service="psico" onclick="openServiceModal('psico')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openServiceModal('psico')}">
-                        <div class="service-icon">__home.services.items.1.icon__</div>
-                        <h3>__home.services.items.1.title__</h3>
-                        <p>__home.services.items.1.card_text__</p>
-                        <span class="service-more">__home.services.more_label__ <i class="bi bi-arrow-right"></i></span>
+                        <div class="service-icon">__servicios.items.1.icon__</div>
+                        <h3>__servicios.items.1.title__</h3>
+                        <p>__servicios.items.1.card_text__</p>
+                        <span class="service-more">__servicios.more_label__ <i class="bi bi-arrow-right"></i></span>
                     </div>
                     <div class="service-card" role="button" tabindex="0" aria-haspopup="dialog" data-service="rehab" onclick="openServiceModal('rehab')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openServiceModal('rehab')}">
-                        <div class="service-icon">__home.services.items.2.icon__</div>
-                        <h3>__home.services.items.2.title__</h3>
-                        <p>__home.services.items.2.card_text__</p>
-                        <span class="service-more">__home.services.more_label__ <i class="bi bi-arrow-right"></i></span>
+                        <div class="service-icon">__servicios.items.2.icon__</div>
+                        <h3>__servicios.items.2.title__</h3>
+                        <p>__servicios.items.2.card_text__</p>
+                        <span class="service-more">__servicios.more_label__ <i class="bi bi-arrow-right"></i></span>
                     </div>
                     <!-- pages:end services-grid -->
                 </div>
@@ -173,7 +173,7 @@
                     <div class="divider"></div>
                     <!-- pages:begin services-areas -->
                     <div class="check-list markdown-content">
-                        __home.services.areas__
+                        __servicios.areas__
                     </div>
                     <!-- pages:end services-areas -->
                 </div>
@@ -185,36 +185,36 @@
             <div class="container">
                 <div class="section-header">
                     <!-- pages:begin modalities-header -->
-                    <h2>__home.modalities.heading__</h2>
+                    <h2>__modalidades.heading__</h2>
                     <div class="divider"></div>
-                    <p>__home.modalities.lead__</p>
+                    <p>__modalidades.lead__</p>
                     <!-- pages:end modalities-header -->
                 </div>
 
                 <div class="modalities-grid">
                     <!-- pages:begin modalities-grid -->
                     <div class="modality-item" role="button" tabindex="0" aria-haspopup="dialog" data-modality="0" onclick="openModalityModal(0)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openModalityModal(0)}">
-                        <div class="modality-icon">__home.modalities.items.0.icon__</div>
+                        <div class="modality-icon">__modalidades.items.0.icon__</div>
                         <div class="modality-content">
-                            <h4>__home.modalities.items.0.title__</h4>
-                            <p>__home.modalities.items.0.text__</p>
-                            <span class="service-more">__home.modalities.more_label__ <i class="bi bi-arrow-right"></i></span>
+                            <h4>__modalidades.items.0.title__</h4>
+                            <p>__modalidades.items.0.text__</p>
+                            <span class="service-more">__modalidades.more_label__ <i class="bi bi-arrow-right"></i></span>
                         </div>
                     </div>
                     <div class="modality-item" role="button" tabindex="0" aria-haspopup="dialog" data-modality="1" onclick="openModalityModal(1)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openModalityModal(1)}">
-                        <div class="modality-icon">__home.modalities.items.1.icon__</div>
+                        <div class="modality-icon">__modalidades.items.1.icon__</div>
                         <div class="modality-content">
-                            <h4>__home.modalities.items.1.title__</h4>
-                            <p>__home.modalities.items.1.text__</p>
-                            <span class="service-more">__home.modalities.more_label__ <i class="bi bi-arrow-right"></i></span>
+                            <h4>__modalidades.items.1.title__</h4>
+                            <p>__modalidades.items.1.text__</p>
+                            <span class="service-more">__modalidades.more_label__ <i class="bi bi-arrow-right"></i></span>
                         </div>
                     </div>
                     <div class="modality-item" role="button" tabindex="0" aria-haspopup="dialog" data-modality="2" onclick="openModalityModal(2)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openModalityModal(2)}">
-                        <div class="modality-icon">__home.modalities.items.2.icon__</div>
+                        <div class="modality-icon">__modalidades.items.2.icon__</div>
                         <div class="modality-content">
-                            <h4>__home.modalities.items.2.title__</h4>
-                            <p>__home.modalities.items.2.text__</p>
-                            <span class="service-more">__home.modalities.more_label__ <i class="bi bi-arrow-right"></i></span>
+                            <h4>__modalidades.items.2.title__</h4>
+                            <p>__modalidades.items.2.text__</p>
+                            <span class="service-more">__modalidades.more_label__ <i class="bi bi-arrow-right"></i></span>
                         </div>
                     </div>
                     <!-- pages:end modalities-grid -->
@@ -227,9 +227,9 @@
             <div class="container">
                 <div class="section-header">
                     <!-- pages:begin process-header -->
-                    <h2>__home.process.heading__</h2>
+                    <h2>__proceso.heading__</h2>
                     <div class="divider"></div>
-                    <p>__home.process.lead__</p>
+                    <p>__proceso.lead__</p>
                     <!-- pages:end process-header -->
                 </div>
 
@@ -237,43 +237,43 @@
                     <!-- pages:begin process-grid -->
                     <div class="process-step">
                         <div class="process-num">
-                            <span class="process-icon">__home.process.steps.0.icon__</span>
+                            <span class="process-icon">__proceso.steps.0.icon__</span>
                             <span class="process-index">1</span>
                         </div>
-                        <h4>__home.process.steps.0.title__</h4>
-                        <p>__home.process.steps.0.text__</p>
+                        <h4>__proceso.steps.0.title__</h4>
+                        <p>__proceso.steps.0.text__</p>
                     </div>
                     <div class="process-step">
                         <div class="process-num">
-                            <span class="process-icon">__home.process.steps.1.icon__</span>
+                            <span class="process-icon">__proceso.steps.1.icon__</span>
                             <span class="process-index">2</span>
                         </div>
-                        <h4>__home.process.steps.1.title__</h4>
-                        <p>__home.process.steps.1.text__</p>
+                        <h4>__proceso.steps.1.title__</h4>
+                        <p>__proceso.steps.1.text__</p>
                     </div>
                     <div class="process-step">
                         <div class="process-num">
-                            <span class="process-icon">__home.process.steps.2.icon__</span>
+                            <span class="process-icon">__proceso.steps.2.icon__</span>
                             <span class="process-index">3</span>
                         </div>
-                        <h4>__home.process.steps.2.title__</h4>
-                        <p>__home.process.steps.2.text__</p>
+                        <h4>__proceso.steps.2.title__</h4>
+                        <p>__proceso.steps.2.text__</p>
                     </div>
                     <div class="process-step">
                         <div class="process-num">
-                            <span class="process-icon">__home.process.steps.3.icon__</span>
+                            <span class="process-icon">__proceso.steps.3.icon__</span>
                             <span class="process-index">4</span>
                         </div>
-                        <h4>__home.process.steps.3.title__</h4>
-                        <p>__home.process.steps.3.text__</p>
+                        <h4>__proceso.steps.3.title__</h4>
+                        <p>__proceso.steps.3.text__</p>
                     </div>
                     <div class="process-step">
                         <div class="process-num">
-                            <span class="process-icon">__home.process.steps.4.icon__</span>
+                            <span class="process-icon">__proceso.steps.4.icon__</span>
                             <span class="process-index">5</span>
                         </div>
-                        <h4>__home.process.steps.4.title__</h4>
-                        <p>__home.process.steps.4.text__</p>
+                        <h4>__proceso.steps.4.title__</h4>
+                        <p>__proceso.steps.4.text__</p>
                     </div>
                     <!-- pages:end process-grid -->
                 </div>
@@ -285,17 +285,17 @@
             <div class="container about-grid">
                 <!-- pages:begin about -->
                 <div class="about-image">
-                    <img src="__home.about.image__" alt="__home.about.image_alt__">
+                    <img src="__especialista.image__" alt="__especialista.image_alt__">
                     <div class="col-card">
-                        <span class="name">__home.about.name__</span>
-                        <span class="label">__home.about.license__</span>
+                        <span class="name">__especialista.name__</span>
+                        <span class="label">__especialista.license__</span>
                     </div>
                 </div>
                 <div class="about-content">
-                    <h2>__home.about.heading__</h2>
+                    <h2>__especialista.heading__</h2>
                     <div class="divider"></div>
 
-                    <p>__home.about.content__</p>
+                    <p>__especialista.content__</p>
                 </div>
                 <!-- pages:end about -->
             </div>
@@ -306,39 +306,39 @@
             <div class="container">
                 <div class="section-header">
                     <!-- pages:begin blog-header -->
-                    <h2>__home.blog.heading__</h2>
+                    <h2>__blog.heading__</h2>
                     <div class="divider"></div>
-                    <p>__home.blog.lead__</p>
+                    <p>__blog.lead__</p>
                     <!-- pages:end blog-header -->
                 </div>
 
                 <div class="blog-grid">
                     <!-- pages:begin blog-grid -->
                     <article class="blog-card">
-                        <div class="blog-thumb">__home.blog.posts.0.image__</div>
+                        <div class="blog-thumb">__blog.posts.0.image__</div>
                         <div class="blog-content">
-                            <span class="blog-date">__home.blog.posts.0.date__</span>
-                            <h4>__home.blog.posts.0.title__</h4>
-                            <p>__home.blog.posts.0.excerpt__</p>
-                            <a href="__home.blog.posts.0.url__" class="read-more">__home.blog.read_more__ <i class="bi bi-arrow-right"></i></a>
+                            <span class="blog-date">__blog.posts.0.date__</span>
+                            <h4>__blog.posts.0.title__</h4>
+                            <p>__blog.posts.0.excerpt__</p>
+                            <a href="__blog.posts.0.url__" class="read-more">__blog.read_more__ <i class="bi bi-arrow-right"></i></a>
                         </div>
                     </article>
                     <article class="blog-card">
-                        <div class="blog-thumb">__home.blog.posts.1.image__</div>
+                        <div class="blog-thumb">__blog.posts.1.image__</div>
                         <div class="blog-content">
-                            <span class="blog-date">__home.blog.posts.1.date__</span>
-                            <h4>__home.blog.posts.1.title__</h4>
-                            <p>__home.blog.posts.1.excerpt__</p>
-                            <a href="__home.blog.posts.1.url__" class="read-more">__home.blog.read_more__ <i class="bi bi-arrow-right"></i></a>
+                            <span class="blog-date">__blog.posts.1.date__</span>
+                            <h4>__blog.posts.1.title__</h4>
+                            <p>__blog.posts.1.excerpt__</p>
+                            <a href="__blog.posts.1.url__" class="read-more">__blog.read_more__ <i class="bi bi-arrow-right"></i></a>
                         </div>
                     </article>
                     <article class="blog-card">
-                        <div class="blog-thumb">__home.blog.posts.2.image__</div>
+                        <div class="blog-thumb">__blog.posts.2.image__</div>
                         <div class="blog-content">
-                            <span class="blog-date">__home.blog.posts.2.date__</span>
-                            <h4>__home.blog.posts.2.title__</h4>
-                            <p>__home.blog.posts.2.excerpt__</p>
-                            <a href="__home.blog.posts.2.url__" class="read-more">__home.blog.read_more__ <i class="bi bi-arrow-right"></i></a>
+                            <span class="blog-date">__blog.posts.2.date__</span>
+                            <h4>__blog.posts.2.title__</h4>
+                            <p>__blog.posts.2.excerpt__</p>
+                            <a href="__blog.posts.2.url__" class="read-more">__blog.read_more__ <i class="bi bi-arrow-right"></i></a>
                         </div>
                     </article>
                     <!-- pages:end blog-grid -->
@@ -351,41 +351,41 @@
             <div class="container">
                 <div class="section-header">
                     <!-- pages:begin faq-header -->
-                    <h2>__home.faq.heading__</h2>
+                    <h2>__faq.heading__</h2>
                     <div class="divider"></div>
-                    <p>__home.faq.lead__</p>
+                    <p>__faq.lead__</p>
                     <!-- pages:end faq-header -->
                 </div>
 
                 <div class="faq-list">
                     <!-- pages:begin faq-list -->
                     <details class="faq-item">
-                        <summary>__home.faq.items.0.question__</summary>
-                        <p>__home.faq.items.0.answer__</p>
+                        <summary>__faq.items.0.question__</summary>
+                        <p>__faq.items.0.answer__</p>
                     </details>
                     <details class="faq-item">
-                        <summary>__home.faq.items.1.question__</summary>
-                        <p>__home.faq.items.1.answer__</p>
+                        <summary>__faq.items.1.question__</summary>
+                        <p>__faq.items.1.answer__</p>
                     </details>
                     <details class="faq-item">
-                        <summary>__home.faq.items.2.question__</summary>
-                        <p>__home.faq.items.2.answer__</p>
+                        <summary>__faq.items.2.question__</summary>
+                        <p>__faq.items.2.answer__</p>
                     </details>
                     <details class="faq-item">
-                        <summary>__home.faq.items.3.question__</summary>
-                        <p>__home.faq.items.3.answer__</p>
+                        <summary>__faq.items.3.question__</summary>
+                        <p>__faq.items.3.answer__</p>
                     </details>
                     <details class="faq-item">
-                        <summary>__home.faq.items.4.question__</summary>
-                        <p>__home.faq.items.4.answer__</p>
+                        <summary>__faq.items.4.question__</summary>
+                        <p>__faq.items.4.answer__</p>
                     </details>
                     <details class="faq-item">
-                        <summary>__home.faq.items.5.question__</summary>
-                        <p>__home.faq.items.5.answer__</p>
+                        <summary>__faq.items.5.question__</summary>
+                        <p>__faq.items.5.answer__</p>
                     </details>
                     <details class="faq-item">
-                        <summary>__home.faq.items.6.question__</summary>
-                        <p>__home.faq.items.6.answer__</p>
+                        <summary>__faq.items.6.question__</summary>
+                        <p>__faq.items.6.answer__</p>
                     </details>
                     <!-- pages:end faq-list -->
                 </div>
@@ -397,45 +397,45 @@
             <div class="container">
                 <div class="section-header">
                     <!-- pages:begin contact-header -->
-                    <h2>__home.contact.heading__</h2>
+                    <h2>__contacto.heading__</h2>
                     <div class="divider"></div>
-                    <strong>__home.contact.highlight__</strong>
-                    <p>__home.contact.lead__</p>
+                    <strong>__contacto.highlight__</strong>
+                    <p>__contacto.lead__</p>
                     <!-- pages:end contact-header -->
                 </div>
 
                 <div class="contact-grid">
-                    <a href="__settings.contact.phone__" target="_blank" class="contact-item neuro-phone-link">
+                    <a href="__common.contact.phone__" target="_blank" class="contact-item neuro-phone-link">
                         <div class="contact-icon"><i class="bi bi-telephone"></i></div>
                         <h4>Teléfono</h4>
-                        <!-- __settings.contact.phone__ -->
+                        <!-- __common.contact.phone__ -->
                         <span class="neuro-phone"></span>
                     </a>
-                    <a href="__settings.contact.phone__" target="_blank" class="contact-item neuro-whatsapp-link">
+                    <a href="__common.contact.phone__" target="_blank" class="contact-item neuro-whatsapp-link">
                         <div class="contact-icon"><i class="bi bi-whatsapp"></i></div>
                         <h4>WhatsApp</h4>
-                        <!-- __settings.contact.phone__ -->
+                        <!-- __common.contact.phone__ -->
                         <span class="neuro-phone"></span>
                     </a>
                     <!-- pages:begin contact-instagram -->
-                    <a href="__settings.contact.instagram.url__" target="_blank" class="contact-item">
+                    <a href="__contacto.instagram.url__" target="_blank" class="contact-item">
                         <div class="contact-icon"><i class="bi bi-instagram"></i></div>
                         <h4>Instagram</h4>
-                        <span>__settings.contact.instagram.handle__</span>
+                        <span>__contacto.instagram.handle__</span>
                     </a>
                     <!-- pages:end contact-instagram -->
                 </div>
                 <div class="contact-grid">
-                    <a href="__settings.contact.mail__" target="_blank" class="contact-item neuro-mail-link">
+                    <a href="__common.contact.mail__" target="_blank" class="contact-item neuro-mail-link">
                         <div class="contact-icon"><i class="bi bi-envelope"></i></div>
                         <h4>Email</h4>
-                        <!-- __settings.contact.mail__ -->
+                        <!-- __common.contact.mail__ -->
                         <span class="neuro-mail"></span>
                     </a>
-                    <a href="__settings.contact.maps_url__" target="_blank" class="contact-item neuro-address-link">
+                    <a href="__common.contact.maps_url__" target="_blank" class="contact-item neuro-address-link">
                         <div class="contact-icon"><i class="bi bi-geo-alt"></i></div>
                         <h4>Dirección</h4>
-                        <!-- __settings.contact.address_lines__ -->
+                        <!-- __common.contact.address_lines__ -->
                         <span class="neuro-address"></span>
                     </a>
                 </div>
@@ -444,7 +444,7 @@
                     <div class="map-container">
                         <!-- pages:begin contact-map -->
                         <iframe
-                            src="__home.contact.map_embed__"
+                            src="__contacto.map_embed__"
                             width="600"
                             height="450"
                             style="border:0;"
@@ -465,23 +465,23 @@
                 <div class="footer-info">
                     <img src="media/logo.svg" alt="NeuroGarval" class="footer-logo">
                     <!-- pages:begin footer-info -->
-                    <p>__settings.footer.lines__</p>
+                    <p>__footer.lines__</p>
                     <br>
-                    <a href="__settings.footer.legal_file__">__settings.footer.legal_label__</a>
+                    <a href="__footer.legal_file__">__footer.legal_label__</a>
                     <!-- pages:end footer-info -->
                 </div>
                 <div class="footer-links">
-                    <!-- __settings.contact.address_lines__ -->
-                    <a href="__settings.contact.maps_url__" class="neuro-address-link neuro-address"></a>
-                    <!-- __settings.contact.phone__ -->
-                    <a href="__settings.contact.phone__" class="neuro-phone-link neuro-phone"></a>
-                    <!-- __settings.contact.mail__ -->
-                    <a href="__settings.contact.mail__" class="neuro-mail-link neuro-mail"></a>
+                    <!-- __common.contact.address_lines__ -->
+                    <a href="__common.contact.maps_url__" class="neuro-address-link neuro-address"></a>
+                    <!-- __common.contact.phone__ -->
+                    <a href="__common.contact.phone__" class="neuro-phone-link neuro-phone"></a>
+                    <!-- __common.contact.mail__ -->
+                    <a href="__common.contact.mail__" class="neuro-mail-link neuro-mail"></a>
                 </div>
             </div>
             <div class="copyright">
                 <!-- pages:begin footer-copyright -->
-                &copy; __settings.footer.copyright__
+                &copy; __footer.copyright__
                 <!-- pages:end footer-copyright -->
             </div>
         </div>

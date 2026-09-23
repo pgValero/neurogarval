@@ -1,0 +1,31 @@
+# ============================================================
+# SECCIÓN PREGUNTAS FRECUENTES (FAQ) — edición en Pages CMS
+# Corresponde a las regiones "faq-header" y "faq-list" de src/index.html.
+# Los textos largos se escriben en Markdown.
+# ============================================================
+
+heading: Preguntas frecuentes
+lead: |-
+  Si tu duda no aparece aquí, puedo resolverla personalmente en la primera consulta.
+items:
+  - question: "¿La primera consulta es gratuita?"
+    answer: |-
+      Sí. La primera consulta es informativa y gratuita, para resolver dudas y valorar si puedo ayudarte.
+  - question: "¿Cuánto dura una sesión?"
+    answer: |-
+      Habitualmente entre 45 y 60 minutos, aunque la duración puede variar según el tipo de intervención y las necesidades de cada persona.
+  - question: "¿Cuántas sesiones voy a necesitar?"
+    answer: |-
+      Depende de cada caso y de los objetivos que nos marquemos. En la propuesta de intervención se concreta una orientación y se revisa periódicamente.
+  - question: "¿Hace falta una evaluación previa?"
+    answer: |-
+      En muchos casos sí, para conocer el punto de partida y ajustar el plan. En la primera consulta se valora si es necesaria.
+  - question: "¿Atiendes a niños, adolescentes y adultos?"
+    answer: |-
+      Sí. Trabajo con niños, adolescentes y adultos, adaptando cada intervención a la etapa y al momento vital de cada persona.
+  - question: "¿Puedo elegir entre clínica, online o domicilio?"
+    answer: |-
+      Sí. Puedes elegir la modalidad que mejor te encaje: atención presencial en consulta, por videollamada o a domicilio.
+  - question: "¿Qué llevo a la primera consulta?"
+    answer: |-
+      El motivo de consulta y, si los tienes, informes o pruebas previas. No es imprescindible para la primera toma de contacto.

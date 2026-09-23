@@ -1,0 +1,19 @@
+# ============================================================
+# SECCIÓN HERO (cabecera) — edición en Pages CMS
+# Corresponde a las regiones "hero" y "hero-img" de src/index.html.
+# Los textos largos se escriben en Markdown; build.py los convierte a HTML.
+# Los títulos, botones y metadatos siguen siendo campos de texto simple.
+# ============================================================
+
+badge: Neuropsicología y Psicología Sanitaria
+# Título principal en dos partes: la segunda se envuelve en <i> (acento azul).
+title: Evaluación e intervención
+title_accent: personalizada
+# Línea de modalidades: build.py une las partes con "·" y protege la última
+# con white-space: nowrap para que no se parta en pantallas estrechas.
+modalities: "Clínica en Valdemoro · Online · A domicilio"
+paragraph: |-
+  Atención profesional centrada en las dificultades emocionales, cognitivas y del aprendizaje en el día a día.
+promo: Primera consulta informativa gratuita
+image: /media/hero-image.png
+image_alt: Consulta Neuropsicológica

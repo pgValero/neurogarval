@@ -80,19 +80,24 @@ components:
           label: Libro (artículos)
 
 # ---------------------------------------------------------------------------
-# CONTENT: archivos editables.
-# type: file  => un fichero con un esquema propio (no hay "colecciones" de
-#                muchos archivos porque todo el contenido vive en 3 ficheros).
+# CONTENT: archivos editables (un fichero por sección + datos comunes).
+# type: file  => cada fichero es una entrada independiente en Pages CMS, con
+#                su propio esquema. Los "name" deben coincidir con las claves
+#                del diccionario CONTEXT de build.py y con los ficheros de
+#                content/.
 # operations.delete: false => evita que un editor borre el fichero y rompa el build.
+# common.yml (contacto que se repite en varios sitios) y footer.yml son de
+# solo lectura: se editan en el repositorio.
 # ---------------------------------------------------------------------------
 content:
   # ---------------------------------------------------------------------
-  # 1) Contacto y footer (solo lectura en Pages CMS).
+  # 1) Datos comunes (solo lectura): contacto repetido en hero, sección
+  #    Contacto, footer y firma de email.
   # ---------------------------------------------------------------------
-  - name: ajustes
-    label: Contacto y footer (solo lectura)
+  - name: common
+    label: Datos comunes (solo lectura)
     type: file
-    path: content/settings.yml
+    path: content/common.yml
     format: yaml
     operations:
       delete: false
@@ -108,7 +113,7 @@ content:
             type: string
             required: true
             pattern: "^\\+34[\\s-]?\\d{3}[\\s-]?\\d{3}[\\s-]?\\d{3}$"
-            description: Formato +34 XXX XXX XXX. Se usa en la web, WhatsApp y la firma.
+            description: Formato +34 XXX XXX XXX. Se usa en la web (hero, contacto, footer) y en la firma.
           - name: mail
             label: Email
             type: string
@@ -126,392 +131,421 @@ content:
             label: Enlace de Google Maps
             type: string
             required: true
-          - name: instagram
-            label: Instagram
-            type: object
-            fields:
-              - name: url
-                label: Perfil (URL)
-                type: string
-                required: true
-              - name: handle
-                label: Usuario (con @)
-                type: string
-                required: true
-                pattern: "^@[A-Za-z0-9._]+$"
-
-      - name: footer
-        label: Footer
-        type: object
-        readonly: true
-        description: Datos fijos; no se pueden modificar desde Pages CMS.
-        fields:
-          - name: lines
-            label: Texto bajo el logo
-            type: string
-            required: true
-            list:
-              min: 2
-              max: 2
-            description: Dos líneas fijas; se unen con un salto de línea.
-          - name: legal_label
-            label: Texto del enlace legal
-            type: string
-            required: true
-          - name: legal_file
-            label: Archivo del enlace legal
-            type: string
-            readonly: true
-            description: aviso_legal.pdf vive en media/ en el repositorio y se publica en la raíz; no se edita desde el CMS.
-          - name: copyright
-            label: Copyright
-            type: string
-            required: true
-            description: Va tras el ©. Actualiza el año cuando cambie.
 
   # ---------------------------------------------------------------------
-  # 2) Página de inicio: todas las secciones del <main> de src/index.html.
+  # 2) Secciones de la página (src/index.html), una por fichero.
   # ---------------------------------------------------------------------
-  - name: inicio
-    label: "Inicio (src/index.html)"
+  - name: hero
+    label: "Sección: Hero (cabecera)"
     type: file
-    path: content/home.yml
+    path: content/hero.yml
     format: yaml
     operations:
       delete: false
     fields:
-      - name: hero
-        label: "Sección: Hero (cabecera)"
+      - name: badge
+        label: Distintivo superior
+        type: string
+        required: true
+      - name: title
+        label: Título
+        type: string
+        required: true
+      - name: title_accent
+        label: Título (parte de acento)
+        type: string
+        description: Se muestra en <i> con color azul. Déjalo vacío si no quieres acento.
+      - name: modalities
+        label: Línea de modalidades
+        type: string
+        required: true
+        description: Separada por "·", p. ej. "Clínica en Valdemoro · Online · A domicilio".
+      - name: paragraph
+        label: Párrafo (Markdown)
+        type: rich-text
+        required: true
+        options:
+          format: markdown
+      - name: promo
+        label: Aviso destacado
+        type: string
+        description: Caja azul con "i" (p. ej. primera consulta gratuita).
+      - name: image
+        label: Imagen lateral
+        type: image
+        required: true
+      - name: image_alt
+        label: Texto alternativo de la imagen
+        type: string
+        required: true
+
+  - name: servicios
+    label: "Sección: Servicios"
+    type: file
+    path: content/servicios.yml
+    format: yaml
+    operations:
+      delete: false
+    fields:
+      - name: heading
+        label: Título
+        type: string
+        required: true
+      - name: lead
+        label: Subtítulo (Markdown)
+        type: rich-text
+        required: true
+        options:
+          format: markdown
+      - name: more_label
+        label: Enlace de tarjeta
+        type: string
+        required: true
+        description: Texto de "Más información" en cada tarjeta.
+      - name: areas
+        label: Áreas de trabajo (Markdown)
+        type: rich-text
+        required: true
+        options:
+          format: markdown
+        description: Incluye la introducción y la lista de áreas con sintaxis Markdown.
+      - name: items
+        label: Servicios (tarjetas + modal)
         type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{title}"
         fields:
-          - name: badge
-            label: Distintivo superior
+          - name: icon
+            component: icono
+          - name: title
+            label: Título de la tarjeta
             type: string
             required: true
+          - name: card_text
+            label: Texto de la tarjeta (Markdown)
+            type: rich-text
+            required: true
+            options:
+              format: markdown
+          - name: modal_content
+            label: Contenido del modal (Markdown)
+            type: rich-text
+            required: true
+            options:
+              format: markdown
+            description: Lo que se ve al pulsar "Más información". Escribe párrafos y listas en Markdown.
+
+  - name: modalidades
+    label: "Sección: Modalidades"
+    type: file
+    path: content/modalidades.yml
+    format: yaml
+    operations:
+      delete: false
+    fields:
+      - name: heading
+        label: Título
+        type: string
+        required: true
+      - name: lead
+        label: Subtítulo (Markdown)
+        type: rich-text
+        required: true
+        options:
+          format: markdown
+      - name: more_label
+        label: Enlace de tarjeta
+        type: string
+        required: true
+        description: Texto de "Más información" en cada tarjeta.
+      - name: items
+        label: Modalidades (tarjetas + modal)
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{title}"
+        fields:
+          - name: icon
+            component: icono
           - name: title
             label: Título
             type: string
             required: true
-          - name: title_accent
-            label: Título (parte de acento)
-            type: string
-            description: Se muestra en <i> con color azul. Déjalo vacío si no quieres acento.
-          - name: modalities
-            label: Línea de modalidades
-            type: string
-            required: true
-            description: Separada por "·", p. ej. "Clínica en Valdemoro · Online · A domicilio".
-          - name: paragraph
-            label: Párrafo (Markdown)
+          - name: text
+            label: Texto de la tarjeta (Markdown)
             type: rich-text
             required: true
             options:
               format: markdown
-          - name: promo
-            label: Aviso destacado
-            type: string
-            description: Caja azul con "i" (p. ej. primera consulta gratuita).
-          - name: image
-            label: Imagen lateral
-            type: image
-            required: true
-          - name: image_alt
-            label: Texto alternativo de la imagen
-            type: string
-            required: true
-
-      - name: services
-        label: "Sección: Servicios"
-        type: object
-        fields:
-          - name: heading
-            label: Título
-            type: string
-            required: true
-          - name: lead
-            label: Subtítulo (Markdown)
+          - name: modal_content
+            label: Contenido del modal (Markdown)
             type: rich-text
             required: true
             options:
               format: markdown
-          - name: more_label
-            label: Enlace de tarjeta
-            type: string
-            required: true
-            description: Texto de "Más información" en cada tarjeta.
-          - name: areas
-            label: Áreas de trabajo (Markdown)
-            type: rich-text
-            required: true
-            options:
-              format: markdown
-            description: Incluye la introducción y la lista de áreas con sintaxis Markdown.
-          - name: items
-            label: Servicios (tarjetas + modal)
-            type: object
-            list:
-              collapsible:
-                collapsed: true
-                summary: "{title}"
-            fields:
-              - name: icon
-                component: icono
-              - name: title
-                label: Título de la tarjeta
-                type: string
-                required: true
-              - name: card_text
-                label: Texto de la tarjeta (Markdown)
-                type: rich-text
-                required: true
-                options:
-                  format: markdown
-              - name: modal_content
-                label: Contenido del modal (Markdown)
-                type: rich-text
-                required: true
-                options:
-                  format: markdown
-                description: Lo que se ve al pulsar "Más información". Escribe párrafos y listas en Markdown.
-
-      - name: modalities
-        label: "Sección: Modalidades"
-        type: object
-        fields:
-          - name: heading
-            label: Título
-            type: string
-            required: true
-          - name: lead
-            label: Subtítulo (Markdown)
-            type: rich-text
-            required: true
-            options:
-              format: markdown
-          - name: more_label
-            label: Enlace de tarjeta
-            type: string
-            required: true
-            description: Texto de "Más información" en cada tarjeta.
-          - name: items
-            label: Modalidades (tarjetas + modal)
-            type: object
-            list:
-              collapsible:
-                collapsed: true
-                summary: "{title}"
-            fields:
-              - name: icon
-                component: icono
-              - name: title
-                label: Título
-                type: string
-                required: true
-              - name: text
-                label: Texto de la tarjeta (Markdown)
-                type: rich-text
-                required: true
-                options:
-                  format: markdown
-              - name: modal_content
-                label: Contenido del modal (Markdown)
-                type: rich-text
-                required: true
-                options:
-                  format: markdown
-                description: Escribe los párrafos y listas del modal en Markdown.
-              - name: images
-                label: Fotos del modal (opcional)
-                type: object
-                list: true
-                collapsible: true
-                description: Se muestran al final del contenido de la modalidad. Deja la lista vacía si no necesita fotos.
-                fields:
-                  - name: image
-                    label: Imagen (vacío = icono de reserva)
-                    type: image
-                  - name: alt
-                    label: Texto alternativo
-                    type: string
-                    required: true
-
-      - name: process
-        label: "Sección: Proceso"
-        type: object
-        fields:
-          - name: heading
-            label: Título
-            type: string
-            required: true
-          - name: lead
-            label: Subtítulo (Markdown)
-            type: rich-text
-            required: true
-            options:
-              format: markdown
-          - name: steps
-            label: Pasos (el número se genera solo)
-            type: object
-            list:
-              collapsible:
-                collapsed: true
-                summary: "{title}"
-            fields:
-              - name: icon
-                component: icono
-              - name: title
-                label: Título del paso
-                type: string
-                required: true
-              - name: text
-                label: Texto del paso (Markdown)
-                type: rich-text
-                required: true
-                options:
-                  format: markdown
-
-      - name: about
-        label: "Sección: Especialista"
-        type: object
-        fields:
-          - name: image
-            label: Foto de perfil
-            type: image
-            required: true
-          - name: image_alt
-            label: Texto alternativo de la foto
-            type: string
-            required: true
-          - name: name
-            label: Nombre (tarjeta de colegiada)
-            type: string
-            required: true
-          - name: license
-            label: Nº de colegiada
-            type: string
-            required: true
-          - name: heading
-            label: Título
-            type: string
-            required: true
-          - name: content
-            label: Contenido (Markdown)
-            type: rich-text
-            required: true
-            options:
-              format: markdown
-            description: Escribe aquí todos los párrafos de la sección. Separa los párrafos con una línea en blanco.
-
-      - name: blog
-        label: "Sección: Blog (tarjetas)"
-        type: object
-        fields:
-          - name: heading
-            label: Título
-            type: string
-            required: true
-          - name: lead
-            label: Subtítulo (Markdown)
-            type: rich-text
-            required: true
-            options:
-              format: markdown
-          - name: read_more
-            label: Enlace "Leer más"
-            type: string
-            required: true
-          - name: posts
-            label: Publicaciones
+            description: Escribe los párrafos y listas del modal en Markdown.
+          - name: images
+            label: Fotos del modal (opcional)
             type: object
             list: true
-            collapsible:
-              collapsed: true
-              summary: "{title}"
+            collapsible: true
+            description: Se muestran al final del contenido de la modalidad. Deja la lista vacía si no necesita fotos.
             fields:
-              - name: date
-                label: Fecha (o texto)
-                type: string
-                required: true
-                description: P. ej. "12/03/2026" o "Próximamente".
-              - name: title
-                label: Título
-                type: string
-                required: true
-              - name: excerpt
-                label: Artículo / resumen (Markdown)
-                type: rich-text
-                required: true
-                options:
-                  format: markdown
-                description: Escribe el texto del artículo o su resumen en un único campo Markdown.
-              - name: url
-                label: Enlace del artículo
-                type: string
-                required: true
-                description: "«#» mientras no exista la página del artículo."
               - name: image
-                label: Imagen (opcional)
+                label: Imagen (vacío = icono de reserva)
                 type: image
-                description: Sin imagen se muestra un icono de reserva.
-
-      - name: faq
-        label: "Sección: Preguntas frecuentes"
-        type: object
-        fields:
-          - name: heading
-            label: Título
-            type: string
-            required: true
-          - name: lead
-            label: Subtítulo (Markdown)
-            type: rich-text
-            required: true
-            options:
-              format: markdown
-          - name: items
-            label: Preguntas
-            type: object
-            list:
-              min: 1
-              collapsible:
-                collapsed: true
-                summary: "{question}"
-            fields:
-              - name: question
-                label: Pregunta
+              - name: alt
+                label: Texto alternativo
                 type: string
                 required: true
-              - name: answer
-                label: Respuesta (Markdown)
-                type: rich-text
-                required: true
-                options:
-                  format: markdown
 
-      - name: contact
-        label: "Sección: Contacto"
+  - name: proceso
+    label: "Sección: Proceso"
+    type: file
+    path: content/proceso.yml
+    format: yaml
+    operations:
+      delete: false
+    fields:
+      - name: heading
+        label: Título
+        type: string
+        required: true
+      - name: lead
+        label: Subtítulo (Markdown)
+        type: rich-text
+        required: true
+        options:
+          format: markdown
+      - name: steps
+        label: Pasos (el número se genera solo)
         type: object
-        description: Teléfono, email, dirección e Instagram vienen de Ajustes > Contacto.
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{title}"
         fields:
-          - name: heading
-            label: Título
+          - name: icon
+            component: icono
+          - name: title
+            label: Título del paso
             type: string
             required: true
-          - name: highlight
-            label: Frase destacada (negrita)
-            type: string
-            required: true
-          - name: lead
-            label: Subtítulo (Markdown)
+          - name: text
+            label: Texto del paso (Markdown)
             type: rich-text
             required: true
             options:
               format: markdown
-          - name: map_embed
-            label: Mapa de Google (src del iframe)
-            type: text
+
+  - name: especialista
+    label: "Sección: Especialista"
+    type: file
+    path: content/especialista.yml
+    format: yaml
+    operations:
+      delete: false
+    fields:
+      - name: image
+        label: Foto de perfil
+        type: image
+        required: true
+      - name: image_alt
+        label: Texto alternativo de la foto
+        type: string
+        required: true
+      - name: name
+        label: Nombre (tarjeta de colegiada)
+        type: string
+        required: true
+      - name: license
+        label: Nº de colegiada
+        type: string
+        required: true
+      - name: heading
+        label: Título
+        type: string
+        required: true
+      - name: content
+        label: Contenido (Markdown)
+        type: rich-text
+        required: true
+        options:
+          format: markdown
+        description: Escribe aquí todos los párrafos de la sección. Separa los párrafos con una línea en blanco.
+
+  - name: blog
+    label: "Sección: Blog (tarjetas)"
+    type: file
+    path: content/blog.yml
+    format: yaml
+    operations:
+      delete: false
+    fields:
+      - name: heading
+        label: Título
+        type: string
+        required: true
+      - name: lead
+        label: Subtítulo (Markdown)
+        type: rich-text
+        required: true
+        options:
+          format: markdown
+      - name: read_more
+        label: Enlace "Leer más"
+        type: string
+        required: true
+      - name: posts
+        label: Publicaciones
+        type: object
+        list: true
+        collapsible:
+          collapsed: true
+          summary: "{title}"
+        fields:
+          - name: date
+            label: Fecha (o texto)
+            type: string
             required: true
-            description: "En Google Maps: Compartir > Insertar un mapa > copiar la URL del iframe."
+            description: P. ej. "12/03/2026" o "Próximamente".
+          - name: title
+            label: Título
+            type: string
+            required: true
+          - name: excerpt
+            label: Artículo / resumen (Markdown)
+            type: rich-text
+            required: true
+            options:
+              format: markdown
+            description: Escribe el texto del artículo o su resumen en un único campo Markdown.
+          - name: url
+            label: Enlace del artículo
+            type: string
+            required: true
+            description: "«#» mientras no exista la página del artículo."
+          - name: image
+            label: Imagen (opcional)
+            type: image
+            description: Sin imagen se muestra un icono de reserva.
+
+  - name: faq
+    label: "Sección: Preguntas frecuentes"
+    type: file
+    path: content/faq.yml
+    format: yaml
+    operations:
+      delete: false
+    fields:
+      - name: heading
+        label: Título
+        type: string
+        required: true
+      - name: lead
+        label: Subtítulo (Markdown)
+        type: rich-text
+        required: true
+        options:
+          format: markdown
+      - name: items
+        label: Preguntas
+        type: object
+        list:
+          min: 1
+          collapsible:
+            collapsed: true
+            summary: "{question}"
+        fields:
+          - name: question
+            label: Pregunta
+            type: string
+            required: true
+          - name: answer
+            label: Respuesta (Markdown)
+            type: rich-text
+            required: true
+            options:
+              format: markdown
+
+  - name: contacto
+    label: "Sección: Contacto"
+    type: file
+    path: content/contacto.yml
+    format: yaml
+    operations:
+      delete: false
+    fields:
+      - name: heading
+        label: Título
+        type: string
+        required: true
+      - name: highlight
+        label: Frase destacada (negrita)
+        type: string
+        required: true
+      - name: lead
+        label: Subtítulo (Markdown)
+        type: rich-text
+        required: true
+        options:
+          format: markdown
+      - name: map_embed
+        label: Mapa de Google (src del iframe)
+        type: text
+        required: true
+        description: "En Google Maps: Compartir > Insertar un mapa > copiar la URL del iframe."
+      - name: instagram
+        label: Instagram (tarjeta de contacto)
+        type: object
+        description: Teléfono, email, dirección y Maps vienen de Datos comunes.
+        fields:
+          - name: url
+            label: Perfil (URL)
+            type: string
+            required: true
+          - name: handle
+            label: Usuario (con @)
+            type: string
+            required: true
+            pattern: "^@[A-Za-z0-9._]+$"
+
+  - name: footer
+    label: Footer (solo lectura)
+    type: file
+    path: content/footer.yml
+    format: yaml
+    operations:
+      delete: false
+    fields:
+      - name: lines
+        label: Texto bajo el logo
+        type: string
+        required: true
+        readonly: true
+        list:
+          min: 2
+          max: 2
+        description: Dos líneas fijas; se unen con un salto de línea.
+      - name: legal_label
+        label: Texto del enlace legal
+        type: string
+        required: true
+        readonly: true
+      - name: legal_file
+        label: Archivo del enlace legal
+        type: string
+        readonly: true
+        description: aviso_legal.pdf vive en media/ en el repositorio y se publica en la raíz; no se edita desde el CMS.
+      - name: copyright
+        label: Copyright
+        type: string
+        required: true
+        readonly: true
+        description: Va tras el ©. Actualiza el año cuando cambie.
 
   # ---------------------------------------------------------------------
   # 3) Firma de email (src/firma.html, archivo aparte del sitio).
