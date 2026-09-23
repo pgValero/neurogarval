@@ -49,3 +49,5 @@ repos:
           - "--exclude=file:///.*/src/(aviso_legal\\.pdf|favicon\\.svg|media/)"
           # URLs absolutas a media/ aún no publicadas (retirar tras el 1er despliegue):
           - "--exclude=neurogarval\\.es/media/"
+          # Marcadores __archivo.campo__ que build.py sustituye por contenido real:
+          - "--exclude=__[a-z0-9_.]+__"
