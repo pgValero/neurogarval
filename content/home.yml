@@ -1,6 +1,6 @@
 # ============================================================
 # CONTENIDO DE LA PÁGINA DE INICIO (edición en Pages CMS)
-# Corresponde a las regiones pages:begin del <main> de index.html.
+# Corresponde a las regiones pages:begin del <main> de src/index.html.
 #
 # Los textos largos se escriben en Markdown. build.py los convierte a HTML
 # antes de insertarlos en la página. Los títulos, botones y metadatos siguen
