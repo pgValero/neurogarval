@@ -8,10 +8,10 @@ Single-page marketing site for NeuroGarval (Spanish psychology practice). No pac
 - `firma.html` — standalone email signature template (not linked from the site); same marker system (4 regions); uses absolute `https://neurogarval.es/media/...` asset URLs.
 - `styles.css` — all site CSS, linked in `<head>`.
 - `script.js` — classic (non-module) script at end of `<body>`; **only** opens/closes the service and modality modals (content from `window.SITE_DATA`, loaded from `data.js` before it) and toggles the mobile menu. It injects no data: contact is written into the HTML by `build.py`. Inline `onclick` handlers rely on top-level functions staying global.
-- `content/` — YAML edited via Pages CMS: `settings.yml` (contact/SEO/JSON-LD), `home.yml` (page sections + service/modality modal content), `firma.yml` (signature copy).
+- `content/` — YAML edited via Pages CMS: `settings.yml` (contact/SEO/JSON-LD), `home.yml` (page sections + Markdown content for cards, modals, specialist, blog and FAQ), `firma.yml` (signature copy).
 - `media/` — images (`logo.svg`, `hero-image.png`, `photo.jpeg`, `image.png`, `qr.svg`); referenced as `media/...`. PDFs (`aviso_legal.pdf`, `tarjeta.pdf`) stay at repo root. Consultation-photo fields in the clinic modality are editable from Pages CMS and fall back to an icon while empty.
-- `.pages.yml` — Pages CMS config (collections, fields, media paths). Commented in Spanish.
-- `build.py` — generator: reads `content/*.yml`, renders the 22 regions of `index.html` + the 4 of `firma.html`, writes contact data into the `.neuro-*` slots of `index.html`, writes `_site/` (templates + `media/` + PDFs + `data.js`). Requires Python + PyYAML. `_site/` is gitignored.
+- `.pages.yml` — Pages CMS config (collections, fields, media paths). Commented in Spanish. Los campos largos de la página son `rich-text` con `format: markdown`; los títulos, botones y metadatos siguen siendo campos simples.
+- `build.py` — generator: reads `content/*.yml`, converts Markdown to HTML, renders the 22 regions of `index.html` + the 4 of `firma.html`, writes contact data into the `.neuro-*` slots of `index.html`, writes `_site/` (templates + `media/` + PDFs + `data.js`). Requires Python + PyYAML + Markdown. `_site/` is gitignored.
 - `.github/workflows/deploy.yml` — on push to `main` (or manual dispatch): runs `build.py` and publishes `_site/` with Actions.
 - `CNAME` — `neurogarval.es`; host is GitHub Pages. **Repo Settings → Pages must be set to source "GitHub Actions"** (once), after which pushing to `main` deploys production.
 
@@ -24,7 +24,7 @@ Single-page marketing site for NeuroGarval (Spanish psychology practice). No pac
 
 ## Verifying
 
-- Build locally: `python build.py` (needs `pip install pyyaml`), then open `_site/index.html` in a browser — never open the repo-root `index.html` directly: its `.neuro-*` contact slots are empty until `build.py` fills them.
+- Build locally: `python build.py` (needs `pip install pyyaml markdown`), then open `_site/index.html` in a browser — never open the repo-root `index.html` directly: its `.neuro-*` contact slots are empty until `build.py` fills them.
 - Lint: `prek run --all-files` (HTMLHint, Stylelint, ESLint, Lychee). Lychee has excludes for `data\.js` (generated, line too long) and for `neurogarval.es/media/` URLs until the media files are live.
 - Check section by section (`#inicio`, `#servicios`, `#modalidades`, `#proceso`, `#especialista`, `#blog`, `#faq`, `#contacto`), a service modal, each modality modal, and the mobile menu.
 - `index.html` (~540 lines), `styles.css` (~845 lines), `script.js` (~90 lines); prefer targeted `Edit` calls over `Write`.
