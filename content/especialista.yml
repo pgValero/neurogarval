@@ -1,6 +1,6 @@
 # ============================================================
 # SECCIÓN ESPECIALISTA — edición en Pages CMS
-# Corresponde a la región "about" de src/index.html.
+# Sus campos se insertan en src/index.html mediante marcadores archivo.ruta.campo.
 # Los textos largos se escriben en Markdown; build.py los convierte a HTML.
 # ============================================================
 

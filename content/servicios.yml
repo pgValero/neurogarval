@@ -1,7 +1,6 @@
 # ============================================================
 # SECCIÓN SERVICIOS — edición en Pages CMS
-# Corresponde a las regiones "services-header", "services-grid" y
-# "services-areas" de src/index.html.
+# Sus campos se insertan en src/index.html mediante marcadores archivo.ruta.campo.
 # Los textos largos se escriben en Markdown; build.py los convierte a HTML.
 # ============================================================
 
@@ -23,7 +22,8 @@ areas: |-
 # Cada servicio conserva sus datos de tarjeta y tiene un único contenido
 # Markdown para el modal.
 items:
-  - icon: brain
+  - id: neuro
+    icon: brain
     title: Neuropsicología
     card_text: |-
       Evaluación e intervención en dificultades cognitivas, conductuales y emocionales relacionadas con el funcionamiento cerebral.
@@ -38,7 +38,8 @@ items:
       - Plan de intervención personalizado.
 
       Dirigido a niños, adolescentes y adultos con TDAH, TEA, dificultades de aprendizaje, daño cerebral adquirido o deterioro cognitivo, entre otros.
-  - icon: heart
+  - id: psico
+    icon: heart
     title: Psicología Sanitaria
     card_text: |-
       Atención a dificultades emocionales y conductuales, proporcionando un espacio profesional y seguro donde poder abordarlas.
@@ -53,7 +54,8 @@ items:
       - Duelo y procesos de adaptación.
 
       Atención a niños, adolescentes y adultos, de forma individual o con la familia cuando es necesario.
-  - icon: zap
+  - id: rehab
+    icon: zap
     title: Rehabilitación
     card_text: |-
       Programas de intervención personalizados orientados a la rehabilitación, estimulación y mantenimiento de las funciones cognitivas.

@@ -1,6 +1,6 @@
 # ============================================================
 # SECCIÓN PREGUNTAS FRECUENTES (FAQ) — edición en Pages CMS
-# Corresponde a las regiones "faq-header" y "faq-list" de src/index.html.
+# Sus campos se insertan en src/index.html mediante marcadores archivo.ruta.campo.
 # Los textos largos se escriben en Markdown.
 # ============================================================
 

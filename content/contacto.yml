@@ -1,7 +1,6 @@
 # ============================================================
 # SECCIÓN CONTACTO — edición en Pages CMS
-# Corresponde a las regiones "contact-header", "contact-instagram" y
-# "contact-map" de src/index.html.
+# Sus campos se insertan en src/index.html mediante marcadores archivo.ruta.campo.
 # Teléfono, email, dirección y Maps vienen de common.yml (solo lectura);
 # aquí solo vive lo propio de la sección, incluido Instagram.
 # ============================================================
