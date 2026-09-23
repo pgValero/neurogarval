@@ -1,2 +1,0 @@
-- Quitar apartado de rehabilitación y meterlo en el de Neuropsicología.
-- Apartado: principales áreas que se trabajan...: Quitar
