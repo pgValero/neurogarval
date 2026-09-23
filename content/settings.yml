@@ -3,12 +3,12 @@
 # Fuente única de verdad del contacto y del pie. Para cambiar estos datos,
 # edita este archivo en el repositorio; el CMS los muestra sin permitir
 # modificaciones. El dominio, el logo, el SEO, los datos estructurados y
-# los menús son parte fija de index.html. build.py escribe el contacto en
-# los huecos .neuro-* (sin JavaScript) y alimenta también la firma.
+# los menús son parte fija de src/index.html. build.py escribe el contacto
+# en los huecos .neuro-* (sin JavaScript) y alimenta también la firma.
 # ============================================================
 
 contact:
-  # build.py lo escribe en index.html (hero, sección Contacto y footer)
+  # build.py lo escribe en el index.html generado (hero, sección Contacto y footer)
   # y en la firma de email: editar aquí y ningún otro sitio.
   phone: "+34 711 233 888"
   mail: teresa@neurogarval.es
@@ -26,7 +26,8 @@ footer:
   lines:
     - Neuropsicología y Psicología Sanitaria.
     - Teresa García Valero (Col. M-42858).
-  # Enlace "Información legal" (PDF en la raíz; el PDF no es editable en el CMS).
+  # Enlace "Información legal" (PDF en media/ en el repositorio y publicado
+  # en la raíz para conservar la ruta pública; no es editable en el CMS).
   legal_label: Información legal
   legal_file: aviso_legal.pdf
   # Aparece tras el símbolo ©; recuerda actualizar el año.

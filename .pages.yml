@@ -12,16 +12,16 @@
 #   Los ficheros de content/*.yml NO los lee el navegador directamente.
 #   build.py (ejecutado por .github/workflows/deploy.yml en cada push a main)
 #   inyecta estos datos en las regiones <!-- pages:begin ... --> de
-#   index.html y firma.html, escribe el contacto en los huecos .neuro-*
-#   de index.html (sin JavaScript), genera _site/data.js (contenido de
-#   los modales) y publica el resultado.
+#   src/index.html y src/firma.html, escribe el contacto en los huecos
+#   .neuro-* del HTML generado (sin JavaScript), genera _site/data.js
+#   (contenido de los modales) y publica el resultado.
 #
 #   Los campos de contenido largo de la página son rich-text con formato
 #   Markdown. Escribe párrafos, énfasis y listas en un único campo; build.py
 #   los convierte a HTML. No escribas HTML en esos campos. Títulos, botones,
 #   etiquetas y metadatos siguen siendo campos simples. Las listas
 #   estructurales (pasos, tarjetas, fotos, etc.) conservan sus campos.
-#   Dominio, logo, SEO/JSON-LD y navegación son parte fija de index.html y
+#   Dominio, logo, SEO/JSON-LD y navegación son parte fija de src/index.html y
 #   no se editan desde el CMS.
 #
 # NOTA SOBRE RAMAS: Pages CMS lee este archivo por rama; se usa la rama
@@ -29,11 +29,12 @@
 # ============================================================================
 
 # ---------------------------------------------------------------------------
-# MEDIA: subida de imágenes desde el CMS.
+# MEDIA: subida de recursos estáticos desde el CMS.
 # input  = carpeta física en el repo; output = URL pública que el CMS escribe
 # (p. ej. "/media/photo.jpeg"). build.py la convierte a ruta relativa
-# "media/..." para el HTML. Los PDFs legales se quedan en la raíz a propósito:
-# son enlaces fijos (footer y tarjeta), no media editable.
+# "media/..." para el HTML. Los PDFs y el favicon también están en media/ en
+# el repositorio, pero el build los publica en la raíz para conservar las
+# rutas públicas actuales; no son contenido editable del CMS.
 # ---------------------------------------------------------------------------
 media:
   input: media
@@ -161,7 +162,7 @@ content:
             label: Archivo del enlace legal
             type: string
             readonly: true
-            description: aviso_legal.pdf vive en la raíz y no se edita desde el CMS.
+            description: aviso_legal.pdf vive en media/ en el repositorio y se publica en la raíz; no se edita desde el CMS.
           - name: copyright
             label: Copyright
             type: string
@@ -169,10 +170,10 @@ content:
             description: Va tras el ©. Actualiza el año cuando cambie.
 
   # ---------------------------------------------------------------------
-  # 2) Página de inicio: todas las secciones del <main> de index.html.
+  # 2) Página de inicio: todas las secciones del <main> de src/index.html.
   # ---------------------------------------------------------------------
   - name: inicio
-    label: "Inicio (index.html)"
+    label: "Inicio (src/index.html)"
     type: file
     path: content/home.yml
     format: yaml
@@ -513,7 +514,7 @@ content:
             description: "En Google Maps: Compartir > Insertar un mapa > copiar la URL del iframe."
 
   # ---------------------------------------------------------------------
-  # 3) Firma de email (firma.html, archivo aparte del sitio).
+  # 3) Firma de email (src/firma.html, archivo aparte del sitio).
   # Los avisos legales son texto plano de solo lectura: el email no usa
   # el renderer Markdown de la página.
   # ---------------------------------------------------------------------

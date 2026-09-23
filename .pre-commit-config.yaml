@@ -44,5 +44,8 @@ repos:
           - "--exclude=^tel:"
           # data.js lo genera build.py; no existe en el árbol fuente:
           - "--exclude=data\\.js"
+          # Las plantillas de src/ usan rutas relativas al HTML publicado;
+          # esos ficheros se comprueban en el _site generado, no junto a src/.
+          - "--exclude=file:///.*/src/(aviso_legal\\.pdf|favicon\\.svg|media/)"
           # URLs absolutas a media/ aún no publicadas (retirar tras el 1er despliegue):
           - "--exclude=neurogarval\\.es/media/"

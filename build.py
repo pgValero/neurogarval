@@ -7,14 +7,15 @@ Qué hace
 2. Convierte a HTML los campos de texto largo escritos en Markdown.
 3. Regenera las regiones delimitadas por
       <!-- pages:begin NOMBRE -->  ...  <!-- pages:end NOMBRE -->
-   en index.html (19) y firma.html (3); el resto de la plantilla
+   en src/index.html (19) y src/firma.html (3); el resto de la plantilla
    HTML/CSS se queda intacto.
-4. Escribe el contacto de content/settings.yml directamente en
-   index.html: los huecos .neuro-* (teléfono, WhatsApp, email,
+4. Escribe el contacto de content/settings.yml directamente en el HTML
+   generado: los huecos .neuro-* (teléfono, WhatsApp, email,
    dirección y Maps) quedan resueltos en el HTML, sin JavaScript.
 5. Genera _site/data.js (window.SITE_DATA: servicios, modalidades e iconos),
    que script.js usa al abrir sus respectivos modales.
-6. Copia los estáticos (CSS, JS, CNAME, favicons, PDFs) y media/ a _site/.
+6. Copia los estáticos (CSS, JS, CNAME, favicon y PDFs) y las imágenes de
+   media/ a _site/, manteniendo la estructura pública actual.
 
 Uso
 ---
@@ -46,6 +47,7 @@ except ImportError as exc:  # pragma: no cover
     sys.exit(f"Falta {missing}. Instálalo con:  pip install pyyaml markdown")
 
 ROOT = Path(__file__).resolve().parent
+SRC = ROOT / "src"
 CONTENT = ROOT / "content"
 OUT = ROOT / "_site"
 
@@ -98,16 +100,25 @@ ICONS: dict[str, str] = {
         '<polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/>'
         '<polyline points="16 7 22 7 22 13"/>'
     ),
-    # Iconos de fuente Bootstrap Icons (incluida en index.html)
+    # Iconos de fuente Bootstrap Icons (incluida en src/index.html)
     "building": '<i class="bi bi-building"></i>',
     "laptop": '<i class="bi bi-laptop"></i>',
     "house": '<i class="bi bi-house-door"></i>',
     "journal": '<i class="bi bi-journal-text"></i>',
 }
 
-# Archivos estáticos que se copian tal cual a _site/.
-STATIC_FILES = ["styles.css", "script.js", "CNAME", "favicon.svg",
-                "aviso_legal.pdf", "tarjeta.pdf"]
+# Ficheros estáticos que se copian a _site/. Los recursos que antes estaban
+# en la raíz se leen ahora desde media/, pero se publican en la raíz para
+# conservar las rutas públicas existentes.
+STATIC_FILES = [
+    (SRC / "styles.css", "styles.css"),
+    (SRC / "script.js", "script.js"),
+    (ROOT / "CNAME", "CNAME"),
+    (ROOT / "media/favicon.svg", "favicon.svg"),
+    (ROOT / "media/aviso_legal.pdf", "aviso_legal.pdf"),
+    (ROOT / "media/tarjeta.pdf", "tarjeta.pdf"),
+]
+MEDIA_EXCLUDES = ("favicon.svg", "aviso_legal.pdf", "tarjeta.pdf")
 
 # Avisos no fatales (p. ej. fotos de modalidades aún no subidas).
 WARNINGS: list[str] = []
@@ -193,7 +204,7 @@ def section_header(heading: str, lead: str) -> str:
 
 
 # ---------------------------------------------------------------------------
-# Regiones de index.html
+# Regiones de src/index.html
 # ---------------------------------------------------------------------------
 def r_hero(c: dict) -> str:
     h = c["home"]["hero"]
@@ -529,7 +540,7 @@ def apply_regions(source: str, renderers: dict, fname: str) -> str:
 
 
 # ---------------------------------------------------------------------------
-# Contacto — content/settings.yml -> huecos .neuro-* de index.html.
+# Contacto — content/settings.yml -> huecos .neuro-* del index.html generado.
 # Fuente única: el contacto se escribe aquí, en el HTML; script.js no lo
 # toca (su único trabajo con datos es rellenar los modales de servicios y
 # modalidades).
@@ -587,7 +598,7 @@ def fill_contact(doc: str, settings: dict) -> str:
 
 
 # ---------------------------------------------------------------------------
-# Regiones de firma.html (contacto desde settings.yml; texto propio de la
+# Regiones de src/firma.html (contacto desde settings.yml; texto propio de la
 # firma desde content/firma.yml). El logo y su URL son fijos en la plantilla.
 # ---------------------------------------------------------------------------
 def r_firma_identity(c: dict) -> str:
@@ -634,7 +645,8 @@ FIRMA_REGIONS: dict[str, "callable"] = {
 
 # ---------------------------------------------------------------------------
 # data.js — puente con script.js (solo modales: servicios, modalidades e iconos).
-# El contacto NO viaja aquí: se escribe en index.html con fill_contact().
+# El contacto NO viaja aquí: se escribe en el index.html generado con
+# fill_contact().
 # ---------------------------------------------------------------------------
 def write_data_js(c: dict) -> None:
     services = [
@@ -679,25 +691,29 @@ def main() -> None:
         shutil.rmtree(OUT)
     OUT.mkdir()
 
-    index_src = (ROOT / "index.html").read_text(encoding="utf-8")
+    index_src = (SRC / "index.html").read_text(encoding="utf-8")
     index_doc = apply_regions(index_src, INDEX_REGIONS, "index.html")
     index_doc = fill_contact(index_doc, CONTEXT["settings"])
     (OUT / "index.html").write_text(index_doc, encoding="utf-8")
 
-    firma_src = (ROOT / "firma.html").read_text(encoding="utf-8")
+    firma_src = (SRC / "firma.html").read_text(encoding="utf-8")
     (OUT / "firma.html").write_text(
         apply_regions(firma_src, FIRMA_REGIONS, "firma.html"), encoding="utf-8")
 
     write_data_js(CONTEXT)
 
-    for name in STATIC_FILES:
-        src = ROOT / name
+    for src, name in STATIC_FILES:
         if not src.exists():
             sys.exit(f"Falta el fichero estático: {src}")
         shutil.copy2(src, OUT / name)
 
     if (ROOT / "media").is_dir():
-        shutil.copytree(ROOT / "media", OUT / "media", dirs_exist_ok=True)
+        shutil.copytree(
+            ROOT / "media",
+            OUT / "media",
+            dirs_exist_ok=True,
+            ignore=shutil.ignore_patterns(*MEDIA_EXCLUDES),
+        )
 
     print(f"OK: sitio generado en {OUT}")
     for warning in WARNINGS:

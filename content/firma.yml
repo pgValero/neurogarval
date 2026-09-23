@@ -1,6 +1,6 @@
 # ============================================================
 # FIRMA DE EMAIL (edición en Pages CMS)
-# Genera _site/firma.html; la plantilla del repo es firma.html.
+# Genera _site/firma.html; la plantilla del repo es src/firma.html.
 # Teléfono, dirección y mapa salen de settings.yml (fuente única);
 # aquí solo vive lo propio de la firma.
 # ============================================================
