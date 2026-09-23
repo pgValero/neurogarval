@@ -68,7 +68,6 @@
             <a href="#modalidades" onclick="toggleMenu()">Modalidades</a>
             <a href="#proceso" onclick="toggleMenu()">Proceso</a>
             <a href="#especialista" onclick="toggleMenu()">Especialista</a>
-            <a href="#galeria" onclick="toggleMenu()">Sala</a>
             <a href="#blog" onclick="toggleMenu()">Blog</a>
             <a href="#faq" onclick="toggleMenu()">FAQ</a>
             <a href="#contacto" onclick="toggleMenu()">Contacto</a>
@@ -220,25 +219,28 @@
 
                 <div class="modalities-grid">
                     <!-- pages:begin modalities-grid -->
-                    <div class="modality-item">
+                    <div class="modality-item" role="button" tabindex="0" aria-haspopup="dialog" data-modality="0" onclick="openModalityModal(0)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openModalityModal(0)}">
                         <div class="modality-icon"><i class="bi bi-building"></i></div>
                         <div class="modality-content">
                             <h4>Atención en Clínica</h4>
                             <p>En consulta presencial, en un entorno profesional y tranquilo, pensado para que puedas sentirte cómodo/a durante las sesiones.</p>
+                            <span class="service-more">Más información <i class="bi bi-arrow-right"></i></span>
                         </div>
                     </div>
-                    <div class="modality-item">
+                    <div class="modality-item" role="button" tabindex="0" aria-haspopup="dialog" data-modality="1" onclick="openModalityModal(1)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openModalityModal(1)}">
                         <div class="modality-icon"><i class="bi bi-laptop"></i></div>
                         <div class="modality-content">
                             <h4>Terapia Online</h4>
                             <p>Sesiones por videollamada, facilitando el acceso a la intervención sin necesidad de desplazamiento.</p>
+                            <span class="service-more">Más información <i class="bi bi-arrow-right"></i></span>
                         </div>
                     </div>
-                    <div class="modality-item">
+                    <div class="modality-item" role="button" tabindex="0" aria-haspopup="dialog" data-modality="2" onclick="openModalityModal(2)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openModalityModal(2)}">
                         <div class="modality-icon"><i class="bi bi-house-door"></i></div>
                         <div class="modality-content">
                             <h4>A Domicilio</h4>
                             <p>Intervención en tu entorno cotidiano, ideal para pacientes con movilidad reducida o dificultades específicas.</p>
+                            <span class="service-more">Más información <i class="bi bi-arrow-right"></i></span>
                         </div>
                     </div>
                     <!-- pages:end modalities-grid -->
@@ -331,30 +333,6 @@
                     <p>Me mantengo en formación continua para ofrecer una atención actualizada y basada en la evidencia.</p>
                 </div>
                 <!-- pages:end about -->
-            </div>
-        </section>
-
-        <!-- GALERÍA -->
-        <section id="galeria" class="section-padding">
-            <div class="container">
-                <div class="section-header">
-                    <!-- pages:begin gallery-header -->
-                    <h2>La consulta</h2>
-                    <div class="divider"></div>
-                    <p>Un espacio tranquilo, cuidado y adaptado para que puedas sentirte cómodo/a durante las sesiones.</p>
-                    <!-- pages:end gallery-header -->
-                </div>
-
-                <div class="gallery-grid">
-                    <!-- pages:begin gallery-grid -->
-                    <figure class="gallery-item"><i class="bi bi-camera"></i><img src="media/sala-1.jpg" alt="Consulta NeuroGarval" loading="lazy" onerror="this.remove()"></figure>
-                    <figure class="gallery-item"><i class="bi bi-camera"></i><img src="media/sala-2.jpg" alt="Sala de terapia NeuroGarval" loading="lazy" onerror="this.remove()"></figure>
-                    <figure class="gallery-item"><i class="bi bi-camera"></i><img src="media/sala-3.jpg" alt="Zona de evaluación NeuroGarval" loading="lazy" onerror="this.remove()"></figure>
-                    <figure class="gallery-item"><i class="bi bi-camera"></i><img src="media/sala-4.jpg" alt="Despacho NeuroGarval" loading="lazy" onerror="this.remove()"></figure>
-                    <figure class="gallery-item"><i class="bi bi-camera"></i><img src="media/sala-5.jpg" alt="Sala de espera NeuroGarval" loading="lazy" onerror="this.remove()"></figure>
-                    <figure class="gallery-item"><i class="bi bi-camera"></i><img src="media/sala-6.jpg" alt="Material de consulta NeuroGarval" loading="lazy" onerror="this.remove()"></figure>
-                    <!-- pages:end gallery-grid -->
-                </div>
             </div>
         </section>
 
@@ -542,6 +520,13 @@
         <div class="service-icon" id="modalIcon"></div>
         <h3 id="modalTitle"></h3>
         <div class="modal-body" id="modalBody"></div>
+    </dialog>
+
+    <dialog id="modalityModal" class="modal" aria-labelledby="modalityModalTitle">
+        <button class="modal-close" onclick="closeModalityModal()" aria-label="Cerrar">&times;</button>
+        <div class="service-icon" id="modalityModalIcon"></div>
+        <h3 id="modalityModalTitle"></h3>
+        <div class="modal-body" id="modalityModalBody"></div>
     </dialog>
 
     <script src="data.js"></script>

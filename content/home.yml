@@ -2,7 +2,7 @@
 # CONTENIDO DE LA PÁGINA DE INICIO (edición en Pages CMS)
 # Corresponde a las regiones pages:begin del <main> de index.html.
 # Secciones: hero, servicios, modalidades, proceso, especialista,
-# galería, blog, FAQ y contacto.
+# blog, FAQ y contacto.
 # ============================================================
 
 hero:
@@ -76,16 +76,63 @@ services:
 modalities:
   heading: Modalidades de atención
   lead: "Elegir el entorno adecuado para tus sesiones es importante: facilita el trabajo terapéutico y tu comodidad durante el proceso."
+  # Texto del enlace de cada tarjeta.
+  more_label: Más información
+  # Cada modalidad genera una tarjeta y su modal. El contenido HTML y las
+  # fotos del modal se editan aquí; para las modalidades Online y A Domicilio,
+  # las fotos son opcionales.
   items:
     - icon: building
       title: Atención en Clínica
       text: En consulta presencial, en un entorno profesional y tranquilo, pensado para que puedas sentirte cómodo/a durante las sesiones.
+      modal_content: |-
+        <p>La atención en clínica se realiza de forma presencial, en un entorno profesional y tranquilo pensado para que puedas sentirte cómodo/a durante las sesiones.</p>
+        <p>Este formato dispone de un espacio adecuado para la evaluación y las sesiones, con la presencia de la profesional durante todo el proceso.</p>
+        <ul>
+            <li>Realizar evaluaciones neuropsicológicas con las pruebas necesarias.</li>
+            <li>Trabajar las dificultades del día a día en un entorno adecuado.</li>
+            <li>Compartir con la persona y, cuando corresponda, con su familia las orientaciones del plan de intervención.</li>
+        </ul>
+        <p>El ambiente de consulta está pensado para recibirte con calma, cuidar tu privacidad y favorecer un trabajo cercano y personalizado.</p>
+      images:
+        # Sube las fotos de la consulta desde el CMS (media/).
+        # Mientras "image" esté vacío se muestra el icono de cámara de reserva.
+        - image: ""
+          alt: Consulta NeuroGarval
+        - image: ""
+          alt: Sala de terapia NeuroGarval
+        - image: ""
+          alt: Zona de evaluación NeuroGarval
+        - image: ""
+          alt: Despacho NeuroGarval
+        - image: ""
+          alt: Sala de espera NeuroGarval
+        - image: ""
+          alt: Material de consulta NeuroGarval
     - icon: laptop
       title: Terapia Online
       text: Sesiones por videollamada, facilitando el acceso a la intervención sin necesidad de desplazamiento.
+      modal_content: |-
+        <p>La terapia online se realiza mediante videollamada, lo que permite mantener el proceso terapéutico sin tener que desplazarse a la consulta.</p>
+        <p>Antes de empezar se comprobará la disponibilidad de los medios necesarios y se organizará un espacio adecuado para favorecer la confidencialidad y la concentración.</p>
+        <ul>
+            <li>Evita desplazamientos y facilita el acceso para quien tenga horarios limitados o dificultad para desplazarse.</li>
+            <li>Ofrece mayor flexibilidad para organizar las sesiones.</li>
+            <li>Permite mantener la continuidad de la intervención desde un lugar cómodo.</li>
+        </ul>
+        <p>El acompañamiento y los objetivos del plan de intervención se adaptan a esta modalidad, manteniendo un contacto directo y personalizado.</p>
     - icon: house
       title: A Domicilio
       text: Intervención en tu entorno cotidiano, ideal para pacientes con movilidad reducida o dificultades específicas.
+      modal_content: |-
+        <p>La atención a domicilio realiza la intervención en el lugar donde vives, siempre que esta modalidad sea adecuada para tu situación y exista un espacio suficiente para trabajar con comodidad.</p>
+        <p>Este formato permite conocer mejor el contexto cotidiano y las rutinas de la persona, para adaptar la intervención a sus necesidades reales.</p>
+        <ul>
+            <li>Evita desplazamientos y permite realizar la sesión en casa.</li>
+            <li>Permite conocer mejor las rutinas y las estrategias que necesitarás en tu día a día.</li>
+            <li>Facilita la intervención cuando existen dificultades de movilidad o para desplazarse.</li>
+        </ul>
+        <p>La idoneidad de esta modalidad y las condiciones del espacio se valoran previamente para acordar el plan de trabajo más adecuado.</p>
 
 process:
   heading: Cómo empezar la terapia
@@ -120,25 +167,6 @@ about:
     - Soy Teresa, neuropsicóloga y psicóloga general sanitaria. Estoy especializada en el trabajo con dificultades cognitivas, emocionales y del aprendizaje. Acompaño a niños, adolescentes y adultos en este proceso, adaptando cada intervención a sus necesidades.
     - Trabajo desde un enfoque cercano y personalizado, con el objetivo de mejorar el funcionamiento y el bienestar en el día a día.
     - Me mantengo en formación continua para ofrecer una atención actualizada y basada en la evidencia.
-
-gallery:
-  heading: La consulta
-  lead: Un espacio tranquilo, cuidado y adaptado para que puedas sentirte cómodo/a durante las sesiones.
-  # Sube las fotos de la sala desde el CMS (media/) y selecciónalas aquí.
-  # Mientras "image" esté vacío se muestra el icono de cámara de reserva.
-  items:
-    - image: ""
-      alt: Consulta NeuroGarval
-    - image: ""
-      alt: Sala de terapia NeuroGarval
-    - image: ""
-      alt: Zona de evaluación NeuroGarval
-    - image: ""
-      alt: Despacho NeuroGarval
-    - image: ""
-      alt: Sala de espera NeuroGarval
-    - image: ""
-      alt: Material de consulta NeuroGarval
 
 blog:
   heading: Publicaciones

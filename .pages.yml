@@ -379,10 +379,18 @@ content:
             label: Subtítulo
             type: text
             required: true
+          - name: more_label
+            label: Enlace de tarjeta
+            type: string
+            required: true
+            description: Texto de "Más información" en cada tarjeta.
           - name: items
-            label: Modalidades
+            label: Modalidades (tarjetas + modal)
             type: object
-            list: true
+            list:
+              collapsible:
+                collapsed: true
+                summary: "{title}"
             fields:
               - name: icon
                 component: icono
@@ -391,9 +399,30 @@ content:
                 type: string
                 required: true
               - name: text
-                label: Texto
+                label: Texto de la tarjeta
                 type: text
                 required: true
+              - name: modal_content
+                label: Contenido del modal (HTML)
+                type: rich-text
+                required: true
+                options:
+                  format: html
+                description: Párrafos, listas y contenido que se ve al pulsar la tarjeta.
+              - name: images
+                label: Fotos del modal (opcional)
+                type: object
+                list: true
+                collapsible: true
+                description: Se muestran al final del contenido de la modalidad. Deja la lista vacía si no necesita fotos.
+                fields:
+                  - name: image
+                    label: Imagen (vacío = icono de reserva)
+                    type: image
+                  - name: alt
+                    label: Texto alternativo
+                    type: string
+                    required: true
 
       - name: process
         label: "Sección: Proceso"
@@ -456,32 +485,6 @@ content:
             list: true
             required: true
             description: Cada entrada es un párrafo; se separan con un salto de línea.
-
-      - name: gallery
-        label: "Sección: Galería (la consulta)"
-        type: object
-        fields:
-          - name: heading
-            label: Título
-            type: string
-            required: true
-          - name: lead
-            label: Subtítulo
-            type: text
-            required: true
-          - name: items
-            label: Fotos
-            type: object
-            list: true
-            collapsible: true
-            fields:
-              - name: image
-                label: Imagen (vacío = icono de reserva)
-                type: image
-              - name: alt
-                label: Texto alternativo
-                type: string
-                required: true
 
       - name: blog
         label: "Sección: Blog (tarjetas)"
