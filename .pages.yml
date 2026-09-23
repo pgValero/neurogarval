@@ -86,10 +86,10 @@ components:
 # ---------------------------------------------------------------------------
 content:
   # ---------------------------------------------------------------------
-  # 1) Contacto y contenido editable del footer.
+  # 1) Contacto y footer (solo lectura en Pages CMS).
   # ---------------------------------------------------------------------
   - name: ajustes
-    label: Contacto y footer
+    label: Contacto y footer (solo lectura)
     type: file
     path: content/settings.yml
     format: yaml
@@ -99,6 +99,8 @@ content:
       - name: contact
         label: Contacto
         type: object
+        readonly: true
+        description: Datos fijos; no se pueden modificar desde Pages CMS.
         fields:
           - name: phone
             label: Teléfono
@@ -115,8 +117,10 @@ content:
             label: Dirección
             type: string
             required: true
-            list: true
-            description: "Dos líneas: 1) calle y número; 2) CP, ciudad y provincia."
+            list:
+              min: 2
+              max: 2
+            description: "Dos líneas fijas: 1) calle y número; 2) CP, ciudad y provincia."
           - name: maps_url
             label: Enlace de Google Maps
             type: string
@@ -138,12 +142,17 @@ content:
       - name: footer
         label: Footer
         type: object
+        readonly: true
+        description: Datos fijos; no se pueden modificar desde Pages CMS.
         fields:
           - name: lines
             label: Texto bajo el logo
             type: string
-            list: true
-            description: Dos líneas; se unen con un salto de línea.
+            required: true
+            list:
+              min: 2
+              max: 2
+            description: Dos líneas fijas; se unen con un salto de línea.
           - name: legal_label
             label: Texto del enlace legal
             type: string

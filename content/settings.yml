@@ -1,9 +1,10 @@
 # ============================================================
-# CONTACTO Y FOOTER DEL SITIO (edición en Pages CMS)
-# Fuente única de verdad del contacto y del contenido editable del pie.
-# El dominio, el logo, el SEO, los datos estructurados y los menús son
-# parte fija de index.html. build.py usa este archivo para escribir el
-# contacto en los huecos .neuro-* (sin JavaScript) y alimentar la firma.
+# CONTACTO Y FOOTER DEL SITIO (solo lectura en Pages CMS)
+# Fuente única de verdad del contacto y del pie. Para cambiar estos datos,
+# edita este archivo en el repositorio; el CMS los muestra sin permitir
+# modificaciones. El dominio, el logo, el SEO, los datos estructurados y
+# los menús son parte fija de index.html. build.py escribe el contacto en
+# los huecos .neuro-* (sin JavaScript) y alimenta también la firma.
 # ============================================================
 
 contact:
@@ -11,7 +12,7 @@ contact:
   # y en la firma de email: editar aquí y ningún otro sitio.
   phone: "+34 711 233 888"
   mail: teresa@neurogarval.es
-  # Dirección en dos líneas: calle / CP, ciudad. La firma los une con " - ".
+  # Dirección: exactamente dos líneas fijas. La firma las une con " - ".
   address_lines:
     - C/ Diego de Almagro, 32
     - 28342, Valdemoro, Madrid
@@ -21,7 +22,7 @@ contact:
     handle: "@neurogarval"
 
 footer:
-  # Dos líneas de texto bajo el logo (se unen con <br>).
+  # Exactamente dos líneas fijas de texto bajo el logo (se unen con <br>).
   lines:
     - Neuropsicología y Psicología Sanitaria.
     - Teresa García Valero (Col. M-42858).
