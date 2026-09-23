@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NeuroGarval | Neuropsicología y Psicología Sanitaria</title>
-
+    <!-- pages:begin head-seo -->
     <!-- SEO Básico -->
     <title>NeuroGarval | Neuropsicología y Psicología Sanitaria en Valdemoro</title>
     <meta name="description" content="NeuroGarval, dirigida por la neuropsicóloga Teresa García Valero. Especialistas en neuropsicología y psicología sanitaria en Valdemoro, Madrid. Evaluación y rehabilitación personalizada.">
@@ -16,7 +15,7 @@
     <meta property="og:locale" content="es">
     <meta property="og:title" content="NeuroGarval | Teresa García Valero - Neuropsicóloga">
     <meta property="og:description" content="Centro especializado en Neuropsicología y Psicología Sanitaria en Valdemoro.">
-    <meta property="og:image" content="https://www.neurogarval.es/image.png">
+    <meta property="og:image" content="https://www.neurogarval.es/media/image.png">
     <meta property="og:url" content="https://www.neurogarval.es/">
 
     <!-- Datos Estructurados (Schema.org) -->
@@ -26,7 +25,7 @@
       "@type": "MedicalBusiness",
       "name": "NeuroGarval",
       "alternateName": "Teresa García Valero Neuropsicóloga",
-      "image": "https://www.neurogarval.es/image.png",
+      "image": "https://www.neurogarval.es/media/image.png",
       "url": "https://www.neurogarval.es/",
       "telephone": "+34711233888",
       "address": {
@@ -44,6 +43,7 @@
       }
     }
     </script>
+    <!-- pages:end head-seo -->
 
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -53,9 +53,16 @@
 </head>
 <body>
 
+    <!-- PLANTILLA DEL SITIO. Las regiones pages:begin/pages:end se
+         regeneran desde content/*.yml (Pages CMS) al ejecutar build.py.
+         Los huecos .neuro-* (teléfono, WhatsApp, email, dirección, logo)
+         se rellenan con content/settings.yml; no hay JS de por medio.
+         No editar los textos de aqui a mano: editar en Pages CMS. -->
+
     <div class="mobile-overlay" id="mobileMenu">
         <button class="close-btn" onclick="toggleMenu()">&times;</button>
         <div class="mobile-links">
+            <!-- pages:begin mobile-menu -->
             <a href="#inicio" onclick="toggleMenu()">Inicio</a>
             <a href="#servicios" onclick="toggleMenu()">Servicios</a>
             <a href="#modalidades" onclick="toggleMenu()">Modalidades</a>
@@ -65,6 +72,7 @@
             <a href="#blog" onclick="toggleMenu()">Blog</a>
             <a href="#faq" onclick="toggleMenu()">FAQ</a>
             <a href="#contacto" onclick="toggleMenu()">Contacto</a>
+            <!-- pages:end mobile-menu -->
         </div>
     </div>
 
@@ -72,10 +80,11 @@
         <div class="container">
             <nav>
                 <a href="#inicio">
-                    <img src="logo.svg" alt="NeuroGarval" class="header-logo neuro-logo">
+                    <img src="media/logo.svg" alt="NeuroGarval" class="header-logo neuro-logo">
                 </a>
 
                 <ul class="nav-links">
+                    <!-- pages:begin nav-desktop -->
                     <li><a href="#inicio">Inicio</a></li>
                     <li><a href="#servicios">Servicios</a></li>
                     <li><a href="#modalidades">Modalidades</a></li>
@@ -83,6 +92,7 @@
                     <li><a href="#blog">Blog</a></li>
                     <li><a href="#faq">FAQ</a></li>
                     <li><a href="#contacto">Contacto</a></li>
+                    <!-- pages:end nav-desktop -->
                 </ul>
 
                 <button class="menu-btn" onclick="toggleMenu()">
@@ -97,6 +107,7 @@
         <section id="inicio" class="hero">
             <div class="container hero-grid">
                 <div class="hero-text">
+                    <!-- pages:begin hero -->
                     <span class="badge">Neuropsicología y Psicología Sanitaria</span>
                     <h1>Evaluación e intervención <i>personalizada</i></h1>
                     <span class="modalities-text">Clínica en Valdemoro · Online <span style="white-space: nowrap;">· A domicilio</span></span>
@@ -106,6 +117,7 @@
                         <i class="bi bi-info-circle-fill"></i>
                         <span>Primera consulta informativa gratuita</span>
                     </div>
+                    <!-- pages:end hero -->
 
                     <div class="btn-group">
                         <a href="#" target="_blank" class="btn btn-whatsapp neuro-whatsapp-link">
@@ -119,7 +131,9 @@
                     </div>
                 </div>
                 <div id="hero-img-wrapper">
-                    <img src="hero-image.png" alt="Consulta Neuropsicológica">
+                    <!-- pages:begin hero-img -->
+                    <img src="media/hero-image.png" alt="Consulta Neuropsicológica">
+                    <!-- pages:end hero-img -->
                 </div>
             </div>
         </section>
@@ -128,12 +142,15 @@
         <section id="servicios" class="section-padding services">
             <div class="container">
                 <div class="section-header">
+                    <!-- pages:begin services-header -->
                     <h2>¿En qué puedo ayudarte?</h2>
                     <div class="divider"></div>
                     <p>Trabajo en el ámbito de la neuropsicología y la psicología sanitaria, teniendo en cuenta las necesidades y el momento vital de cada persona.</p>
+                    <!-- pages:end services-header -->
                 </div>
 
                 <div class="services-grid">
+                    <!-- pages:begin services-grid -->
                     <div class="service-card" role="button" tabindex="0" aria-haspopup="dialog" data-service="neuro" onclick="openServiceModal('neuro')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openServiceModal('neuro')}">
                         <div class="service-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><!-- icono de cerebro, estilo Lucide (ISC) --><path d="M12 18V5"/><path d="M15 13a4.17 4.17 0 0 1-3-4 4.17 4.17 0 0 1-3 4"/><path d="M17.598 6.5A3 3 0 1 0 12 5a3 3 0 1 0-5.598 1.5"/><path d="M17.997 5.125a4 4 0 0 1 2.526 5.77"/><path d="M18 18a4 4 0 0 0 2-7.464"/><path d="M19.967 17.483A4 4 0 1 1 12 18a4 4 0 1 1-7.967-.517"/><path d="M6 18a4 4 0 0 1-2-7.464"/><path d="M6.003 5.125a4 4 0 0 0-2.526 5.77"/></svg></div>
                         <h3>Neuropsicología</h3>
@@ -152,9 +169,11 @@
                         <p>Programas de intervención personalizados orientados a la rehabilitación, estimulación y mantenimiento de las funciones cognitivas.</p>
                         <span class="service-more">Más información <i class="bi bi-arrow-right"></i></span>
                     </div>
+                    <!-- pages:end services-grid -->
                 </div>
                 <div class="section-header">
                     <div class="divider"></div>
+                    <!-- pages:begin services-areas -->
                     <p>Principales áreas que se trabajan en consulta:</p>
                     <div class="check-list">
                         <div class="check-item">
@@ -183,6 +202,7 @@
                             <span>Dificultades emocionales y conductuales.</span>
                         </div>
                     </div>
+                    <!-- pages:end services-areas -->
                 </div>
             </div>
         </section>
@@ -191,12 +211,15 @@
         <section id="modalidades" class="section-padding modalities-section">
             <div class="container">
                 <div class="section-header">
+                    <!-- pages:begin modalities-header -->
                     <h2>Modalidades de atención</h2>
                     <div class="divider"></div>
                     <p>Elegir el entorno adecuado para tus sesiones es importante: facilita el trabajo terapéutico y tu comodidad durante el proceso.</p>
+                    <!-- pages:end modalities-header -->
                 </div>
 
                 <div class="modalities-grid">
+                    <!-- pages:begin modalities-grid -->
                     <div class="modality-item">
                         <div class="modality-icon"><i class="bi bi-building"></i></div>
                         <div class="modality-content">
@@ -218,6 +241,7 @@
                             <p>Intervención en tu entorno cotidiano, ideal para pacientes con movilidad reducida o dificultades específicas.</p>
                         </div>
                     </div>
+                    <!-- pages:end modalities-grid -->
                 </div>
             </div>
         </section>
@@ -226,12 +250,15 @@
         <section id="proceso" class="section-padding">
             <div class="container">
                 <div class="section-header">
+                    <!-- pages:begin process-header -->
                     <h2>Cómo empezar la terapia</h2>
                     <div class="divider"></div>
                     <p>Un proceso claro y sin prisas, adaptado al ritmo y a las necesidades de cada persona.</p>
+                    <!-- pages:end process-header -->
                 </div>
 
                 <div class="process-grid">
+                    <!-- pages:begin process-grid -->
                     <div class="process-step">
                         <div class="process-num">
                             <span class="process-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><!-- icono de burbuja de mensaje, estilo Lucide (ISC) --><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg></span>
@@ -272,6 +299,7 @@
                         <h4>Seguimiento</h4>
                         <p>Sesiones periódicas y revisiones para ajustar el trabajo a los avances.</p>
                     </div>
+                    <!-- pages:end process-grid -->
                 </div>
             </div>
         </section>
@@ -279,8 +307,9 @@
         <!-- ESPECIALISTA -->
         <section id="especialista" class="section-padding">
             <div class="container about-grid">
+                <!-- pages:begin about -->
                 <div class="about-image">
-                    <img src="photo.jpeg" alt="Teresa García Valero">
+                    <img src="media/photo.jpeg" alt="Teresa García Valero">
                     <div class="col-card">
                         <span class="name">Teresa García Valero</span>
                         <span class="label">Nº Colegiada: M-42858</span>
@@ -301,6 +330,7 @@
                     <br>
                     <p>Me mantengo en formación continua para ofrecer una atención actualizada y basada en la evidencia.</p>
                 </div>
+                <!-- pages:end about -->
             </div>
         </section>
 
@@ -308,18 +338,22 @@
         <section id="galeria" class="section-padding">
             <div class="container">
                 <div class="section-header">
+                    <!-- pages:begin gallery-header -->
                     <h2>La consulta</h2>
                     <div class="divider"></div>
                     <p>Un espacio tranquilo, cuidado y adaptado para que puedas sentirte cómodo/a durante las sesiones.</p>
+                    <!-- pages:end gallery-header -->
                 </div>
 
                 <div class="gallery-grid">
-                    <figure class="gallery-item"><i class="bi bi-camera"></i><img src="sala-1.jpg" alt="Consulta NeuroGarval" loading="lazy" onerror="this.remove()"></figure>
-                    <figure class="gallery-item"><i class="bi bi-camera"></i><img src="sala-2.jpg" alt="Sala de terapia NeuroGarval" loading="lazy" onerror="this.remove()"></figure>
-                    <figure class="gallery-item"><i class="bi bi-camera"></i><img src="sala-3.jpg" alt="Zona de evaluación NeuroGarval" loading="lazy" onerror="this.remove()"></figure>
-                    <figure class="gallery-item"><i class="bi bi-camera"></i><img src="sala-4.jpg" alt="Despacho NeuroGarval" loading="lazy" onerror="this.remove()"></figure>
-                    <figure class="gallery-item"><i class="bi bi-camera"></i><img src="sala-5.jpg" alt="Sala de espera NeuroGarval" loading="lazy" onerror="this.remove()"></figure>
-                    <figure class="gallery-item"><i class="bi bi-camera"></i><img src="sala-6.jpg" alt="Material de consulta NeuroGarval" loading="lazy" onerror="this.remove()"></figure>
+                    <!-- pages:begin gallery-grid -->
+                    <figure class="gallery-item"><i class="bi bi-camera"></i><img src="media/sala-1.jpg" alt="Consulta NeuroGarval" loading="lazy" onerror="this.remove()"></figure>
+                    <figure class="gallery-item"><i class="bi bi-camera"></i><img src="media/sala-2.jpg" alt="Sala de terapia NeuroGarval" loading="lazy" onerror="this.remove()"></figure>
+                    <figure class="gallery-item"><i class="bi bi-camera"></i><img src="media/sala-3.jpg" alt="Zona de evaluación NeuroGarval" loading="lazy" onerror="this.remove()"></figure>
+                    <figure class="gallery-item"><i class="bi bi-camera"></i><img src="media/sala-4.jpg" alt="Despacho NeuroGarval" loading="lazy" onerror="this.remove()"></figure>
+                    <figure class="gallery-item"><i class="bi bi-camera"></i><img src="media/sala-5.jpg" alt="Sala de espera NeuroGarval" loading="lazy" onerror="this.remove()"></figure>
+                    <figure class="gallery-item"><i class="bi bi-camera"></i><img src="media/sala-6.jpg" alt="Material de consulta NeuroGarval" loading="lazy" onerror="this.remove()"></figure>
+                    <!-- pages:end gallery-grid -->
                 </div>
             </div>
         </section>
@@ -328,12 +362,15 @@
         <section id="blog" class="section-padding">
             <div class="container">
                 <div class="section-header">
+                    <!-- pages:begin blog-header -->
                     <h2>Publicaciones</h2>
                     <div class="divider"></div>
                     <p>Artículos cortos con información útil sobre neuropsicología, aprendizaje y bienestar emocional.</p>
+                    <!-- pages:end blog-header -->
                 </div>
 
                 <div class="blog-grid">
+                    <!-- pages:begin blog-grid -->
                     <article class="blog-card">
                         <div class="blog-thumb"><i class="bi bi-journal-text"></i></div>
                         <div class="blog-content">
@@ -361,6 +398,7 @@
                             <a href="#" class="read-more">Leer más <i class="bi bi-arrow-right"></i></a>
                         </div>
                     </article>
+                    <!-- pages:end blog-grid -->
                 </div>
             </div>
         </section>
@@ -369,12 +407,15 @@
         <section id="faq" class="section-padding">
             <div class="container">
                 <div class="section-header">
+                    <!-- pages:begin faq-header -->
                     <h2>Preguntas frecuentes</h2>
                     <div class="divider"></div>
                     <p>Si tu duda no aparece aquí, puedo resolverla personalmente en la primera consulta.</p>
+                    <!-- pages:end faq-header -->
                 </div>
 
                 <div class="faq-list">
+                    <!-- pages:begin faq-list -->
                     <details class="faq-item">
                         <summary>¿La primera consulta es gratuita?</summary>
                         <p>Sí. La primera consulta es informativa y gratuita, para resolver dudas y valorar si puedo ayudarte.</p>
@@ -403,6 +444,7 @@
                         <summary>¿Qué llevo a la primera consulta?</summary>
                         <p>El motivo de consulta y, si los tienes, informes o pruebas previas. No es imprescindible para la primera toma de contacto.</p>
                     </details>
+                    <!-- pages:end faq-list -->
                 </div>
             </div>
         </section>
@@ -411,10 +453,12 @@
         <section id="contacto" class="section-padding contact">
             <div class="container">
                 <div class="section-header">
+                    <!-- pages:begin contact-header -->
                     <h2>Pide tu cita</h2>
                     <div class="divider"></div>
                     <strong>Primera consulta informativa para resolver dudas y valorar cada situación.</strong>
                     <p>Puedes ponerte en contacto conmigo a través de cualquiera de los siguientes canales:</p>
+                    <!-- pages:end contact-header -->
                 </div>
 
                 <div class="contact-grid">
@@ -428,11 +472,13 @@
                         <h4>WhatsApp</h4>
                         <span class="neuro-phone"></span>
                     </a>
+                    <!-- pages:begin contact-instagram -->
                     <a href="https://instagram.com/neurogarval" target="_blank" class="contact-item">
                         <div class="contact-icon"><i class="bi bi-instagram"></i></div>
                         <h4>Instagram</h4>
                         <span>@neurogarval</span>
                     </a>
+                    <!-- pages:end contact-instagram -->
                 </div>
                 <div class="contact-grid">
                     <a href="#" target="_blank" class="contact-item neuro-mail-link">
@@ -449,6 +495,7 @@
 
                 <div class="map-wrapper">
                     <div class="map-container">
+                        <!-- pages:begin contact-map -->
                         <iframe
                             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3047.4102062110496!2d-3.6931494!3d40.199937299999995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd421fc6ce867025%3A0x1abf8630d9ed5e9b!2sNeuroGarval%20%7C%20Psicolog%C3%ADa%20y%20Neuropsicolog%C3%ADa%20Cl%C3%ADnica!5e0!3m2!1sen!2ses!4v1774983440789!5m2!1sen!2ses"
                             width="600"
@@ -458,6 +505,7 @@
                             loading="lazy"
                             referrerpolicy="no-referrer-when-downgrade">
                         </iframe>
+                        <!-- pages:end contact-map -->
                     </div>
                 </div>
             </div>
@@ -468,10 +516,12 @@
         <div class="container">
             <div class="footer-top">
                 <div class="footer-info">
-                    <img src="logo.svg" alt="NeuroGarval" class="footer-logo neuro-logo">
+                    <!-- pages:begin footer-info -->
+                    <img src="media/logo.svg" alt="NeuroGarval" class="footer-logo neuro-logo">
                     <p>Neuropsicología y Psicología Sanitaria.<br>Teresa García Valero (Col. M-42858).</p>
                     <br>
                     <a href="aviso_legal.pdf">Información legal</a>
+                    <!-- pages:end footer-info -->
                 </div>
                 <div class="footer-links">
                     <a href="#" class="neuro-address-link neuro-address"></a>
@@ -480,7 +530,9 @@
                 </div>
             </div>
             <div class="copyright">
+                <!-- pages:begin footer-copyright -->
                 &copy; 2026 NeuroGarval
+                <!-- pages:end footer-copyright -->
             </div>
         </div>
     </footer>
@@ -492,6 +544,7 @@
         <div class="modal-body" id="modalBody"></div>
     </dialog>
 
+    <script src="data.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

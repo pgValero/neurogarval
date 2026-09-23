@@ -44,3 +44,7 @@ repos:
           - "--exclude=^tel:"
           # Excluir temporalmente placeholders (imágenes de la galería aún no añadidas):
           - "--exclude=sala-[0-9]\\.jpg"
+          # data.js lo genera build.py; no existe en el árbol fuente:
+          - "--exclude=data\\.js"
+          # URLs absolutas a media/ aún no publicadas (retirar tras el 1er despliegue):
+          - "--exclude=neurogarval\\.es/media/"

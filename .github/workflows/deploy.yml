@@ -1,0 +1,59 @@
+# Build y despliegue del sitio estático en GitHub Pages.
+#
+# Flujo: Pages CMS (o Git) commitea en main -> esta Action ejecuta build.py
+# (content/*.yml -> _site/) y publica _site/ como sitio de GitHub Pages.
+# La plataforma de despliegue sigue siendo GitHub Pages y las ramas no
+# cambian: solo el "push en crudo" pasa a ser "build + deploy".
+#
+# REQUISITO (una sola vez, manual): en Settings -> Pages del repositorio,
+# cambiar la fuente a "GitHub Actions".
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: # botón "Desplegar sitio" de Pages CMS (.pages.yml -> actions)
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Un solo despliegue a la vez; si llega otro push, se cancela el anterior.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependencias
+        run: pip install pyyaml
+
+      - name: Construir sitio (build.py)
+        run: python build.py
+
+      - name: Subir artefacto (_site)
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Desplegar en GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

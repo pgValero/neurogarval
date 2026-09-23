@@ -1,0 +1,673 @@
+# ============================================================================
+# Pages CMS — configuración del repositorio neurogarval
+# https://pagescms.org · Documentación: /docs/configuration
+#
+# Este archivo define TODO lo que se puede editar desde Pages CMS:
+#   media    -> dónde se guardan las imágenes y qué URL se escribe en el contenido
+#   content  -> las "colecciones" (archivos) editables y sus campos
+#   components -> definiciones de campo reutilizables
+#   actions  -> botones opcionales (despliegue manual)
+#
+# CÓMO SE RELACIONA CON EL SITIO:
+#   Los ficheros de content/*.yml NO los lee el navegador directamente.
+#   build.py (ejecutado por .github/workflows/deploy.yml en cada push a main)
+#   inyecta estos datos en las regiones <!-- pages:begin ... --> de
+#   index.html y firma.html, escribe el contacto en los huecos .neuro-*
+#   de index.html (sin JavaScript), genera _site/data.js (contenido de
+#   los modales) y publica el resultado.
+#
+# NOTA SOBRE RAMAS: Pages CMS lee este archivo por rama; se usa la rama
+# por defecto del repositorio (main). develop queda para trabajo técnico.
+# ============================================================================
+
+# ---------------------------------------------------------------------------
+# MEDIA: subida de imágenes desde el CMS.
+# input  = carpeta física en el repo; output = URL pública que el CMS escribe
+# (p. ej. "/media/photo.jpeg"). build.py la convierte a ruta relativa
+# "media/..." para el HTML. Los PDFs legales se quedan en la raíz a propósito:
+# son enlaces fijos (footer y tarjeta), no media editable.
+# ---------------------------------------------------------------------------
+media:
+  input: media
+  output: /media
+
+# ---------------------------------------------------------------------------
+# COMPONENTS: campo de icono reutilizado en servicios, modalidades y proceso.
+# IMPORTANTE: los values deben coincidir con las claves del diccionario ICONS
+# en build.py; si añades un icono aquí, añádelo también allí (y al CSS/base
+# de Bootstrap Icons si es un "bi bi-*").
+# ---------------------------------------------------------------------------
+components:
+  icono:
+    type: select
+    label: Icono
+    description: "Icono del listado. No hace falta escribir código: elige uno de la lista."
+    options:
+      placeholder: Elige un icono
+      values:
+        - name: brain
+          label: Cerebro
+        - name: heart
+          label: Corazón con pulso
+        - name: zap
+          label: Rayo
+        - name: message
+          label: Burbuja de mensaje
+        - name: calendar
+          label: Calendario
+        - name: clipboard
+          label: Portapapeles
+        - name: target
+          label: Diana
+        - name: chart
+          label: Gráfico ascendente
+        - name: building
+          label: Edificio (clínica)
+        - name: laptop
+          label: Portátil (online)
+        - name: house
+          label: Casa (domicilio)
+        - name: journal
+          label: Libro (artículos)
+
+# ---------------------------------------------------------------------------
+# CONTENT: archivos editables.
+# type: file  => un fichero con un esquema propio (no hay "colecciones" de
+#                muchos archivos porque todo el contenido vive en 3 ficheros).
+# operations.delete: false => evita que un editor borre el fichero y rompa el build.
+# ---------------------------------------------------------------------------
+content:
+  # ---------------------------------------------------------------------
+  # 1) Ajustes globales: dominio, contacto, menú, SEO/JSON-LD y footer.
+  # ---------------------------------------------------------------------
+  - name: ajustes
+    label: Ajustes del sitio
+    type: file
+    path: content/settings.yml
+    format: yaml
+    operations:
+      delete: false
+    fields:
+      - name: site
+        label: Dominio y logo
+        type: object
+        fields:
+          - name: base_url
+            label: URL base
+            type: string
+            required: true
+            pattern: "^https://[^/\\s]+$"
+            description: Dominio del sitio sin barra final (usado en canonical, Open Graph y schema.org).
+          - name: logo
+            label: Logo
+            type: image
+            required: true
+            description: Cabecera, footer y firma de email.
+
+      - name: contact
+        label: Contacto
+        type: object
+        fields:
+          - name: phone
+            label: Teléfono
+            type: string
+            required: true
+            pattern: "^\\+34[\\s-]?\\d{3}[\\s-]?\\d{3}[\\s-]?\\d{3}$"
+            description: Formato +34 XXX XXX XXX. Se usa en la web, WhatsApp y la firma.
+          - name: mail
+            label: Email
+            type: string
+            required: true
+            pattern: "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$"
+          - name: address_lines
+            label: Dirección
+            type: string
+            required: true
+            list: true
+            description: "Dos líneas: 1) calle y número; 2) CP, ciudad y provincia."
+          - name: maps_url
+            label: Enlace de Google Maps
+            type: string
+            required: true
+          - name: instagram
+            label: Instagram
+            type: object
+            fields:
+              - name: url
+                label: Perfil (URL)
+                type: string
+                required: true
+              - name: handle
+                label: Usuario (con @)
+                type: string
+                required: true
+                pattern: "^@[A-Za-z0-9._]+$"
+
+      - name: menu
+        label: Menú de navegación
+        type: object
+        description: Una sola lista para cabecera y menú móvil. "Escritorio" desactivado = solo menú móvil.
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{label}"
+        fields:
+          - name: label
+            label: Texto
+            type: string
+            required: true
+          - name: href
+            label: Enlace
+            type: string
+            required: true
+            pattern: "^#[a-z0-9-]+$"
+            description: "Anclaje interno, p. ej. #servicios."
+          - name: desktop
+            label: Visible en escritorio
+            type: boolean
+            required: true
+
+      - name: seo
+        label: SEO y redes sociales
+        type: object
+        fields:
+          - name: title
+            label: Título (pestaña)
+            type: string
+            required: true
+            description: Máximo ~60 caracteres para que Google no lo corte.
+          - name: description
+            label: Meta descripción
+            type: text
+            required: true
+            options:
+              maxlength: 160
+          - name: keywords
+            label: Palabras clave
+            type: text
+          - name: og_title
+            label: Título al compartir (Open Graph)
+            type: string
+            required: true
+          - name: og_description
+            label: Descripción al compartir
+            type: text
+            required: true
+          - name: og_image
+            label: Imagen al compartir
+            type: image
+            required: true
+            description: También se usa como imagen del schema.org.
+
+      - name: jsonld
+        label: Datos estructurados (schema.org)
+        type: object
+        description: Telephone e imagen se generan solos desde Contacto y SEO.
+        fields:
+          - name: name
+            label: Nombre del negocio
+            type: string
+            required: true
+          - name: alternate_name
+            label: Nombre alternativo
+            type: string
+          - name: price_range
+            label: Rango de precios
+            type: string
+            description: Texto de schema.org (p. ej. "$", "€" o vacío).
+          - name: founder
+            label: Fundador/a
+            type: string
+            required: true
+          - name: address
+            label: Dirección (schema.org)
+            type: object
+            fields:
+              - name: street
+                label: Calle y número
+                type: string
+                required: true
+              - name: locality
+                label: Ciudad
+                type: string
+                required: true
+              - name: region
+                label: Provincia / región
+                type: string
+              - name: postal_code
+                label: Código postal
+                type: string
+                required: true
+              - name: country
+                label: País (código ISO)
+                type: string
+                required: true
+                pattern: "^[A-Z]{2}$"
+
+      - name: footer
+        label: Footer
+        type: object
+        fields:
+          - name: lines
+            label: Texto bajo el logo
+            type: string
+            list: true
+            description: Dos líneas; se unen con un salto de línea.
+          - name: legal_label
+            label: Texto del enlace legal
+            type: string
+            required: true
+          - name: legal_file
+            label: Archivo del enlace legal
+            type: string
+            readonly: true
+            description: aviso_legal.pdf vive en la raíz y no se edita desde el CMS.
+          - name: copyright
+            label: Copyright
+            type: string
+            required: true
+            description: Va tras el ©. Actualiza el año cuando cambie.
+
+  # ---------------------------------------------------------------------
+  # 2) Página de inicio: todas las secciones del <main> de index.html.
+  # ---------------------------------------------------------------------
+  - name: inicio
+    label: "Inicio (index.html)"
+    type: file
+    path: content/home.yml
+    format: yaml
+    operations:
+      delete: false
+    fields:
+      - name: hero
+        label: "Sección: Hero (cabecera)"
+        type: object
+        fields:
+          - name: badge
+            label: Distintivo superior
+            type: string
+            required: true
+          - name: title
+            label: Título
+            type: string
+            required: true
+          - name: title_accent
+            label: Título (parte de acento)
+            type: string
+            description: Se muestra en <i> con color azul. Déjalo vacío si no quieres acento.
+          - name: modalities
+            label: Línea de modalidades
+            type: string
+            required: true
+            description: Separada por "·", p. ej. "Clínica en Valdemoro · Online · A domicilio".
+          - name: paragraph
+            label: Párrafo
+            type: text
+            required: true
+          - name: promo
+            label: Aviso destacado
+            type: string
+            description: Caja azul con "i" (p. ej. primera consulta gratuita).
+          - name: image
+            label: Imagen lateral
+            type: image
+            required: true
+          - name: image_alt
+            label: Texto alternativo de la imagen
+            type: string
+            required: true
+
+      - name: services
+        label: "Sección: Servicios"
+        type: object
+        fields:
+          - name: heading
+            label: Título
+            type: string
+            required: true
+          - name: lead
+            label: Subtítulo
+            type: text
+            required: true
+          - name: more_label
+            label: Enlace de tarjeta
+            type: string
+            required: true
+            description: Texto de "Más información" en cada tarjeta.
+          - name: areas_intro
+            label: Introducción de áreas
+            type: string
+          - name: areas
+            label: Áreas de trabajo (lista con check)
+            type: string
+            list: true
+          - name: items
+            label: Servicios (tarjetas + modal)
+            type: object
+            list:
+              collapsible:
+                collapsed: true
+                summary: "{title}"
+            fields:
+              - name: icon
+                component: icono
+              - name: title
+                label: Título de la tarjeta
+                type: string
+                required: true
+              - name: card_text
+                label: Texto de la tarjeta
+                type: text
+                required: true
+              - name: modal_content
+                label: Contenido del modal (HTML)
+                type: rich-text
+                required: true
+                options:
+                  format: html
+                description: Lo que se ve al pulsar "Más información". Párrafos y listas.
+
+      - name: modalities
+        label: "Sección: Modalidades"
+        type: object
+        fields:
+          - name: heading
+            label: Título
+            type: string
+            required: true
+          - name: lead
+            label: Subtítulo
+            type: text
+            required: true
+          - name: items
+            label: Modalidades
+            type: object
+            list: true
+            fields:
+              - name: icon
+                component: icono
+              - name: title
+                label: Título
+                type: string
+                required: true
+              - name: text
+                label: Texto
+                type: text
+                required: true
+
+      - name: process
+        label: "Sección: Proceso"
+        type: object
+        fields:
+          - name: heading
+            label: Título
+            type: string
+            required: true
+          - name: lead
+            label: Subtítulo
+            type: text
+            required: true
+          - name: steps
+            label: Pasos (el número se genera solo)
+            type: object
+            list:
+              collapsible:
+                collapsed: true
+                summary: "{title}"
+            fields:
+              - name: icon
+                component: icono
+              - name: title
+                label: Título del paso
+                type: string
+                required: true
+              - name: text
+                label: Texto del paso
+                type: text
+                required: true
+
+      - name: about
+        label: "Sección: Especialista"
+        type: object
+        fields:
+          - name: image
+            label: Foto de perfil
+            type: image
+            required: true
+          - name: image_alt
+            label: Texto alternativo de la foto
+            type: string
+            required: true
+          - name: name
+            label: Nombre (tarjeta de colegiada)
+            type: string
+            required: true
+          - name: license
+            label: Nº de colegiada
+            type: string
+            required: true
+          - name: heading
+            label: Título
+            type: string
+            required: true
+          - name: paragraphs
+            label: Párrafos
+            type: text
+            list: true
+            required: true
+            description: Cada entrada es un párrafo; se separan con un salto de línea.
+
+      - name: gallery
+        label: "Sección: Galería (la consulta)"
+        type: object
+        fields:
+          - name: heading
+            label: Título
+            type: string
+            required: true
+          - name: lead
+            label: Subtítulo
+            type: text
+            required: true
+          - name: items
+            label: Fotos
+            type: object
+            list: true
+            collapsible: true
+            fields:
+              - name: image
+                label: Imagen (vacío = icono de reserva)
+                type: image
+              - name: alt
+                label: Texto alternativo
+                type: string
+                required: true
+
+      - name: blog
+        label: "Sección: Blog (tarjetas)"
+        type: object
+        fields:
+          - name: heading
+            label: Título
+            type: string
+            required: true
+          - name: lead
+            label: Subtítulo
+            type: text
+            required: true
+          - name: read_more
+            label: Enlace "Leer más"
+            type: string
+            required: true
+          - name: posts
+            label: Publicaciones
+            type: object
+            list: true
+            collapsible:
+              collapsed: true
+              summary: "{title}"
+            fields:
+              - name: date
+                label: Fecha (o texto)
+                type: string
+                required: true
+                description: P. ej. "12/03/2026" o "Próximamente".
+              - name: title
+                label: Título
+                type: string
+                required: true
+              - name: excerpt
+                label: Resumen
+                type: text
+                required: true
+              - name: url
+                label: Enlace del artículo
+                type: string
+                required: true
+                description: "«#» mientras no exista la página del artículo."
+              - name: image
+                label: Imagen (opcional)
+                type: image
+                description: Sin imagen se muestra un icono de reserva.
+
+      - name: faq
+        label: "Sección: Preguntas frecuentes"
+        type: object
+        fields:
+          - name: heading
+            label: Título
+            type: string
+            required: true
+          - name: lead
+            label: Subtítulo
+            type: text
+            required: true
+          - name: items
+            label: Preguntas
+            type: object
+            list:
+              min: 1
+              collapsible:
+                collapsed: true
+                summary: "{question}"
+            fields:
+              - name: question
+                label: Pregunta
+                type: string
+                required: true
+              - name: answer
+                label: Respuesta
+                type: text
+                required: true
+
+      - name: contact
+        label: "Sección: Contacto"
+        type: object
+        description: Teléfono, email, dirección e Instagram vienen de Ajustes > Contacto.
+        fields:
+          - name: heading
+            label: Título
+            type: string
+            required: true
+          - name: highlight
+            label: Frase destacada (negrita)
+            type: string
+            required: true
+          - name: lead
+            label: Subtítulo
+            type: text
+            required: true
+          - name: map_embed
+            label: Mapa de Google (src del iframe)
+            type: text
+            required: true
+            description: "En Google Maps: Compartir > Insertar un mapa > copiar la URL del iframe."
+
+  # ---------------------------------------------------------------------
+  # 3) Firma de email (firma.html, archivo aparte del sitio).
+  # ---------------------------------------------------------------------
+  - name: firma
+    label: Firma de email
+    type: file
+    path: content/firma.yml
+    format: yaml
+    operations:
+      delete: false
+    fields:
+      - name: name
+        label: Nombre
+        type: string
+        required: true
+      - name: license
+        label: Nº de colegiada
+        type: string
+        required: true
+      - name: role
+        label: Cargo
+        type: string
+        required: true
+      - name: web_label
+        label: Web (texto visible)
+        type: string
+        required: true
+      - name: web_url
+        label: Web (enlace)
+        type: string
+        required: true
+        pattern: "^https://[^/\\s]+$"
+      - name: legal_aviso
+        label: Aviso legal
+        type: text
+        required: true
+        readonly: true
+        description: Texto legal — no modificar sin asesoría.
+      - name: legal_proteccion
+        label: Protección de datos
+        type: text
+        required: true
+        readonly: true
+        description: Texto legal — no modificar sin asesoría.
+
+# ---------------------------------------------------------------------------
+# ACTIONS (opcional): botón "Desplegar sitio" en Pages CMS.
+# Requiere que el workflow tenga workflow_dispatch (lo tiene) y que la
+# rama main esté configurada para desplegar con GitHub Actions.
+# ---------------------------------------------------------------------------
+actions:
+  - name: desplegar
+    label: Desplegar sitio
+    workflow: deploy.yml
+
+# ---------------------------------------------------------------------------
+# EXTENSIÓN FUTURA — colección de artículos del blog (Markdown):
+# cuando haya páginas de artículo reales, descomentar y crear content/posts/:
+#
+#   - name: posts
+#     label: Artículos
+#     type: collection
+#     path: content/posts
+#     filename: "{primary}.md"        # slug en el nombre del archivo
+#     exclude: ["README.md"]
+#     view:
+#       primary: title
+#       sort: date
+#       order: desc
+#     fields:
+#       - name: title
+#         type: string
+#         required: true
+#       - name: date
+#         type: date
+#         required: true
+#       - name: excerpt
+#         type: text
+#       - name: cover
+#         type: image
+#       - name: body
+#         type: rich-text
+#         options:
+#           format: markdown
+#
+# (Con la arquitectura actual haría falta además un paso de render en
+#  build.py para generar la página del artículo; ver "Advertencias".)
+# ---------------------------------------------------------------------------
