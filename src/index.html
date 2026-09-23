@@ -57,7 +57,9 @@
          (Pages CMS) al ejecutar build.py. Los huecos .neuro-* (teléfono,
          WhatsApp, email, dirección y Maps) se rellenan con
          content/settings.yml; no hay JS de por medio. No editar los textos
-         dentro de las regiones a mano: editar en Pages CMS. -->
+         dentro de las regiones a mano: editar en Pages CMS. Los textos que
+         regenera build.py se marcan aquí con __archivo.campo__ (p. ej.
+         __home.hero.badge__) para distinguirlos de la parte fija. -->
 
     <div class="mobile-overlay" id="mobileMenu">
         <button class="close-btn" onclick="toggleMenu()">&times;</button>
@@ -103,31 +105,32 @@
             <div class="container hero-grid">
                 <div class="hero-text">
                     <!-- pages:begin hero -->
-                    <span class="badge">Neuropsicología y Psicología Sanitaria</span>
-                    <h1>Evaluación e intervención <i>personalizada</i></h1>
-                    <span class="modalities-text">Clínica en Valdemoro · Online <span style="white-space: nowrap;">· A domicilio</span></span>
-                    <p>Atención profesional centrada en las dificultades emocionales, cognitivas y del aprendizaje en el día a día.</p>
+                    <span class="badge">__home.hero.badge__</span>
+                    <h1>__home.hero.title__ <i>__home.hero.title_accent__</i></h1>
+                    <span class="modalities-text">__home.hero.modalities__</span>
+                    <p>__home.hero.paragraph__</p>
 
                     <div id="hero-promo">
                         <i class="bi bi-info-circle-fill"></i>
-                        <span>Primera consulta informativa gratuita</span>
+                        <span>__home.hero.promo__</span>
                     </div>
                     <!-- pages:end hero -->
 
                     <div class="btn-group">
-                        <a href="#" target="_blank" class="btn btn-whatsapp neuro-whatsapp-link">
+                        <a href="__settings.contact.phone__" target="_blank" class="btn btn-whatsapp neuro-whatsapp-link">
                             <i class="bi bi-whatsapp" style="margin-right: 10px;"></i>
                             WhatsApp
                         </a>
-                        <a href="#" class="btn neuro-phone-link">
+                        <a href="__settings.contact.phone__" class="btn neuro-phone-link">
                             <i class="bi bi-telephone" style="margin-right: 10px;"></i>
+                            <!-- __settings.contact.phone__ -->
                             <span class="neuro-phone"></span>
                         </a>
                     </div>
                 </div>
                 <div id="hero-img-wrapper">
                     <!-- pages:begin hero-img -->
-                    <img src="media/hero-image.png" alt="Consulta Neuropsicológica">
+                    <img src="__home.hero.image__" alt="__home.hero.image_alt__">
                     <!-- pages:end hero-img -->
                 </div>
             </div>
@@ -138,64 +141,39 @@
             <div class="container">
                 <div class="section-header">
                     <!-- pages:begin services-header -->
-                    <h2>¿En qué puedo ayudarte?</h2>
+                    <h2>__home.services.heading__</h2>
                     <div class="divider"></div>
-                    <p>Trabajo en el ámbito de la neuropsicología y la psicología sanitaria, teniendo en cuenta las necesidades y el momento vital de cada persona.</p>
+                    <p>__home.services.lead__</p>
                     <!-- pages:end services-header -->
                 </div>
 
                 <div class="services-grid">
                     <!-- pages:begin services-grid -->
                     <div class="service-card" role="button" tabindex="0" aria-haspopup="dialog" data-service="neuro" onclick="openServiceModal('neuro')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openServiceModal('neuro')}">
-                        <div class="service-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><!-- icono de cerebro, estilo Lucide (ISC) --><path d="M12 18V5"/><path d="M15 13a4.17 4.17 0 0 1-3-4 4.17 4.17 0 0 1-3 4"/><path d="M17.598 6.5A3 3 0 1 0 12 5a3 3 0 1 0-5.598 1.5"/><path d="M17.997 5.125a4 4 0 0 1 2.526 5.77"/><path d="M18 18a4 4 0 0 0 2-7.464"/><path d="M19.967 17.483A4 4 0 1 1 12 18a4 4 0 1 1-7.967-.517"/><path d="M6 18a4 4 0 0 1-2-7.464"/><path d="M6.003 5.125a4 4 0 0 0-2.526 5.77"/></svg></div>
-                        <h3>Neuropsicología</h3>
-                        <p>Evaluación e intervención en dificultades cognitivas, conductuales y emocionales relacionadas con el funcionamiento cerebral.</p>
-                        <span class="service-more">Más información <i class="bi bi-arrow-right"></i></span>
+                        <div class="service-icon">__home.services.items.0.icon__</div>
+                        <h3>__home.services.items.0.title__</h3>
+                        <p>__home.services.items.0.card_text__</p>
+                        <span class="service-more">__home.services.more_label__ <i class="bi bi-arrow-right"></i></span>
                     </div>
                     <div class="service-card" role="button" tabindex="0" aria-haspopup="dialog" data-service="psico" onclick="openServiceModal('psico')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openServiceModal('psico')}">
-                        <div class="service-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><!-- icono de corazón con pulso, estilo Lucide (ISC) --><path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5"/><path d="M3.22 13H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/></svg></div>
-                        <h3>Psicología Sanitaria</h3>
-                        <p>Atención a dificultades emocionales y conductuales, proporcionando un espacio profesional y seguro donde poder abordalas.</p>
-                        <span class="service-more">Más información <i class="bi bi-arrow-right"></i></span>
+                        <div class="service-icon">__home.services.items.1.icon__</div>
+                        <h3>__home.services.items.1.title__</h3>
+                        <p>__home.services.items.1.card_text__</p>
+                        <span class="service-more">__home.services.more_label__ <i class="bi bi-arrow-right"></i></span>
                     </div>
                     <div class="service-card" role="button" tabindex="0" aria-haspopup="dialog" data-service="rehab" onclick="openServiceModal('rehab')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openServiceModal('rehab')}">
-                        <div class="service-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><!-- icono de rayo, estilo Lucide (ISC) --><path d="M15.914 4a1.5 1.5 0 0 0-2.474-1.561l-9 9A1.5 1.5 0 0 0 5.5 14h4.002a.5.5 0 0 1 .471.666L8.086 20a1.5 1.5 0 0 0 2.475 1.56l9-9A1.5 1.5 0 0 0 18.5 10h-3.997a.5.5 0 0 1-.472-.667z"/></svg></div>
-                        <h3>Rehabilitación</h3>
-                        <p>Programas de intervención personalizados orientados a la rehabilitación, estimulación y mantenimiento de las funciones cognitivas.</p>
-                        <span class="service-more">Más información <i class="bi bi-arrow-right"></i></span>
+                        <div class="service-icon">__home.services.items.2.icon__</div>
+                        <h3>__home.services.items.2.title__</h3>
+                        <p>__home.services.items.2.card_text__</p>
+                        <span class="service-more">__home.services.more_label__ <i class="bi bi-arrow-right"></i></span>
                     </div>
                     <!-- pages:end services-grid -->
                 </div>
                 <div class="section-header">
                     <div class="divider"></div>
                     <!-- pages:begin services-areas -->
-                    <p>Principales áreas que se trabajan en consulta:</p>
-                    <div class="check-list">
-                        <div class="check-item">
-                            <div class="check-icon"><i class="bi bi-check-lg"></i></div>
-                            <span>Dificultades de aprendizaje.</span>
-                        </div>
-                        <div class="check-item">
-                            <div class="check-icon"><i class="bi bi-check-lg"></i></div>
-                            <span>Trastorno por Déficit de Atención e Hiperactividad (TDAH).</span>
-                        </div>
-
-                        <div class="check-item">
-                            <div class="check-icon"><i class="bi bi-check-lg"></i></div>
-                            <span>Trastorno del Espectro Autista (TEA).</span>
-                        </div>
-                        <div class="check-item">
-                            <div class="check-icon"><i class="bi bi-check-lg"></i></div>
-                            <span>Deterioro cognitivo.</span>
-                        </div>
-                        <div class="check-item">
-                            <div class="check-icon"><i class="bi bi-check-lg"></i></div>
-                            <span>Daño Cerebral Adquirido (DCA).</span>
-                        </div>
-                        <div class="check-item">
-                            <div class="check-icon"><i class="bi bi-check-lg"></i></div>
-                            <span>Dificultades emocionales y conductuales.</span>
-                        </div>
+                    <div class="check-list markdown-content">
+                        __home.services.areas__
                     </div>
                     <!-- pages:end services-areas -->
                 </div>
@@ -207,36 +185,36 @@
             <div class="container">
                 <div class="section-header">
                     <!-- pages:begin modalities-header -->
-                    <h2>Modalidades de atención</h2>
+                    <h2>__home.modalities.heading__</h2>
                     <div class="divider"></div>
-                    <p>Elegir el entorno adecuado para tus sesiones es importante: facilita el trabajo terapéutico y tu comodidad durante el proceso.</p>
+                    <p>__home.modalities.lead__</p>
                     <!-- pages:end modalities-header -->
                 </div>
 
                 <div class="modalities-grid">
                     <!-- pages:begin modalities-grid -->
                     <div class="modality-item" role="button" tabindex="0" aria-haspopup="dialog" data-modality="0" onclick="openModalityModal(0)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openModalityModal(0)}">
-                        <div class="modality-icon"><i class="bi bi-building"></i></div>
+                        <div class="modality-icon">__home.modalities.items.0.icon__</div>
                         <div class="modality-content">
-                            <h4>Atención en Clínica</h4>
-                            <p>En consulta presencial, en un entorno profesional y tranquilo, pensado para que puedas sentirte cómodo/a durante las sesiones.</p>
-                            <span class="service-more">Más información <i class="bi bi-arrow-right"></i></span>
+                            <h4>__home.modalities.items.0.title__</h4>
+                            <p>__home.modalities.items.0.text__</p>
+                            <span class="service-more">__home.modalities.more_label__ <i class="bi bi-arrow-right"></i></span>
                         </div>
                     </div>
                     <div class="modality-item" role="button" tabindex="0" aria-haspopup="dialog" data-modality="1" onclick="openModalityModal(1)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openModalityModal(1)}">
-                        <div class="modality-icon"><i class="bi bi-laptop"></i></div>
+                        <div class="modality-icon">__home.modalities.items.1.icon__</div>
                         <div class="modality-content">
-                            <h4>Terapia Online</h4>
-                            <p>Sesiones por videollamada, facilitando el acceso a la intervención sin necesidad de desplazamiento.</p>
-                            <span class="service-more">Más información <i class="bi bi-arrow-right"></i></span>
+                            <h4>__home.modalities.items.1.title__</h4>
+                            <p>__home.modalities.items.1.text__</p>
+                            <span class="service-more">__home.modalities.more_label__ <i class="bi bi-arrow-right"></i></span>
                         </div>
                     </div>
                     <div class="modality-item" role="button" tabindex="0" aria-haspopup="dialog" data-modality="2" onclick="openModalityModal(2)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openModalityModal(2)}">
-                        <div class="modality-icon"><i class="bi bi-house-door"></i></div>
+                        <div class="modality-icon">__home.modalities.items.2.icon__</div>
                         <div class="modality-content">
-                            <h4>A Domicilio</h4>
-                            <p>Intervención en tu entorno cotidiano, ideal para pacientes con movilidad reducida o dificultades específicas.</p>
-                            <span class="service-more">Más información <i class="bi bi-arrow-right"></i></span>
+                            <h4>__home.modalities.items.2.title__</h4>
+                            <p>__home.modalities.items.2.text__</p>
+                            <span class="service-more">__home.modalities.more_label__ <i class="bi bi-arrow-right"></i></span>
                         </div>
                     </div>
                     <!-- pages:end modalities-grid -->
@@ -249,9 +227,9 @@
             <div class="container">
                 <div class="section-header">
                     <!-- pages:begin process-header -->
-                    <h2>Cómo empezar la terapia</h2>
+                    <h2>__home.process.heading__</h2>
                     <div class="divider"></div>
-                    <p>Un proceso claro y sin prisas, adaptado al ritmo y a las necesidades de cada persona.</p>
+                    <p>__home.process.lead__</p>
                     <!-- pages:end process-header -->
                 </div>
 
@@ -259,43 +237,43 @@
                     <!-- pages:begin process-grid -->
                     <div class="process-step">
                         <div class="process-num">
-                            <span class="process-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><!-- icono de burbuja de mensaje, estilo Lucide (ISC) --><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg></span>
+                            <span class="process-icon">__home.process.steps.0.icon__</span>
                             <span class="process-index">1</span>
                         </div>
-                        <h4>Contacto</h4>
-                        <p>Escríbeme por WhatsApp, teléfono o email y cuéntame brevemente qué necesitas.</p>
+                        <h4>__home.process.steps.0.title__</h4>
+                        <p>__home.process.steps.0.text__</p>
                     </div>
                     <div class="process-step">
                         <div class="process-num">
-                            <span class="process-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><!-- icono de calendario, estilo Lucide (ISC) --><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg></span>
+                            <span class="process-icon">__home.process.steps.1.icon__</span>
                             <span class="process-index">2</span>
                         </div>
-                        <h4>Primera consulta</h4>
-                        <p>Una entrevista informativa y gratuita para conocernos y resolver tus dudas.</p>
+                        <h4>__home.process.steps.1.title__</h4>
+                        <p>__home.process.steps.1.text__</p>
                     </div>
                     <div class="process-step">
                         <div class="process-num">
-                            <span class="process-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><!-- icono de portapapeles, estilo Lucide (ISC) --><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg></span>
+                            <span class="process-icon">__home.process.steps.2.icon__</span>
                             <span class="process-index">3</span>
                         </div>
-                        <h4>Evaluación</h4>
-                        <p>Valoración de la situación y, cuando procede, pruebas para conocer el punto de partida.</p>
+                        <h4>__home.process.steps.2.title__</h4>
+                        <p>__home.process.steps.2.text__</p>
                     </div>
                     <div class="process-step">
                         <div class="process-num">
-                            <span class="process-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><!-- icono de diana/objetivo, estilo Lucide (ISC) --><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span>
+                            <span class="process-icon">__home.process.steps.3.icon__</span>
                             <span class="process-index">4</span>
                         </div>
-                        <h4>Plan de intervención</h4>
-                        <p>Propuesta personalizada con objetivos concretos y revisables.</p>
+                        <h4>__home.process.steps.3.title__</h4>
+                        <p>__home.process.steps.3.text__</p>
                     </div>
                     <div class="process-step">
                         <div class="process-num">
-                            <span class="process-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><!-- icono de gráfico ascendente, estilo Lucide (ISC) --><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></span>
+                            <span class="process-icon">__home.process.steps.4.icon__</span>
                             <span class="process-index">5</span>
                         </div>
-                        <h4>Seguimiento</h4>
-                        <p>Sesiones periódicas y revisiones para ajustar el trabajo a los avances.</p>
+                        <h4>__home.process.steps.4.title__</h4>
+                        <p>__home.process.steps.4.text__</p>
                     </div>
                     <!-- pages:end process-grid -->
                 </div>
@@ -307,26 +285,17 @@
             <div class="container about-grid">
                 <!-- pages:begin about -->
                 <div class="about-image">
-                    <img src="media/photo.jpeg" alt="Teresa García Valero">
+                    <img src="__home.about.image__" alt="__home.about.image_alt__">
                     <div class="col-card">
-                        <span class="name">Teresa García Valero</span>
-                        <span class="label">Nº Colegiada: M-42858</span>
+                        <span class="name">__home.about.name__</span>
+                        <span class="label">__home.about.license__</span>
                     </div>
                 </div>
                 <div class="about-content">
-                    <h2>Compromiso con tu salud mental</h2>
+                    <h2>__home.about.heading__</h2>
                     <div class="divider"></div>
 
-                    <p>Bienvenido/a!</p><br>
-                    <p>
-                        Soy Teresa, neuropsicóloga y psicóloga general sanitaria. Estoy especializada en el trabajo con dificultades
-                        cognitivas, emocionales y del aprendizaje. Acompaño a niños, adolescentes y adultos en este proceso, adaptando
-                        cada intervención a sus necesidades.
-                    </p>
-                    <br>
-                    <p>Trabajo desde un enfoque cercano y personalizado, con el objetivo de mejorar el funcionamiento y el bienestar en el día a día.</p>
-                    <br>
-                    <p>Me mantengo en formación continua para ofrecer una atención actualizada y basada en la evidencia.</p>
+                    <p>__home.about.content__</p>
                 </div>
                 <!-- pages:end about -->
             </div>
@@ -337,39 +306,39 @@
             <div class="container">
                 <div class="section-header">
                     <!-- pages:begin blog-header -->
-                    <h2>Publicaciones</h2>
+                    <h2>__home.blog.heading__</h2>
                     <div class="divider"></div>
-                    <p>Artículos cortos con información útil sobre neuropsicología, aprendizaje y bienestar emocional.</p>
+                    <p>__home.blog.lead__</p>
                     <!-- pages:end blog-header -->
                 </div>
 
                 <div class="blog-grid">
                     <!-- pages:begin blog-grid -->
                     <article class="blog-card">
-                        <div class="blog-thumb"><i class="bi bi-journal-text"></i></div>
+                        <div class="blog-thumb">__home.blog.posts.0.image__</div>
                         <div class="blog-content">
-                            <span class="blog-date">Próximamente</span>
-                            <h4>¿Qué es la neuropsicología y cuándo consultar?</h4>
-                            <p>Breve resumen de la publicación. Sustituye este texto por el contenido real del artículo.</p>
-                            <a href="#" class="read-more">Leer más <i class="bi bi-arrow-right"></i></a>
+                            <span class="blog-date">__home.blog.posts.0.date__</span>
+                            <h4>__home.blog.posts.0.title__</h4>
+                            <p>__home.blog.posts.0.excerpt__</p>
+                            <a href="__home.blog.posts.0.url__" class="read-more">__home.blog.read_more__ <i class="bi bi-arrow-right"></i></a>
                         </div>
                     </article>
                     <article class="blog-card">
-                        <div class="blog-thumb"><i class="bi bi-journal-text"></i></div>
+                        <div class="blog-thumb">__home.blog.posts.1.image__</div>
                         <div class="blog-content">
-                            <span class="blog-date">Próximamente</span>
-                            <h4>TDAH en la infancia: señales para pedir ayuda</h4>
-                            <p>Breve resumen de la publicación. Sustituye este texto por el contenido real del artículo.</p>
-                            <a href="#" class="read-more">Leer más <i class="bi bi-arrow-right"></i></a>
+                            <span class="blog-date">__home.blog.posts.1.date__</span>
+                            <h4>__home.blog.posts.1.title__</h4>
+                            <p>__home.blog.posts.1.excerpt__</p>
+                            <a href="__home.blog.posts.1.url__" class="read-more">__home.blog.read_more__ <i class="bi bi-arrow-right"></i></a>
                         </div>
                     </article>
                     <article class="blog-card">
-                        <div class="blog-thumb"><i class="bi bi-journal-text"></i></div>
+                        <div class="blog-thumb">__home.blog.posts.2.image__</div>
                         <div class="blog-content">
-                            <span class="blog-date">Próximamente</span>
-                            <h4>Estimulación cognitiva en el día a día</h4>
-                            <p>Breve resumen de la publicación. Sustituye este texto por el contenido real del artículo.</p>
-                            <a href="#" class="read-more">Leer más <i class="bi bi-arrow-right"></i></a>
+                            <span class="blog-date">__home.blog.posts.2.date__</span>
+                            <h4>__home.blog.posts.2.title__</h4>
+                            <p>__home.blog.posts.2.excerpt__</p>
+                            <a href="__home.blog.posts.2.url__" class="read-more">__home.blog.read_more__ <i class="bi bi-arrow-right"></i></a>
                         </div>
                     </article>
                     <!-- pages:end blog-grid -->
@@ -382,41 +351,41 @@
             <div class="container">
                 <div class="section-header">
                     <!-- pages:begin faq-header -->
-                    <h2>Preguntas frecuentes</h2>
+                    <h2>__home.faq.heading__</h2>
                     <div class="divider"></div>
-                    <p>Si tu duda no aparece aquí, puedo resolverla personalmente en la primera consulta.</p>
+                    <p>__home.faq.lead__</p>
                     <!-- pages:end faq-header -->
                 </div>
 
                 <div class="faq-list">
                     <!-- pages:begin faq-list -->
                     <details class="faq-item">
-                        <summary>¿La primera consulta es gratuita?</summary>
-                        <p>Sí. La primera consulta es informativa y gratuita, para resolver dudas y valorar si puedo ayudarte.</p>
+                        <summary>__home.faq.items.0.question__</summary>
+                        <p>__home.faq.items.0.answer__</p>
                     </details>
                     <details class="faq-item">
-                        <summary>¿Cuánto dura una sesión?</summary>
-                        <p>Habitualmente entre 45 y 60 minutos, aunque la duración puede variar según el tipo de intervención y las necesidades de cada persona.</p>
+                        <summary>__home.faq.items.1.question__</summary>
+                        <p>__home.faq.items.1.answer__</p>
                     </details>
                     <details class="faq-item">
-                        <summary>¿Cuántas sesiones voy a necesitar?</summary>
-                        <p>Depende de cada caso y de los objetivos que nos marquemos. En la propuesta de intervención se concreta una orientación y se revisa periódicamente.</p>
+                        <summary>__home.faq.items.2.question__</summary>
+                        <p>__home.faq.items.2.answer__</p>
                     </details>
                     <details class="faq-item">
-                        <summary>¿Hace falta una evaluación previa?</summary>
-                        <p>En muchos casos sí, para conocer el punto de partida y ajustar el plan. En la primera consulta se valora si es necesaria.</p>
+                        <summary>__home.faq.items.3.question__</summary>
+                        <p>__home.faq.items.3.answer__</p>
                     </details>
                     <details class="faq-item">
-                        <summary>¿Atiendes a niños, adolescentes y adultos?</summary>
-                        <p>Sí. Trabajo con niños, adolescentes y adultos, adaptando cada intervención a la etapa y al momento vital de cada persona.</p>
+                        <summary>__home.faq.items.4.question__</summary>
+                        <p>__home.faq.items.4.answer__</p>
                     </details>
                     <details class="faq-item">
-                        <summary>¿Puedo elegir entre clínica, online o domicilio?</summary>
-                        <p>Sí. Puedes elegir la modalidad que mejor te encaje: atención presencial en consulta, por videollamada o a domicilio.</p>
+                        <summary>__home.faq.items.5.question__</summary>
+                        <p>__home.faq.items.5.answer__</p>
                     </details>
                     <details class="faq-item">
-                        <summary>¿Qué llevo a la primera consulta?</summary>
-                        <p>El motivo de consulta y, si los tienes, informes o pruebas previas. No es imprescindible para la primera toma de contacto.</p>
+                        <summary>__home.faq.items.6.question__</summary>
+                        <p>__home.faq.items.6.answer__</p>
                     </details>
                     <!-- pages:end faq-list -->
                 </div>
@@ -428,41 +397,45 @@
             <div class="container">
                 <div class="section-header">
                     <!-- pages:begin contact-header -->
-                    <h2>Pide tu cita</h2>
+                    <h2>__home.contact.heading__</h2>
                     <div class="divider"></div>
-                    <strong>Primera consulta informativa para resolver dudas y valorar cada situación.</strong>
-                    <p>Puedes ponerte en contacto conmigo a través de cualquiera de los siguientes canales:</p>
+                    <strong>__home.contact.highlight__</strong>
+                    <p>__home.contact.lead__</p>
                     <!-- pages:end contact-header -->
                 </div>
 
                 <div class="contact-grid">
-                    <a href="#" target="_blank" class="contact-item neuro-phone-link">
+                    <a href="__settings.contact.phone__" target="_blank" class="contact-item neuro-phone-link">
                         <div class="contact-icon"><i class="bi bi-telephone"></i></div>
                         <h4>Teléfono</h4>
+                        <!-- __settings.contact.phone__ -->
                         <span class="neuro-phone"></span>
                     </a>
-                    <a href="#" target="_blank" class="contact-item neuro-whatsapp-link">
+                    <a href="__settings.contact.phone__" target="_blank" class="contact-item neuro-whatsapp-link">
                         <div class="contact-icon"><i class="bi bi-whatsapp"></i></div>
                         <h4>WhatsApp</h4>
+                        <!-- __settings.contact.phone__ -->
                         <span class="neuro-phone"></span>
                     </a>
                     <!-- pages:begin contact-instagram -->
-                    <a href="https://instagram.com/neurogarval" target="_blank" class="contact-item">
+                    <a href="__settings.contact.instagram.url__" target="_blank" class="contact-item">
                         <div class="contact-icon"><i class="bi bi-instagram"></i></div>
                         <h4>Instagram</h4>
-                        <span>@neurogarval</span>
+                        <span>__settings.contact.instagram.handle__</span>
                     </a>
                     <!-- pages:end contact-instagram -->
                 </div>
                 <div class="contact-grid">
-                    <a href="#" target="_blank" class="contact-item neuro-mail-link">
+                    <a href="__settings.contact.mail__" target="_blank" class="contact-item neuro-mail-link">
                         <div class="contact-icon"><i class="bi bi-envelope"></i></div>
                         <h4>Email</h4>
+                        <!-- __settings.contact.mail__ -->
                         <span class="neuro-mail"></span>
                     </a>
-                    <a href="#" target="_blank" class="contact-item neuro-address-link">
+                    <a href="__settings.contact.maps_url__" target="_blank" class="contact-item neuro-address-link">
                         <div class="contact-icon"><i class="bi bi-geo-alt"></i></div>
                         <h4>Dirección</h4>
+                        <!-- __settings.contact.address_lines__ -->
                         <span class="neuro-address"></span>
                     </a>
                 </div>
@@ -471,7 +444,7 @@
                     <div class="map-container">
                         <!-- pages:begin contact-map -->
                         <iframe
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3047.4102062110496!2d-3.6931494!3d40.199937299999995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd421fc6ce867025%3A0x1abf8630d9ed5e9b!2sNeuroGarval%20%7C%20Psicolog%C3%ADa%20y%20Neuropsicolog%C3%ADa%20Cl%C3%ADnica!5e0!3m2!1sen!2ses!4v1774983440789!5m2!1sen!2ses"
+                            src="__home.contact.map_embed__"
                             width="600"
                             height="450"
                             style="border:0;"
@@ -492,20 +465,23 @@
                 <div class="footer-info">
                     <img src="media/logo.svg" alt="NeuroGarval" class="footer-logo">
                     <!-- pages:begin footer-info -->
-                    <p>Neuropsicología y Psicología Sanitaria.<br>Teresa García Valero (Col. M-42858).</p>
+                    <p>__settings.footer.lines__</p>
                     <br>
-                    <a href="aviso_legal.pdf">Información legal</a>
+                    <a href="__settings.footer.legal_file__">__settings.footer.legal_label__</a>
                     <!-- pages:end footer-info -->
                 </div>
                 <div class="footer-links">
-                    <a href="#" class="neuro-address-link neuro-address"></a>
-                    <a href="#" class="neuro-phone-link neuro-phone"></a>
-                    <a href="#" class="neuro-mail-link neuro-mail"></a>
+                    <!-- __settings.contact.address_lines__ -->
+                    <a href="__settings.contact.maps_url__" class="neuro-address-link neuro-address"></a>
+                    <!-- __settings.contact.phone__ -->
+                    <a href="__settings.contact.phone__" class="neuro-phone-link neuro-phone"></a>
+                    <!-- __settings.contact.mail__ -->
+                    <a href="__settings.contact.mail__" class="neuro-mail-link neuro-mail"></a>
                 </div>
             </div>
             <div class="copyright">
                 <!-- pages:begin footer-copyright -->
-                &copy; 2026 NeuroGarval
+                &copy; __settings.footer.copyright__
                 <!-- pages:end footer-copyright -->
             </div>
         </div>
