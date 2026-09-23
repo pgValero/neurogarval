@@ -1,4 +1,4 @@
-// Modales de servicio: el contenido lo genera build.py desde
+// Modales de servicios y modalidades: el contenido lo genera build.py desde
 // content/home.yml (edición en Pages CMS) y se publica como _site/data.js,
 // que se carga antes que este archivo. Sin data.js (preview sin build) la
 // página carga, pero los modales no tienen contenido.
@@ -13,11 +13,29 @@ function openServiceModal(key) {
     document.getElementById('modalIcon').innerHTML = icons[info.icon] || '';
     document.getElementById('modalTitle').textContent = info.title;
     document.getElementById('modalBody').innerHTML = info.html;
-    document.getElementById('serviceModal').showModal();
+    const modal = document.getElementById('serviceModal');
+    if (!modal.open) modal.showModal();
 }
 
 function closeServiceModal() {
-    document.getElementById('serviceModal').close();
+    const modal = document.getElementById('serviceModal');
+    if (modal.open) modal.close();
+}
+
+function openModalityModal(key) {
+    const info = siteData.modalities && siteData.modalities[key];
+    if (!info) return;
+    const icons = siteData.icons || {};
+    document.getElementById('modalityModalIcon').innerHTML = icons[info.icon] || '';
+    document.getElementById('modalityModalTitle').textContent = info.title;
+    document.getElementById('modalityModalBody').innerHTML = info.html;
+    const modal = document.getElementById('modalityModal');
+    if (!modal.open) modal.showModal();
+}
+
+function closeModalityModal() {
+    const modal = document.getElementById('modalityModal');
+    if (modal.open) modal.close();
 }
 
 function toggleMenu() {
@@ -28,4 +46,8 @@ function toggleMenu() {
 
 document.getElementById('serviceModal').addEventListener('click', function (event) {
     if (event.target === this) closeServiceModal();
+});
+
+document.getElementById('modalityModal').addEventListener('click', function (event) {
+    if (event.target === this) closeModalityModal();
 });

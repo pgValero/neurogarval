@@ -6,13 +6,13 @@ Qué hace
 1. Lee el contenido editable de Pages CMS:  content/*.yml
 2. Regenera las regiones delimitadas por
       <!-- pages:begin NOMBRE -->  ...  <!-- pages:end NOMBRE -->
-   en index.html (24) y firma.html (4); el resto de la plantilla
+   en index.html (22) y firma.html (4); el resto de la plantilla
    HTML/CSS se queda intacto.
 3. Escribe el contacto de content/settings.yml directamente en
    index.html: los huecos .neuro-* (teléfono, WhatsApp, email,
    dirección, Maps y logo) quedan resueltos en el HTML, sin JavaScript.
-4. Genera _site/data.js (window.SITE_DATA: servicios + iconos), que
-   script.js usa únicamente al abrir los modales de servicio.
+4. Genera _site/data.js (window.SITE_DATA: servicios, modalidades e iconos),
+   que script.js usa al abrir sus respectivos modales.
 5. Copia los estáticos (CSS, JS, CNAME, favicons, PDFs) y media/ a _site/.
 
 Uso
@@ -106,7 +106,7 @@ ICONS: dict[str, str] = {
 STATIC_FILES = ["styles.css", "script.js", "CNAME", "favicon.svg",
                 "aviso_legal.pdf", "tarjeta.pdf"]
 
-# Avisos no fatales (p. ej. fotos de la galería aún no subidas).
+# Avisos no fatales (p. ej. fotos de modalidades aún no subidas).
 WARNINGS: list[str] = []
 
 
@@ -298,18 +298,59 @@ def r_services_areas(c: dict) -> str:
 
 
 def r_modalities_grid(c: dict) -> str:
+    modalities = c["home"]["modalities"]
     chunks = []
-    for item in c["home"]["modalities"]["items"]:
+    for i, item in enumerate(modalities["items"]):
+        onkeydown = (
+            f"if(event.key==='Enter'||event.key===' '){{event.preventDefault();"
+            f"openModalityModal({i})}}"
+        )
         chunks.append("\n".join([
-            '<div class="modality-item">',
+            f'<div class="modality-item" role="button" tabindex="0" '
+            f'aria-haspopup="dialog" data-modality="{i}" '
+            f'onclick="openModalityModal({i})" onkeydown="{onkeydown}">',
             f'    <div class="modality-icon">{icon_html(item.get("icon"))}</div>',
             '    <div class="modality-content">',
             f'        <h4>{esc(item["title"])}</h4>',
             f'        <p>{esc(item["text"])}</p>',
+            f'        <span class="service-more">{esc(modalities["more_label"])} '
+            '<i class="bi bi-arrow-right"></i></span>',
             "    </div>",
             "</div>",
         ]))
     return "\n\n".join(chunks)
+
+
+def modality_gallery(images: list[dict]) -> str:
+    """Genera la cuadrícula opcional de fotos dentro de un modal."""
+    figures = []
+    for image in images:
+        src = media_url(image.get("image"))
+        alt = esc(image.get("alt"))
+        if src:
+            figures.append(
+                f'<figure class="modality-gallery-item">'
+                '<i class="bi bi-camera"></i>'
+                f'<img src="{esc(src)}" alt="{alt}" loading="lazy" '
+                'onerror="this.remove()"></figure>'
+            )
+        else:
+            figures.append(
+                '<figure class="modality-gallery-item">'
+                '<i class="bi bi-camera"></i></figure>'
+            )
+    if not figures:
+        return ""
+    return ('<div class="modality-gallery">\n'
+            + ind("\n".join(figures), 4)
+            + "\n</div>")
+
+
+def modality_modal_html(item: dict) -> str:
+    """Añade al rich-text las fotos configuradas para la modalidad."""
+    content = str(item["modal_content"]).strip()
+    gallery = modality_gallery(item.get("images") or [])
+    return f"{content}\n{gallery}" if gallery else content
 
 
 def r_process_grid(c: dict) -> str:
@@ -345,24 +386,6 @@ def r_about(c: dict) -> str:
         ind(paragraphs, 4),
         "</div>",
     ])
-
-
-def r_gallery_grid(c: dict) -> str:
-    figures = []
-    for item in c["home"]["gallery"]["items"]:
-        img = media_url(item.get("image"))
-        alt = esc(item.get("alt"))
-        if img:
-            figures.append(
-                f'<figure class="gallery-item"><i class="bi bi-camera"></i>'
-                f'<img src="{img}" alt="{alt}" loading="lazy" '
-                'onerror="this.remove()"></figure>'
-            )
-        else:
-            figures.append(
-                '<figure class="gallery-item"><i class="bi bi-camera"></i></figure>'
-            )
-    return "\n".join(figures)
 
 
 def r_blog_grid(c: dict) -> str:
@@ -471,9 +494,6 @@ INDEX_REGIONS: dict[str, "callable"] = {
         c["home"]["process"]["heading"], c["home"]["process"]["lead"]),
     "process-grid": r_process_grid,
     "about": r_about,
-    "gallery-header": lambda c: section_header(
-        c["home"]["gallery"]["heading"], c["home"]["gallery"]["lead"]),
-    "gallery-grid": r_gallery_grid,
     "blog-header": lambda c: section_header(
         c["home"]["blog"]["heading"], c["home"]["blog"]["lead"]),
     "blog-grid": r_blog_grid,
@@ -526,7 +546,8 @@ def apply_regions(source: str, renderers: dict, fname: str) -> str:
 # ---------------------------------------------------------------------------
 # Contacto — content/settings.yml -> huecos .neuro-* de index.html.
 # Fuente única: el contacto se escribe aquí, en el HTML; script.js no lo
-# toca (su único trabajo con datos es rellenar los modales).
+# toca (su único trabajo con datos es rellenar los modales de servicios y
+# modalidades).
 # ---------------------------------------------------------------------------
 def fill_contact(doc: str, settings: dict) -> str:
     """Resuelve en el HTML todos los huecos .neuro-* de la plantilla.
@@ -640,7 +661,7 @@ FIRMA_REGIONS: dict[str, "callable"] = {
 }
 
 # ---------------------------------------------------------------------------
-# data.js — puente con script.js (solo modales: servicios + iconos).
+# data.js — puente con script.js (solo modales: servicios, modalidades e iconos).
 # El contacto NO viaja aquí: se escribe en index.html con fill_contact().
 # ---------------------------------------------------------------------------
 def write_data_js(c: dict) -> None:
@@ -652,7 +673,15 @@ def write_data_js(c: dict) -> None:
         }
         for item in c["home"]["services"]["items"]
     ]
-    payload = {"services": services, "icons": ICONS}
+    modalities = [
+        {
+            "title": item["title"],
+            "icon": item.get("icon", ""),
+            "html": modality_modal_html(item),
+        }
+        for item in c["home"]["modalities"]["items"]
+    ]
+    payload = {"services": services, "modalities": modalities, "icons": ICONS}
     js = ("// Generado por build.py desde content/*.yml — NO editar a mano.\n"
           "window.SITE_DATA = "
           + json.dumps(payload, ensure_ascii=False, indent=2)

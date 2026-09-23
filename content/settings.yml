@@ -47,9 +47,6 @@ menu:
   - label: Especialista
     href: "#especialista"
     desktop: true
-  - label: Sala
-    href: "#galeria"
-    desktop: false
   - label: Blog
     href: "#blog"
     desktop: true

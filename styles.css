@@ -222,6 +222,7 @@ nav {
     background: white;
     border: 1px solid var(--color-light);
     transition: var(--transition);
+    cursor: pointer;
 }
 
 .modality-item:hover {
@@ -243,10 +244,21 @@ nav {
     border-radius: 100%;
 }
 
+.modality-content {
+    width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
 .modality-content h4 {
     font-size: 1.2rem;
     margin-bottom: 1rem;
     color: var(--color-dark);
+}
+
+.modality-content .service-more {
+    justify-content: center;
 }
 
 /* --- Specialists --- */
@@ -544,8 +556,9 @@ footer a:hover {
     font-size: 1.5rem;
 }
 
-/* --- Service Modal --- */
-.service-card:focus-visible {
+/* --- Modals --- */
+.service-card:focus-visible,
+.modality-item:focus-visible {
     outline: 3px solid var(--color-primary);
     outline-offset: 4px;
 }
@@ -567,7 +580,9 @@ footer a:hover {
     border-radius: 30px;
     padding: 3rem 2.5rem;
     max-width: 620px;
+    max-height: calc(100vh - 2rem);
     width: calc(100% - 2rem);
+    overflow-y: auto;
     color: var(--color-dark);
     background: white;
     box-shadow: 0 30px 80px rgba(41, 51, 92, 0.35);
@@ -611,6 +626,34 @@ footer a:hover {
 
 .modal-body li {
     margin-bottom: 0.4rem;
+}
+
+.modality-gallery {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.modality-gallery-item {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    border-radius: 16px;
+    overflow: hidden;
+    background: var(--color-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-primary);
+    font-size: 1.5rem;
+}
+
+.modality-gallery-item img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 /* --- Process --- */
@@ -677,34 +720,6 @@ footer a:hover {
 
 .process-step p {
     font-size: 0.9rem;
-}
-
-/* --- Gallery --- */
-.gallery-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
-}
-
-.gallery-item {
-    position: relative;
-    aspect-ratio: 4 / 3;
-    border-radius: 24px;
-    overflow: hidden;
-    background: var(--color-light);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--color-primary);
-    font-size: 2rem;
-}
-
-.gallery-item img {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
 }
 
 /* --- Blog --- */
@@ -829,7 +844,7 @@ footer a:hover {
     .menu-btn { display: block; }
 
     .hero-grid, .about-grid, .services-grid, .contact-grid, .modalities-grid,
-    .process-grid, .gallery-grid, .blog-grid {
+    .process-grid, .blog-grid {
         grid-template-columns: 1fr;
         grid-auto-flow: unset;
     }
@@ -847,4 +862,5 @@ footer a:hover {
     .footer-links { text-align: center; }
 
     .map-container { height: 240px; margin: 0 1rem; }
+    .modality-gallery { grid-template-columns: 1fr; }
 }
