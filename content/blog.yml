@@ -1,0 +1,31 @@
+# ============================================================
+# SECCIÓN BLOG (tarjetas) — edición en Pages CMS
+# Corresponde a las regiones "blog-header" y "blog-grid" de src/index.html.
+# El texto de cada artículo se escribe en un único campo Markdown.
+# ============================================================
+
+heading: Publicaciones
+lead: |-
+  Artículos cortos con información útil sobre neuropsicología, aprendizaje y bienestar emocional.
+read_more: Leer más
+# "url" apunta al artículo (dejar "#" mientras no exista la página).
+# Sin imagen se muestra un icono de reserva.
+posts:
+  - date: Próximamente
+    title: "¿Qué es la neuropsicología y cuándo consultar?"
+    excerpt: |-
+      Breve resumen de la publicación. Sustituye este texto por el contenido real del artículo.
+    url: "#"
+    image: ""
+  - date: Próximamente
+    title: "TDAH en la infancia: señales para pedir ayuda"
+    excerpt: |-
+      Breve resumen de la publicación. Sustituye este texto por el contenido real del artículo.
+    url: "#"
+    image: ""
+  - date: Próximamente
+    title: Estimulación cognitiva en el día a día
+    excerpt: |-
+      Breve resumen de la publicación. Sustituye este texto por el contenido real del artículo.
+    url: "#"
+    image: ""

@@ -1,6 +1,6 @@
 <!-- PLANTILLA DE LA FIRMA. El logo y su URL son fijos. Las regiones
      pages:begin/pages:end se regeneran desde content/firma.yml y
-     content/settings.yml (Pages CMS) con build.py. Los textos que regenera
+     content/common.yml (Pages CMS) con build.py. Los textos que regenera
      build.py se marcan aquí con __archivo.campo__ (p. ej. __firma.name__). -->
 <table cellpadding="0" cellspacing="0" style="font-family: Arial, sans-serif; line-height: 1.5;">
   <tr>
@@ -21,9 +21,9 @@
 
       <!-- pages:begin firma-contact -->
       <div style="font-size: 13px; color: #666666;">
-        <a href="__settings.contact.phone__" style="color: #666666; text-decoration: none;">__settings.contact.phone__</a> |
+        <a href="__common.contact.phone__" style="color: #666666; text-decoration: none;">__common.contact.phone__</a> |
         <a href="__firma.web_url__" style="color: #666666; text-decoration: none;">__firma.web_label__</a><br>
-        <a href="__settings.contact.maps_url__" style="color: #666666; text-decoration: none;">__settings.contact.address_lines__</a>
+        <a href="__common.contact.maps_url__" style="color: #666666; text-decoration: none;">__common.contact.address_lines__</a>
       </div>
       <!-- pages:end firma-contact -->
     </td>

@@ -1,0 +1,20 @@
+# ============================================================
+# SECCIÓN ESPECIALISTA — edición en Pages CMS
+# Corresponde a la región "about" de src/index.html.
+# Los textos largos se escriben en Markdown; build.py los convierte a HTML.
+# ============================================================
+
+image: /media/photo.jpeg
+image_alt: Teresa García Valero
+name: Teresa García Valero
+license: "Nº Colegiada: M-42858"
+heading: Compromiso con tu salud mental
+# Todos los párrafos de la sección se editan en un único campo Markdown.
+content: |-
+  Bienvenido/a!
+
+  Soy Teresa, neuropsicóloga y psicóloga general sanitaria. Estoy especializada en el trabajo con dificultades cognitivas, emocionales y del aprendizaje. Acompaño a niños, adolescentes y adultos en este proceso, adaptando cada intervención a sus necesidades.
+
+  Trabajo desde un enfoque cercano y personalizado, con el objetivo de mejorar el funcionamiento y el bienestar en el día a día.
+
+  Me mantengo en formación continua para ofrecer una atención actualizada y basada en la evidencia.
