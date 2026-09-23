@@ -738,6 +738,13 @@ footer a:hover {
     font-size: 2rem;
 }
 
+/* Imagen de portada del artículo (campo "image" del blog en Pages CMS) */
+.blog-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
 .blog-content {
     padding: 1.5rem;
     display: flex;
