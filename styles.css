@@ -318,10 +318,50 @@ nav {
     text-align: justify;
 }
 
+.markdown-content > :first-child {
+    margin-top: 0;
+}
+
+.markdown-content p {
+    margin: 0 0 1rem;
+}
+
+.markdown-content > :last-child {
+    margin-bottom: 0;
+}
+
+.markdown-content ul,
+.markdown-content ol {
+    padding-left: 1.4rem;
+    margin: 1rem 0;
+}
+
+.markdown-content ul {
+    list-style: disc;
+}
+
+.markdown-content ol {
+    list-style: decimal;
+}
+
+.markdown-content li {
+    margin-bottom: 0.4rem;
+}
+
+.hero .markdown-content p {
+    margin-bottom: 2.5rem;
+}
+
 .check-list {
     padding-top: 2rem;
 }
 
+.check-list ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.check-list li,
 .check-item {
     display: flex;
     align-items: center;
@@ -330,6 +370,19 @@ nav {
     font-style: italic;
 }
 
+.check-list li::before {
+    content: "✓";
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    min-width: 32px;
+    height: 32px;
+    border-radius: 100%;
+    color: var(--color-dark);
+}
+
+/* Estilo del marcado antiguo que todavía puede verse en la plantilla sin build. */
 .check-icon {
     width: 32px;
     height: 32px;
@@ -836,6 +889,14 @@ footer a:hover {
 
 .faq-item p {
     padding: 0 1.5rem 1.5rem;
+}
+
+.faq-item > .markdown-content {
+    padding: 0 1.5rem 1.5rem;
+}
+
+.faq-item > .markdown-content p {
+    padding: 0;
 }
 
 /* --- Responsive --- */

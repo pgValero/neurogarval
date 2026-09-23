@@ -16,6 +16,12 @@
 #   de index.html (sin JavaScript), genera _site/data.js (contenido de
 #   los modales) y publica el resultado.
 #
+#   Los campos de contenido largo de la página son rich-text con formato
+#   Markdown. Escribe párrafos, énfasis y listas en un único campo; build.py
+#   los convierte a HTML. No escribas HTML en esos campos. Títulos, botones,
+#   etiquetas y metadatos siguen siendo campos simples. Las listas
+#   estructurales (menús, pasos, tarjetas, fotos, etc.) conservan sus campos.
+#
 # NOTA SOBRE RAMAS: Pages CMS lee este archivo por rama; se usa la rama
 # por defecto del repositorio (main). develop queda para trabajo técnico.
 # ============================================================================
@@ -301,9 +307,11 @@ content:
             required: true
             description: Separada por "·", p. ej. "Clínica en Valdemoro · Online · A domicilio".
           - name: paragraph
-            label: Párrafo
-            type: text
+            label: Párrafo (Markdown)
+            type: rich-text
             required: true
+            options:
+              format: markdown
           - name: promo
             label: Aviso destacado
             type: string
@@ -326,21 +334,23 @@ content:
             type: string
             required: true
           - name: lead
-            label: Subtítulo
-            type: text
+            label: Subtítulo (Markdown)
+            type: rich-text
             required: true
+            options:
+              format: markdown
           - name: more_label
             label: Enlace de tarjeta
             type: string
             required: true
             description: Texto de "Más información" en cada tarjeta.
-          - name: areas_intro
-            label: Introducción de áreas
-            type: string
           - name: areas
-            label: Áreas de trabajo (lista con check)
-            type: string
-            list: true
+            label: Áreas de trabajo (Markdown)
+            type: rich-text
+            required: true
+            options:
+              format: markdown
+            description: Incluye la introducción y la lista de áreas con sintaxis Markdown.
           - name: items
             label: Servicios (tarjetas + modal)
             type: object
@@ -356,16 +366,18 @@ content:
                 type: string
                 required: true
               - name: card_text
-                label: Texto de la tarjeta
-                type: text
-                required: true
-              - name: modal_content
-                label: Contenido del modal (HTML)
+                label: Texto de la tarjeta (Markdown)
                 type: rich-text
                 required: true
                 options:
-                  format: html
-                description: Lo que se ve al pulsar "Más información". Párrafos y listas.
+                  format: markdown
+              - name: modal_content
+                label: Contenido del modal (Markdown)
+                type: rich-text
+                required: true
+                options:
+                  format: markdown
+                description: Lo que se ve al pulsar "Más información". Escribe párrafos y listas en Markdown.
 
       - name: modalities
         label: "Sección: Modalidades"
@@ -376,9 +388,11 @@ content:
             type: string
             required: true
           - name: lead
-            label: Subtítulo
-            type: text
+            label: Subtítulo (Markdown)
+            type: rich-text
             required: true
+            options:
+              format: markdown
           - name: more_label
             label: Enlace de tarjeta
             type: string
@@ -399,16 +413,18 @@ content:
                 type: string
                 required: true
               - name: text
-                label: Texto de la tarjeta
-                type: text
-                required: true
-              - name: modal_content
-                label: Contenido del modal (HTML)
+                label: Texto de la tarjeta (Markdown)
                 type: rich-text
                 required: true
                 options:
-                  format: html
-                description: Párrafos, listas y contenido que se ve al pulsar la tarjeta.
+                  format: markdown
+              - name: modal_content
+                label: Contenido del modal (Markdown)
+                type: rich-text
+                required: true
+                options:
+                  format: markdown
+                description: Escribe los párrafos y listas del modal en Markdown.
               - name: images
                 label: Fotos del modal (opcional)
                 type: object
@@ -433,9 +449,11 @@ content:
             type: string
             required: true
           - name: lead
-            label: Subtítulo
-            type: text
+            label: Subtítulo (Markdown)
+            type: rich-text
             required: true
+            options:
+              format: markdown
           - name: steps
             label: Pasos (el número se genera solo)
             type: object
@@ -451,9 +469,11 @@ content:
                 type: string
                 required: true
               - name: text
-                label: Texto del paso
-                type: text
+                label: Texto del paso (Markdown)
+                type: rich-text
                 required: true
+                options:
+                  format: markdown
 
       - name: about
         label: "Sección: Especialista"
@@ -479,12 +499,13 @@ content:
             label: Título
             type: string
             required: true
-          - name: paragraphs
-            label: Párrafos
-            type: text
-            list: true
+          - name: content
+            label: Contenido (Markdown)
+            type: rich-text
             required: true
-            description: Cada entrada es un párrafo; se separan con un salto de línea.
+            options:
+              format: markdown
+            description: Escribe aquí todos los párrafos de la sección. Separa los párrafos con una línea en blanco.
 
       - name: blog
         label: "Sección: Blog (tarjetas)"
@@ -495,9 +516,11 @@ content:
             type: string
             required: true
           - name: lead
-            label: Subtítulo
-            type: text
+            label: Subtítulo (Markdown)
+            type: rich-text
             required: true
+            options:
+              format: markdown
           - name: read_more
             label: Enlace "Leer más"
             type: string
@@ -520,9 +543,12 @@ content:
                 type: string
                 required: true
               - name: excerpt
-                label: Resumen
-                type: text
+                label: Artículo / resumen (Markdown)
+                type: rich-text
                 required: true
+                options:
+                  format: markdown
+                description: Escribe el texto del artículo o su resumen en un único campo Markdown.
               - name: url
                 label: Enlace del artículo
                 type: string
@@ -542,9 +568,11 @@ content:
             type: string
             required: true
           - name: lead
-            label: Subtítulo
-            type: text
+            label: Subtítulo (Markdown)
+            type: rich-text
             required: true
+            options:
+              format: markdown
           - name: items
             label: Preguntas
             type: object
@@ -559,9 +587,11 @@ content:
                 type: string
                 required: true
               - name: answer
-                label: Respuesta
-                type: text
+                label: Respuesta (Markdown)
+                type: rich-text
                 required: true
+                options:
+                  format: markdown
 
       - name: contact
         label: "Sección: Contacto"
@@ -577,9 +607,11 @@ content:
             type: string
             required: true
           - name: lead
-            label: Subtítulo
-            type: text
+            label: Subtítulo (Markdown)
+            type: rich-text
             required: true
+            options:
+              format: markdown
           - name: map_embed
             label: Mapa de Google (src del iframe)
             type: text
@@ -588,6 +620,8 @@ content:
 
   # ---------------------------------------------------------------------
   # 3) Firma de email (firma.html, archivo aparte del sitio).
+  # Los avisos legales son texto plano de solo lectura: el email no usa
+  # el renderer Markdown de la página.
   # ---------------------------------------------------------------------
   - name: firma
     label: Firma de email
@@ -663,7 +697,9 @@ actions:
 #         type: date
 #         required: true
 #       - name: excerpt
-#         type: text
+#         type: rich-text
+#         options:
+#           format: markdown
 #       - name: cover
 #         type: image
 #       - name: body

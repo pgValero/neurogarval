@@ -4,21 +4,22 @@
 Qué hace
 --------
 1. Lee el contenido editable de Pages CMS:  content/*.yml
-2. Regenera las regiones delimitadas por
+2. Convierte a HTML los campos de texto largo escritos en Markdown.
+3. Regenera las regiones delimitadas por
       <!-- pages:begin NOMBRE -->  ...  <!-- pages:end NOMBRE -->
    en index.html (22) y firma.html (4); el resto de la plantilla
    HTML/CSS se queda intacto.
-3. Escribe el contacto de content/settings.yml directamente en
+4. Escribe el contacto de content/settings.yml directamente en
    index.html: los huecos .neuro-* (teléfono, WhatsApp, email,
    dirección, Maps y logo) quedan resueltos en el HTML, sin JavaScript.
-4. Genera _site/data.js (window.SITE_DATA: servicios, modalidades e iconos),
+5. Genera _site/data.js (window.SITE_DATA: servicios, modalidades e iconos),
    que script.js usa al abrir sus respectivos modales.
-5. Copia los estáticos (CSS, JS, CNAME, favicons, PDFs) y media/ a _site/.
+6. Copia los estáticos (CSS, JS, CNAME, favicons, PDFs) y media/ a _site/.
 
 Uso
 ---
-    pip install pyyaml       # única dependencia
-    python build.py          # genera ./_site
+    pip install pyyaml markdown  # dependencias del generador
+    python build.py              # genera ./_site
 
 La GitHub Action (.github/workflows/deploy.yml) hace exactamente esto en
 cada push a main y publica _site/ en GitHub Pages. No hay framework ni
@@ -38,9 +39,11 @@ import sys
 from pathlib import Path
 
 try:
+    import markdown
     import yaml
-except ImportError:  # pragma: no cover
-    sys.exit("Falta PyYAML. Instálalo con:  pip install pyyaml")
+except ImportError as exc:  # pragma: no cover
+    missing = "Markdown" if exc.name == "markdown" else "PyYAML"
+    sys.exit(f"Falta {missing}. Instálalo con:  pip install pyyaml markdown")
 
 ROOT = Path(__file__).resolve().parent
 CONTENT = ROOT / "content"
@@ -114,8 +117,31 @@ WARNINGS: list[str] = []
 # Utilidades
 # ---------------------------------------------------------------------------
 def esc(value) -> str:
-    """Escapa texto plano para insertarlo en HTML (no usar con rich-text)."""
+    """Escapa texto plano para insertarlo en HTML (no usar con Markdown)."""
     return html.escape(str("" if value is None else value), quote=True)
+
+
+def markdown_html(value) -> str:
+    """Convierte un valor de Pages CMS en Markdown a HTML.
+
+    Los campos de contenido largo se guardan como Markdown. Esta función es
+    el único punto por el que ese texto entra en el HTML: los títulos,
+    botones y metadatos siguen usando ``esc`` porque son texto plano.
+    """
+    if isinstance(value, (list, tuple)):
+        # Permite que una versión anterior del contenido (párrafos o áreas
+        # separados) siga construyendo durante la migración al nuevo formato.
+        source = "\n\n".join(str(part) for part in value if part is not None)
+    else:
+        source = "" if value is None else str(value)
+    source = source.replace("\r\n", "\n").replace("\r", "\n").strip()
+    if not source:
+        return ""
+    return markdown.markdown(
+        source,
+        extensions=["extra"],
+        output_format="html5",
+    ).strip()
 
 
 def ind(text: str, spaces: int) -> str:
@@ -166,7 +192,13 @@ def load_yaml(name: str) -> dict:
 
 
 def section_header(heading: str, lead: str) -> str:
-    return f"<h2>{esc(heading)}</h2>\n<div class=\"divider\"></div>\n<p>{esc(lead)}</p>"
+    return (
+        f"<h2>{esc(heading)}</h2>\n"
+        '<div class="divider"></div>\n'
+        '<div class="markdown-content">\n'
+        f"{ind(markdown_html(lead), 4)}\n"
+        "</div>"
+    )
 
 
 def menu_items(settings: dict, desktop: bool) -> str:
@@ -249,7 +281,9 @@ def r_hero(c: dict) -> str:
         f'<span class="badge">{esc(h["badge"])}</span>',
         f"<h1>{title}</h1>",
         f'<span class="modalities-text">{modalities}</span>',
-        f'<p>{esc(h["paragraph"])}</p>',
+        '<div class="markdown-content">',
+        ind(markdown_html(h["paragraph"]), 4),
+        "</div>",
         "",
         '<div id="hero-promo">'
         f'<i class="bi bi-info-circle-fill"></i><span>{esc(h["promo"])}</span>'
@@ -276,7 +310,9 @@ def r_services_grid(c: dict) -> str:
             f'onclick="openServiceModal({i})" onkeydown="{onkeydown}">',
             f'    <div class="service-icon">{icon_html(item.get("icon"))}</div>',
             f'    <h3>{esc(item["title"])}</h3>',
-            f'    <p>{esc(item["card_text"])}</p>',
+            '    <div class="markdown-content">',
+            ind(markdown_html(item["card_text"]), 8),
+            "    </div>",
             f'    <span class="service-more">{esc(sv["more_label"])} '
             '<i class="bi bi-arrow-right"></i></span>',
             "</div>",
@@ -286,15 +322,24 @@ def r_services_grid(c: dict) -> str:
 
 def r_services_areas(c: dict) -> str:
     sv = c["home"]["services"]
-    items = "\n\n".join(
-        '<div class="check-item">\n'
-        '    <div class="check-icon"><i class="bi bi-check-lg"></i></div>\n'
-        f'    <span>{esc(area)}</span>\n'
-        "</div>"
-        for area in sv["areas"]
+    # La introducción y las áreas viven en un único campo Markdown. El
+    # contenedor conserva el estilo de lista con check del bloque original.
+    areas = sv.get("areas", "")
+    if isinstance(areas, (list, tuple)):
+        # Compatibilidad con el esquema anterior, que separaba cada área.
+        intro = sv.get("areas_intro", "")
+        items = "\n".join(f"- {area}" for area in areas)
+        areas = f"{intro}\n\n{items}".strip()
+    elif not areas and sv.get("areas_intro"):
+        areas = sv["areas_intro"]
+    content = markdown_html(areas)
+    if not content:
+        return ""
+    return (
+        '<div class="check-list markdown-content">\n'
+        + ind(content, 4)
+        + "\n</div>"
     )
-    return (f'<p>{esc(sv["areas_intro"])}</p>\n'
-            '<div class="check-list">\n' + ind(items, 4) + "\n</div>")
 
 
 def r_modalities_grid(c: dict) -> str:
@@ -312,7 +357,9 @@ def r_modalities_grid(c: dict) -> str:
             f'    <div class="modality-icon">{icon_html(item.get("icon"))}</div>',
             '    <div class="modality-content">',
             f'        <h4>{esc(item["title"])}</h4>',
-            f'        <p>{esc(item["text"])}</p>',
+            '        <div class="markdown-content">',
+            ind(markdown_html(item["text"]), 12),
+            "        </div>",
             f'        <span class="service-more">{esc(modalities["more_label"])} '
             '<i class="bi bi-arrow-right"></i></span>',
             "    </div>",
@@ -347,8 +394,8 @@ def modality_gallery(images: list[dict]) -> str:
 
 
 def modality_modal_html(item: dict) -> str:
-    """Añade al rich-text las fotos configuradas para la modalidad."""
-    content = str(item["modal_content"]).strip()
+    """Convierte a HTML el Markdown y añade las fotos de la modalidad."""
+    content = markdown_html(item.get("modal_content", ""))
     gallery = modality_gallery(item.get("images") or [])
     return f"{content}\n{gallery}" if gallery else content
 
@@ -363,7 +410,9 @@ def r_process_grid(c: dict) -> str:
             f'        <span class="process-index">{n}</span>',
             "    </div>",
             f'    <h4>{esc(step["title"])}</h4>',
-            f'    <p>{esc(step["text"])}</p>',
+            '    <div class="markdown-content">',
+            ind(markdown_html(step["text"]), 8),
+            "    </div>",
             "</div>",
         ]))
     return "\n\n".join(chunks)
@@ -371,7 +420,8 @@ def r_process_grid(c: dict) -> str:
 
 def r_about(c: dict) -> str:
     a = c["home"]["about"]
-    paragraphs = "\n<br>\n".join(f"<p>{esc(p)}</p>" for p in a["paragraphs"])
+    # Todo el texto de la especialista se edita en un único campo Markdown.
+    content = markdown_html(a.get("content", a.get("paragraphs", "")))
     return "\n".join([
         '<div class="about-image">',
         f'    <img src="{media_url(a.get("image"))}" alt="{esc(a.get("image_alt"))}">',
@@ -383,7 +433,9 @@ def r_about(c: dict) -> str:
         '<div class="about-content">',
         f'    <h2>{esc(a["heading"])}</h2>',
         '    <div class="divider"></div>',
-        ind(paragraphs, 4),
+        '    <div class="markdown-content">',
+        ind(content, 8),
+        "    </div>",
         "</div>",
     ])
 
@@ -398,13 +450,18 @@ def r_blog_grid(c: dict) -> str:
                      'loading="lazy">')
         else:
             thumb = icon_html("journal")
+        # El texto visible de cada artículo se escribe como un único campo
+        # Markdown y se convierte aquí antes de insertarlo en la tarjeta.
+        article = markdown_html(post.get("excerpt", post.get("content", "")))
         cards.append("\n".join([
             '<article class="blog-card">',
             f'    <div class="blog-thumb">{thumb}</div>',
             '    <div class="blog-content">',
             f'        <span class="blog-date">{esc(post["date"])}</span>',
             f'        <h4>{esc(post["title"])}</h4>',
-            f'        <p>{esc(post["excerpt"])}</p>',
+            '        <div class="markdown-content">',
+            ind(article, 12),
+            "        </div>",
             f'        <a href="{esc(post.get("url") or "#")}" class="read-more">'
             f'{esc(b["read_more"])} <i class="bi bi-arrow-right"></i></a>',
             "    </div>",
@@ -414,14 +471,17 @@ def r_blog_grid(c: dict) -> str:
 
 
 def r_faq_list(c: dict) -> str:
-    items = "\n\n".join(
-        '<details class="faq-item">\n'
-        f'    <summary>{esc(item["question"])}</summary>\n'
-        f'    <p>{esc(item["answer"])}</p>\n'
-        "</details>"
-        for item in c["home"]["faq"]["items"]
-    )
-    return items
+    items = []
+    for item in c["home"]["faq"]["items"]:
+        items.append("\n".join([
+            '<details class="faq-item">',
+            f'    <summary>{esc(item["question"])}</summary>',
+            '    <div class="markdown-content">',
+            ind(markdown_html(item["answer"]), 8),
+            "    </div>",
+            "</details>",
+        ]))
+    return "\n\n".join(items)
 
 
 def r_contact_header(c: dict) -> str:
@@ -430,7 +490,9 @@ def r_contact_header(c: dict) -> str:
         f'<h2>{esc(k["heading"])}</h2>',
         '<div class="divider"></div>',
         f'<strong>{esc(k["highlight"])}</strong>',
-        f'<p>{esc(k["lead"])}</p>',
+        '<div class="markdown-content">',
+        ind(markdown_html(k["lead"]), 4),
+        "</div>",
     ])
 
 
@@ -669,7 +731,7 @@ def write_data_js(c: dict) -> None:
         {
             "title": item["title"],
             "icon": item.get("icon", ""),
-            "html": item["modal_content"],
+            "html": markdown_html(item["modal_content"]),
         }
         for item in c["home"]["services"]["items"]
     ]
