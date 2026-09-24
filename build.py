@@ -24,8 +24,8 @@ Qué hace
    dirección y Maps) quedan resueltos sin JavaScript.
 4. Genera _site/data.js (window.SITE_DATA: servicios, modalidades, artículos
    del blog e iconos), que script.js usa al abrir sus respectivos modales.
-5. Copia los estáticos (CSS, JS, CNAME, favicon y PDFs) y las imágenes de
-   media/ a _site/, manteniendo la estructura pública actual.
+5. Copia los estáticos (CSS, JS, CNAME, favicon, logo y PDFs) y las imágenes
+   de media/ a _site/, manteniendo la estructura pública actual.
 
 Uso
 ---
@@ -141,16 +141,17 @@ ICONS: dict[str, str] = {
 
 # Ficheros estáticos que se copian a _site/. Los recursos que antes estaban
 # en la raíz se leen ahora desde media/, pero se publican en la raíz para
-# conservar las rutas públicas existentes.
+# conservar las rutas públicas existentes (favicon, PDFs y logo).
 STATIC_FILES = [
     (SRC / "styles.css", "styles.css"),
     (SRC / "script.js", "script.js"),
     (ROOT / "CNAME", "CNAME"),
     (ROOT / "media/favicon.svg", "favicon.svg"),
+    (ROOT / "media/logo.svg", "logo.svg"),
     (ROOT / "media/aviso_legal.pdf", "aviso_legal.pdf"),
     (ROOT / "media/tarjeta.pdf", "tarjeta.pdf"),
 ]
-MEDIA_EXCLUDES = ("favicon.svg", "aviso_legal.pdf", "tarjeta.pdf")
+MEDIA_EXCLUDES = ("favicon.svg", "logo.svg", "aviso_legal.pdf", "tarjeta.pdf")
 
 # Avisos no fatales (p. ej. fotos de modalidades aún no subidas).
 WARNINGS: list[str] = []
