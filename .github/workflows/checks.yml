@@ -1,0 +1,44 @@
+# Checks de la pull request (develop -> main).
+#
+# Se ejecuta en CADA pull request contra main: construye el sitio con
+# build.py y valida con prek, igual que el despliegue. Su resultado es el
+# status check "checks" que la protección de rama de main exige como
+# obligatorio: si falla, la PR no se mergea (ni el auto-merge la toca).
+#
+# REQUISITO (una sola vez, manual): en Settings -> Branches -> regla de main,
+# marcar "Require status checks to pass before merging" y añadir el check
+# "checks". Ver AGENTS.md.
+name: Checks
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependencias
+        run: pip install pyyaml markdown prek
+
+      - name: Construir sitio (build.py)
+        run: python build.py
+
+      - name: Validar _site generado (prek run --all-files)
+        run: |
+          # prek --all-files solo lintea ficheros rastreados por git y _site/
+          # está en .gitignore; se indexa _site para que la validación cubra
+          # todo lo generado por build.py (HTML, CSS, JS y URLs).
+          git add -f _site
+          prek run --all-files
