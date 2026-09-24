@@ -1,26 +1,25 @@
 # Build y despliegue del sitio estático en GitHub Pages.
 #
-# Flujo: Pages CMS (o Git) commitea en main -> esta Action ejecuta build.py
-# (content/*.yml -> _site/), valida _site con prek y publica _site/ como sitio
-# de GitHub Pages.
+# El workflow NO se ejecuta automáticamente con cada commit: solo se lanza
+# a mano, bien desde el botón "Desplegar sitio" de Pages CMS (.pages.yml ->
+# actions), bien desde el botón "Run workflow" de la interfaz de GitHub.
+# En ambos casos el disparador es workflow_dispatch.
 # La plataforma de despliegue sigue siendo GitHub Pages y las ramas no
-# cambian: solo el "push en crudo" pasa a ser "build + deploy".
+# cambian: lanzándolo desde main hace "build + deploy" y publica _site/.
 #
 # REQUISITO (una sola vez, manual): en Settings -> Pages del repositorio,
 # cambiar la fuente a "GitHub Actions".
 name: Deploy
 
 on:
-  push:
-    branches: [main]
-  workflow_dispatch: # botón "Desplegar sitio" de Pages CMS (.pages.yml -> actions)
+  workflow_dispatch: # botón "Desplegar sitio" de Pages CMS (.pages.yml -> actions) o "Run workflow" en GitHub
 
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# Un solo despliegue a la vez; si llega otro push, se cancela el anterior.
+# Un solo despliegue a la vez; si se lanza otro manual, se cancela el anterior.
 concurrency:
   group: pages
   cancel-in-progress: true
@@ -57,8 +56,8 @@ jobs:
           path: _site
 
   deploy:
-    # Solo se despliega desde main: el push a otras ramas (o un dispatch
-    # manual desde una rama distinta) construye y valida, pero no publica.
+    # Solo se despliega desde main: un dispatch manual lanzado desde una
+    # rama distinta construye y valida, pero no publica.
     if: github.ref == 'refs/heads/main'
     needs: build
     runs-on: ubuntu-latest
