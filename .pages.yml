@@ -10,7 +10,8 @@
 #
 # CÓMO SE RELACIONA CON EL SITIO:
 #   Los ficheros de content/*.yml NO los lee el navegador directamente.
-#   build.py (ejecutado por .github/workflows/deploy.yml en cada push a main)
+#   build.py (ejecutado por .github/workflows/deploy.yml de forma manual,
+#   desde el botón "Desplegar sitio" o "Run workflow"; nunca con cada commit)
 #   sustituye los marcadores __archivo.ruta.campo__ de src/index.html y
 #   src/firma.html por estos datos, escribe el contacto en los huecos
 #   .neuro-* del HTML generado (sin JavaScript), genera _site/data.js
