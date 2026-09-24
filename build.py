@@ -22,8 +22,8 @@ Qué hace
 3. Escribe el contacto de content/common.yml (fuente única) directamente en
    el index.html generado: los huecos .neuro-* (teléfono, WhatsApp, email,
    dirección y Maps) quedan resueltos sin JavaScript.
-4. Genera _site/data.js (window.SITE_DATA: servicios, modalidades e iconos),
-   que script.js usa al abrir sus respectivos modales.
+4. Genera _site/data.js (window.SITE_DATA: servicios, modalidades, artículos
+   del blog e iconos), que script.js usa al abrir sus respectivos modales.
 5. Copia los estáticos (CSS, JS, CNAME, favicon y PDFs) y las imágenes de
    media/ a _site/, manteniendo la estructura pública actual.
 
@@ -565,10 +565,11 @@ def fill_contact(doc: str, contact: dict) -> str:
 
 
 # ---------------------------------------------------------------------------
-# data.js — puente con script.js (solo modales: servicios, modalidades e
-# iconos). Los servicios se indexan por su campo "id" (los onclick de la
-# plantilla pasan ese id, p. ej. openServiceModal('neuro')). El contacto NO
-# viaja aquí: se escribe en el index.html generado con fill_contact().
+# data.js — puente con script.js (modales: servicios, modalidades, artículos
+# del blog e iconos). Los servicios se indexan por su campo "id" (los onclick
+# de la plantilla pasan ese id, p. ej. openServiceModal('neuro')); las
+# modalidades y los artículos, por su índice. El contacto NO viaja aquí: se
+# escribe en el index.html generado con fill_contact().
 # ---------------------------------------------------------------------------
 def write_data_js(c: dict) -> None:
     services: dict[str, dict] = {}
@@ -594,7 +595,16 @@ def write_data_js(c: dict) -> None:
         }
         for item in c["modalidades"]["items"]
     ]
-    payload = {"services": services, "modalities": modalities, "icons": ICONS}
+    posts = [
+        {
+            "title": item["title"],
+            "cover": media_url(item.get("image", "")),
+            "html": markdown_html(item["article"]),
+        }
+        for item in c["blog"]["posts"]
+    ]
+    payload = {"services": services, "modalities": modalities,
+               "posts": posts, "icons": ICONS}
     js = ("// Generado por build.py desde content/*.yml — NO editar a mano.\n"
           "window.SITE_DATA = "
           + json.dumps(payload, ensure_ascii=False, indent=2)
