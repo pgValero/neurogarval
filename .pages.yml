@@ -25,6 +25,9 @@
 #   los convierte a HTML. No escribas HTML en esos campos. Títulos, botones,
 #   etiquetas y metadatos siguen siendo campos simples. Las listas
 #   estructurales (pasos, tarjetas, fotos, etc.) conservan sus campos.
+#   Las tarjetas e ítems de esas listas se repiten en la plantilla con
+#   bloques @foreach (ver expand_loops en build.py): añadir o quitar
+#   entradas aquí no exige tocar el HTML.
 #   Dominio, logo, SEO/JSON-LD y navegación son parte fija de src/index.html y
 #   no se editan desde el CMS.
 #
@@ -218,9 +221,8 @@ content:
             label: Identificador
             type: string
             required: true
-            readonly: true
             pattern: "^[a-z0-9-]+$"
-            description: "Identificador interno (data.js y los onclick de la plantilla lo usan, p. ej. openServiceModal('neuro')). No cambiar."
+            description: "Identificador interno único. Abre el modal de la tarjeta (openServiceModal('id')) y sirve de clave en data.js; minúsculas, números y guiones. Evita cambiarlo tras publicar si alguien enlaza a él."
           - name: icon
             component: icono
           - name: title

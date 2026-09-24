@@ -73,10 +73,15 @@
          Los marcadores que rellena build.py (formato: archivo.ruta.campo,
          sin los guiones bajos aquí para no confundir al build) se leen de
          content/*.yml (Pages CMS, un fichero por sección), usando los tipos
-         declarados en .pages.yml. Los huecos .neuro-* (teléfono, WhatsApp,
-         email, dirección y Maps) se rellenan con content/common.yml; no hay
-         JS de por medio. No editar los textos marcados a mano: editar en
-         Pages CMS. -->
+         declarados en .pages.yml. Las tarjetas e ítems de las listas
+         (servicios, modalidades, proceso, blog y FAQ) se repiten con bloques
+         @foreach:archivo.ruta ... @endforeach:archivo.ruta: dentro del
+         bloque, "n" en el marcador es el elemento actual (p. ej.
+         servicios.items.n.title) y loop.index / loop.index0 son la posición.
+         Añadir o quitar entradas en el CMS no exige tocar esta plantilla.
+         Los huecos .neuro-* (teléfono, WhatsApp, email, dirección y Maps) se
+         rellenan con content/common.yml; no hay JS de por medio. No editar
+         los textos marcados a mano: editar en Pages CMS. -->
 
     <div class="mobile-overlay" id="mobileMenu">
         <button class="close-btn" onclick="toggleMenu()">&times;</button>
@@ -159,24 +164,14 @@
                 </div>
 
                 <div class="services-grid">
-                    <div class="service-card" role="button" tabindex="0" aria-haspopup="dialog" data-service="neuro" onclick="openServiceModal('neuro')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openServiceModal('neuro')}">
-                        <div class="service-icon">__servicios.items.0.icon__</div>
-                        <h3>__servicios.items.0.title__</h3>
-                        <div class="markdown-content">__servicios.items.0.card_text__</div>
+                    <!-- @foreach:servicios.items -->
+                    <div class="service-card" role="button" tabindex="0" aria-haspopup="dialog" data-service="__servicios.items.n.id__" onclick="openServiceModal('__servicios.items.n.id__')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openServiceModal('__servicios.items.n.id__')}">
+                        <div class="service-icon">__servicios.items.n.icon__</div>
+                        <h3>__servicios.items.n.title__</h3>
+                        <div class="markdown-content">__servicios.items.n.card_text__</div>
                         <span class="service-more">__servicios.more_label__ <i class="bi bi-arrow-right"></i></span>
                     </div>
-                    <div class="service-card" role="button" tabindex="0" aria-haspopup="dialog" data-service="psico" onclick="openServiceModal('psico')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openServiceModal('psico')}">
-                        <div class="service-icon">__servicios.items.1.icon__</div>
-                        <h3>__servicios.items.1.title__</h3>
-                        <div class="markdown-content">__servicios.items.1.card_text__</div>
-                        <span class="service-more">__servicios.more_label__ <i class="bi bi-arrow-right"></i></span>
-                    </div>
-                    <div class="service-card" role="button" tabindex="0" aria-haspopup="dialog" data-service="rehab" onclick="openServiceModal('rehab')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openServiceModal('rehab')}">
-                        <div class="service-icon">__servicios.items.2.icon__</div>
-                        <h3>__servicios.items.2.title__</h3>
-                        <div class="markdown-content">__servicios.items.2.card_text__</div>
-                        <span class="service-more">__servicios.more_label__ <i class="bi bi-arrow-right"></i></span>
-                    </div>
+                    <!-- @endforeach:servicios.items -->
                 </div>
             </div>
         </section>
@@ -191,30 +186,16 @@
                 </div>
 
                 <div class="modalities-grid">
-                    <div class="modality-item" role="button" tabindex="0" aria-haspopup="dialog" data-modality="0" onclick="openModalityModal(0)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openModalityModal(0)}">
-                        <div class="modality-icon">__modalidades.items.0.icon__</div>
+                    <!-- @foreach:modalidades.items -->
+                    <div class="modality-item" role="button" tabindex="0" aria-haspopup="dialog" data-modality="__loop.index0__" onclick="openModalityModal(__loop.index0__)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openModalityModal(__loop.index0__)}">
+                        <div class="modality-icon">__modalidades.items.n.icon__</div>
                         <div class="modality-content">
-                            <h4>__modalidades.items.0.title__</h4>
-                            <div class="markdown-content">__modalidades.items.0.text__</div>
+                            <h4>__modalidades.items.n.title__</h4>
+                            <div class="markdown-content">__modalidades.items.n.text__</div>
                             <span class="service-more">__modalidades.more_label__ <i class="bi bi-arrow-right"></i></span>
                         </div>
                     </div>
-                    <div class="modality-item" role="button" tabindex="0" aria-haspopup="dialog" data-modality="1" onclick="openModalityModal(1)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openModalityModal(1)}">
-                        <div class="modality-icon">__modalidades.items.1.icon__</div>
-                        <div class="modality-content">
-                            <h4>__modalidades.items.1.title__</h4>
-                            <div class="markdown-content">__modalidades.items.1.text__</div>
-                            <span class="service-more">__modalidades.more_label__ <i class="bi bi-arrow-right"></i></span>
-                        </div>
-                    </div>
-                    <div class="modality-item" role="button" tabindex="0" aria-haspopup="dialog" data-modality="2" onclick="openModalityModal(2)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openModalityModal(2)}">
-                        <div class="modality-icon">__modalidades.items.2.icon__</div>
-                        <div class="modality-content">
-                            <h4>__modalidades.items.2.title__</h4>
-                            <div class="markdown-content">__modalidades.items.2.text__</div>
-                            <span class="service-more">__modalidades.more_label__ <i class="bi bi-arrow-right"></i></span>
-                        </div>
-                    </div>
+                    <!-- @endforeach:modalidades.items -->
                 </div>
             </div>
         </section>
@@ -229,46 +210,16 @@
                 </div>
 
                 <div class="process-grid">
+                    <!-- @foreach:proceso.steps -->
                     <div class="process-step">
                         <div class="process-num">
-                            <span class="process-icon">__proceso.steps.0.icon__</span>
-                            <span class="process-index">1</span>
+                            <span class="process-icon">__proceso.steps.n.icon__</span>
+                            <span class="process-index">__loop.index__</span>
                         </div>
-                        <h4>__proceso.steps.0.title__</h4>
-                        <div class="markdown-content">__proceso.steps.0.text__</div>
+                        <h4>__proceso.steps.n.title__</h4>
+                        <div class="markdown-content">__proceso.steps.n.text__</div>
                     </div>
-                    <div class="process-step">
-                        <div class="process-num">
-                            <span class="process-icon">__proceso.steps.1.icon__</span>
-                            <span class="process-index">2</span>
-                        </div>
-                        <h4>__proceso.steps.1.title__</h4>
-                        <div class="markdown-content">__proceso.steps.1.text__</div>
-                    </div>
-                    <div class="process-step">
-                        <div class="process-num">
-                            <span class="process-icon">__proceso.steps.2.icon__</span>
-                            <span class="process-index">3</span>
-                        </div>
-                        <h4>__proceso.steps.2.title__</h4>
-                        <div class="markdown-content">__proceso.steps.2.text__</div>
-                    </div>
-                    <div class="process-step">
-                        <div class="process-num">
-                            <span class="process-icon">__proceso.steps.3.icon__</span>
-                            <span class="process-index">4</span>
-                        </div>
-                        <h4>__proceso.steps.3.title__</h4>
-                        <div class="markdown-content">__proceso.steps.3.text__</div>
-                    </div>
-                    <div class="process-step">
-                        <div class="process-num">
-                            <span class="process-icon">__proceso.steps.4.icon__</span>
-                            <span class="process-index">5</span>
-                        </div>
-                        <h4>__proceso.steps.4.title__</h4>
-                        <div class="markdown-content">__proceso.steps.4.text__</div>
-                    </div>
+                    <!-- @endforeach:proceso.steps -->
                 </div>
             </div>
         </section>
@@ -302,33 +253,17 @@
                 </div>
 
                 <div class="blog-grid">
+                    <!-- @foreach:blog.posts -->
                     <article class="blog-card">
-                        <div class="blog-thumb">__blog.posts.0.image__</div>
+                        <div class="blog-thumb">__blog.posts.n.image__</div>
                         <div class="blog-content">
-                            <span class="blog-date">__blog.posts.0.date__</span>
-                            <h4>__blog.posts.0.title__</h4>
-                            <div class="markdown-content">__blog.posts.0.excerpt__</div>
-                            <a href="__blog.posts.0.url__" class="read-more">__blog.read_more__ <i class="bi bi-arrow-right"></i></a>
+                            <span class="blog-date">__blog.posts.n.date__</span>
+                            <h4>__blog.posts.n.title__</h4>
+                            <div class="markdown-content">__blog.posts.n.excerpt__</div>
+                            <a href="__blog.posts.n.url__" class="read-more">__blog.read_more__ <i class="bi bi-arrow-right"></i></a>
                         </div>
                     </article>
-                    <article class="blog-card">
-                        <div class="blog-thumb">__blog.posts.1.image__</div>
-                        <div class="blog-content">
-                            <span class="blog-date">__blog.posts.1.date__</span>
-                            <h4>__blog.posts.1.title__</h4>
-                            <div class="markdown-content">__blog.posts.1.excerpt__</div>
-                            <a href="__blog.posts.1.url__" class="read-more">__blog.read_more__ <i class="bi bi-arrow-right"></i></a>
-                        </div>
-                    </article>
-                    <article class="blog-card">
-                        <div class="blog-thumb">__blog.posts.2.image__</div>
-                        <div class="blog-content">
-                            <span class="blog-date">__blog.posts.2.date__</span>
-                            <h4>__blog.posts.2.title__</h4>
-                            <div class="markdown-content">__blog.posts.2.excerpt__</div>
-                            <a href="__blog.posts.2.url__" class="read-more">__blog.read_more__ <i class="bi bi-arrow-right"></i></a>
-                        </div>
-                    </article>
+                    <!-- @endforeach:blog.posts -->
                 </div>
             </div>
         </section>
@@ -343,34 +278,12 @@
                 </div>
 
                 <div class="faq-list">
+                    <!-- @foreach:faq.items -->
                     <details class="faq-item">
-                        <summary>__faq.items.0.question__</summary>
-                        <div class="markdown-content">__faq.items.0.answer__</div>
+                        <summary>__faq.items.n.question__</summary>
+                        <div class="markdown-content">__faq.items.n.answer__</div>
                     </details>
-                    <details class="faq-item">
-                        <summary>__faq.items.1.question__</summary>
-                        <div class="markdown-content">__faq.items.1.answer__</div>
-                    </details>
-                    <details class="faq-item">
-                        <summary>__faq.items.2.question__</summary>
-                        <div class="markdown-content">__faq.items.2.answer__</div>
-                    </details>
-                    <details class="faq-item">
-                        <summary>__faq.items.3.question__</summary>
-                        <div class="markdown-content">__faq.items.3.answer__</div>
-                    </details>
-                    <details class="faq-item">
-                        <summary>__faq.items.4.question__</summary>
-                        <div class="markdown-content">__faq.items.4.answer__</div>
-                    </details>
-                    <details class="faq-item">
-                        <summary>__faq.items.5.question__</summary>
-                        <div class="markdown-content">__faq.items.5.answer__</div>
-                    </details>
-                    <details class="faq-item">
-                        <summary>__faq.items.6.question__</summary>
-                        <div class="markdown-content">__faq.items.6.answer__</div>
-                    </details>
+                    <!-- @endforeach:faq.items -->
                 </div>
             </div>
         </section>
