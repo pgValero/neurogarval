@@ -38,6 +38,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     if: github.ref == 'refs/heads/develop' # el botón solo publica desde develop
+    env:
+      GH_TOKEN: ${{ github.token }} # gh necesita el token explícito en el entorno
     steps:
       - name: Checkout
         uses: actions/checkout@v4
