@@ -1,7 +1,8 @@
 # Build y despliegue del sitio estático en GitHub Pages.
 #
 # Flujo: Pages CMS (o Git) commitea en main -> esta Action ejecuta build.py
-# (content/*.yml -> _site/) y publica _site/ como sitio de GitHub Pages.
+# (content/*.yml -> _site/), valida _site con prek y publica _site/ como sitio
+# de GitHub Pages.
 # La plataforma de despliegue sigue siendo GitHub Pages y las ramas no
 # cambian: solo el "push en crudo" pasa a ser "build + deploy".
 #
@@ -37,10 +38,18 @@ jobs:
           python-version: "3.12"
 
       - name: Instalar dependencias
-        run: pip install pyyaml markdown
+        run: pip install pyyaml markdown prek
 
       - name: Construir sitio (build.py)
         run: python build.py
+
+      - name: Validar _site generado (prek run --all-files)
+        run: |
+          # prek --all-files solo lintea ficheros rastreados por git y _site/
+          # está en .gitignore; se indexa _site para que la validación cubra
+          # todo lo generado por build.py (HTML, CSS, JS y URLs).
+          git add -f _site
+          prek run --all-files
 
       - name: Subir artefacto (_site)
         uses: actions/upload-pages-artifact@v3
