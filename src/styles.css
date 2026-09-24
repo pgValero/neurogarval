@@ -352,36 +352,6 @@ nav {
     margin-bottom: 2.5rem;
 }
 
-.check-list {
-    padding-top: 2rem;
-}
-
-.check-list ul {
-    list-style: none;
-    padding-left: 0;
-}
-
-.check-list li,
-.check-item {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 1rem;
-    font-style: italic;
-}
-
-.check-list li::before {
-    content: "✓";
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    min-width: 32px;
-    height: 32px;
-    border-radius: 100%;
-    color: var(--color-dark);
-}
-
 /* Estilo del marcado antiguo que todavía puede verse en la plantilla sin build. */
 .check-icon {
     width: 32px;

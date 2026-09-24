@@ -206,13 +206,6 @@ content:
         type: string
         required: true
         description: Texto de "Más información" en cada tarjeta.
-      - name: areas
-        label: Áreas de trabajo (Markdown)
-        type: rich-text
-        required: true
-        options:
-          format: markdown
-        description: Incluye la introducción y la lista de áreas con sintaxis Markdown.
       - name: items
         label: Servicios (tarjetas + modal)
         type: object
