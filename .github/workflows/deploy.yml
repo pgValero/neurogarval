@@ -18,6 +18,11 @@ on:
   push:
     branches: [main] # despliegue automático al mergear la PR develop -> main
   workflow_dispatch: # fallback manual: "Run workflow" en GitHub
+    inputs:
+      payload:
+        description: Pages CMS payload as JSON (requerido por el botón del CMS si algún día se vuelve a apuntar aquí; se deja opcional para no estorbar al lanzarlo a mano)
+        required: false
+        type: string
 
 permissions:
   contents: read

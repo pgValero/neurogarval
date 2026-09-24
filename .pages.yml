@@ -615,6 +615,10 @@ content:
 # Requiere que las ramas main y develop tengan el workflow (lo tendrán tras la
 # primera PR de migración) y que main esté protegida con el status check
 # "checks" como obligatorio (ver AGENTS.md, sección "Layout & deploy").
+# IMPORTANTE: Pages CMS envía siempre un input "payload" (JSON) al lanzar el
+# workflow; por eso on.workflow_dispatch de publicar.yml (y de deploy.yml)
+# declara el input payload, o la API de GitHub rechaza el evento con
+# "Unexpected inputs provided: [\"payload\"]".
 # ---------------------------------------------------------------------------
 actions:
   - name: publicar

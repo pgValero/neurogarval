@@ -23,6 +23,11 @@ name: Publicar
 
 on:
   workflow_dispatch: # botón "Publicar cambios" de Pages CMS (.pages.yml -> actions)
+    inputs:
+      payload:
+        description: Pages CMS payload as JSON (lo envía siempre el CMS al lanzar el botón; este workflow no lo usa)
+        required: false
+        type: string
 
 permissions:
   contents: write
