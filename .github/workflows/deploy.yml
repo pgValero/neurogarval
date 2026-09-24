@@ -57,6 +57,9 @@ jobs:
           path: _site
 
   deploy:
+    # Solo se despliega desde main: el push a otras ramas (o un dispatch
+    # manual desde una rama distinta) construye y valida, pero no publica.
+    if: github.ref == 'refs/heads/main'
     needs: build
     runs-on: ubuntu-latest
     environment:
