@@ -45,6 +45,14 @@ de content/, p. ej. __servicios.items.0.title__). Los índices numéricos
 recorren listas. Si el archivo, la ruta o el campo no existen en
 content/*.yml o el campo no está declarado en .pages.yml, se lanza
 CampoAusenteError con el nombre del campo buscado.
+
+Listas repetidas
+----------------
+Las tarjetas e ítems de las listas (servicios, modalidades, pasos del proceso,
+artículos del blog y preguntas frecuentes) no se escriben en la plantilla
+índice a índice: se envuelven en un bloque de plantilla que build.py repite
+una vez por elemento del YAML, por lo que añadir o quitar entradas en el CMS
+no exige tocar el HTML. Ver expand_loops() para la sintaxis (@foreach).
 """
 
 from __future__ import annotations
@@ -284,6 +292,99 @@ def resolve_data(plantilla: str, ref: str, file: str, route: list[str],
     return node, parent
 
 
+# ---------------------------------------------------------------------------
+# Bucles de plantilla (@foreach) — listas que se repiten solas
+# ---------------------------------------------------------------------------
+# Las tarjetas e ítems de las listas (servicios, modalidades, pasos del
+# proceso, artículos del blog y preguntas frecuentes) NO se escriben en la
+# plantilla índice a índice: se envuelven en un bloque @foreach que build.py
+# repite una vez por elemento del YAML, de modo que añadir o quitar entradas
+# en el CMS no exige tocar el HTML.
+#
+# Sintaxis en la plantilla:
+#
+#   <!-- @foreach:servicios.items -->
+#   <div class="service-card" data-service="__servicios.items.n.id__"
+#        onclick="openServiceModal('__servicios.items.n.id__')">
+#       <h3>__servicios.items.n.title__</h3>
+#       ...
+#   </div>
+#   <!-- @endforeach:servicios.items -->
+#
+# Dentro del bloque, el segmento "n" del marcador se sustituye por el índice
+# del elemento actual (0, 1, 2...); el resto del marcador se resuelve igual
+# que siempre. Los marcadores __loop.index__ y __loop.index0__ valen la
+# posición (1-based y 0-based) y sirven para, p. ej., el número del paso o el
+# índice del modal (openModalityModal(index)). Los marcadores de la sección
+# que no dependen del elemento (p. ej. __servicios.more_label__) se dejan
+# intactos. Si la lista queda vacía, el bloque no genera nada. Los bucles no
+# se anidan.
+LOOP_TOKENS = re.compile(
+    r"<!--\s*@(?P<open>foreach:(?P<ref>[a-z0-9_]+(?:\.[a-z0-9_]+)+)|"
+    r"endforeach(?::(?P<close_ref>[a-z0-9_]+(?:\.[a-z0-9_]+)+))?)\s*-->"
+)
+
+
+def expand_loop(plantilla: str, ref: str, body: str, items: list) -> str:
+    """Repite el cuerpo del bloque una vez por elemento de la lista."""
+    prefix = ref + ".n."
+    fragments = []
+    for idx in range(len(items)):
+
+        def repl(m: "re.Match", i: int = idx) -> str:
+            r = m.group("ref")
+            if r.startswith(prefix):
+                return f"__{ref}.{i}.{r[len(prefix):]}__"
+            if r == "loop.index":
+                return str(i + 1)
+            if r == "loop.index0":
+                return str(i)
+            return m.group(0)
+
+        fragments.append(PLACEHOLDER_RE.sub(repl, body).strip())
+    return "\n".join(fragments)
+
+
+def expand_loops(plantilla: str, source: str, context: dict) -> str:
+    """Localiza los bloques @foreach de la plantilla y los expande."""
+    parts = []
+    stack: list[str] = []
+    pos = 0
+    for m in LOOP_TOKENS.finditer(source):
+        token = m.group("open")
+        if token.startswith("foreach:"):
+            ref = m.group("ref")
+            if stack:
+                sys.exit(f"{plantilla}: @foreach anidado ('{ref}' dentro de "
+                         f"'{stack[-1]}') no soportado")
+            parts.append(source[pos:m.start()])
+            pos = m.end()
+            stack.append(ref)
+        else:
+            if not stack:
+                sys.exit(f"{plantilla}: cierre @endforeach sin @foreach previo")
+            ref = stack.pop()
+            close_ref = m.group("close_ref")
+            if close_ref and close_ref != ref:
+                sys.exit(f"{plantilla}: @endforeach cierra '{close_ref}' pero "
+                         f"el @foreach abrió '{ref}'")
+            body = source[pos:m.start()]
+            file, _, route_str = ref.partition(".")
+            node, _ = resolve_data(plantilla, ref, file, route_str.split("."),
+                                   context)
+            if not isinstance(node, (list, tuple)):
+                raise CampoAusenteError(
+                    plantilla, ref,
+                    f"'{ref}' no es una lista en content/{file}.yml "
+                    "(un @foreach solo repite sobre listas)")
+            parts.append(expand_loop(plantilla, ref, body, node))
+            pos = m.end()
+    if stack:
+        sys.exit(f"{plantilla}: @foreach '{stack[-1]}' sin @endforeach")
+    parts.append(source[pos:])
+    return "".join(parts)
+
+
 def resolve_type(plantilla: str, ref: str, file: str, route: list[str],
                  fields_by_file: dict) -> dict:
     """Busca el campo en el registro de tipos (.pages.yml).
@@ -372,6 +473,7 @@ def apply_template(template_key: str, source: str, context: dict,
                    fields_by_file: dict) -> str:
     """Sustituye los marcadores __archivo.ruta.campo__ de una plantilla."""
     specials = SPECIALS.get(template_key, {})
+    source = expand_loops(template_key, source, context)
 
     def repl(m: "re.Match") -> str:
         ref = m.group("ref")
@@ -469,14 +571,21 @@ def fill_contact(doc: str, contact: dict) -> str:
 # viaja aquí: se escribe en el index.html generado con fill_contact().
 # ---------------------------------------------------------------------------
 def write_data_js(c: dict) -> None:
-    services = {
-        item["id"]: {
+    services: dict[str, dict] = {}
+    for item in c["servicios"]["items"]:
+        sid = item.get("id")
+        if not sid:
+            sys.exit("Un servicio de content/servicios.yml no tiene 'id'. "
+                     "Es obligatorio: abre su modal (openServiceModal('id')) "
+                     "y es la clave del servicio en data.js.")
+        if sid in services:
+            sys.exit(f"Identificador duplicado en content/servicios.yml: "
+                     f"'{sid}'. Debe ser único por servicio.")
+        services[sid] = {
             "title": item["title"],
             "icon": item.get("icon", ""),
             "html": markdown_html(item["modal_content"]),
         }
-        for item in c["servicios"]["items"]
-    }
     modalities = [
         {
             "title": item["title"],
