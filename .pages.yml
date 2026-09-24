@@ -413,31 +413,28 @@ content:
           collapsed: true
           summary: "{title}"
         fields:
-          - name: date
-            label: Fecha (o texto)
-            type: string
-            required: true
-            description: P. ej. "12/03/2026" o "Próximamente".
           - name: title
             label: Título
             type: string
             required: true
           - name: excerpt
-            label: Artículo / resumen (Markdown)
+            label: Resumen de la tarjeta (Markdown)
             type: rich-text
             required: true
             options:
               format: markdown
-            description: Escribe el texto del artículo o su resumen en un único campo Markdown.
-          - name: url
-            label: Enlace del artículo
-            type: string
+            description: Texto corto que se muestra en la tarjeta del blog.
+          - name: article
+            label: Texto del artículo (Markdown)
+            type: rich-text
             required: true
-            description: "«#» mientras no exista la página del artículo."
+            options:
+              format: markdown
+            description: Texto completo del artículo; se muestra al abrir la tarjeta como un modal.
           - name: image
-            label: Imagen (opcional)
+            label: Imagen de portada (opcional)
             type: image
-            description: Sin imagen se muestra un icono de reserva.
+            description: Se usa en la tarjeta y en el modal. Sin imagen se muestra un icono de reserva.
 
   - name: faq
     label: "Sección: Preguntas frecuentes"

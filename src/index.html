@@ -254,13 +254,12 @@
 
                 <div class="blog-grid">
                     <!-- @foreach:blog.posts -->
-                    <article class="blog-card">
+                    <article class="blog-card" role="button" tabindex="0" aria-haspopup="dialog" data-blog="__loop.index0__" onclick="openBlogModal(__loop.index0__)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openBlogModal(__loop.index0__)}">
                         <div class="blog-thumb">__blog.posts.n.image__</div>
                         <div class="blog-content">
-                            <span class="blog-date">__blog.posts.n.date__</span>
                             <h4>__blog.posts.n.title__</h4>
                             <div class="markdown-content">__blog.posts.n.excerpt__</div>
-                            <a href="__blog.posts.n.url__" class="read-more">__blog.read_more__ <i class="bi bi-arrow-right"></i></a>
+                            <span class="read-more">__blog.read_more__ <i class="bi bi-arrow-right"></i></span>
                         </div>
                     </article>
                     <!-- @endforeach:blog.posts -->
@@ -385,6 +384,13 @@
         <div class="service-icon" id="modalityModalIcon"></div>
         <h3 id="modalityModalTitle"></h3>
         <div class="modal-body markdown-content" id="modalityModalBody"></div>
+    </dialog>
+
+    <dialog id="blogModal" class="modal" aria-labelledby="blogModalTitle">
+        <button class="modal-close" onclick="closeBlogModal()" aria-label="Cerrar">&times;</button>
+        <div class="blog-modal-cover" id="blogModalCover" hidden></div>
+        <h3 id="blogModalTitle"></h3>
+        <div class="modal-body markdown-content" id="blogModalBody"></div>
     </dialog>
 
     <script src="data.js"></script>
