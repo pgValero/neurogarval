@@ -9,16 +9,6 @@ lead: |-
   Trabajo en el ámbito de la neuropsicología y la psicología sanitaria, teniendo en cuenta las necesidades y el momento vital de cada persona.
 # Texto del enlace de cada tarjeta.
 more_label: Más información
-# Introducción y lista de áreas en un único campo Markdown.
-areas: |-
-  Principales áreas que se trabajan en consulta:
-
-  - Dificultades de aprendizaje.
-  - Trastorno por Déficit de Atención e Hiperactividad (TDAH).
-  - Trastorno del Espectro Autista (TEA).
-  - Deterioro cognitivo.
-  - Daño Cerebral Adquirido (DCA).
-  - Dificultades emocionales y conductuales.
 # Cada servicio conserva sus datos de tarjeta y tiene un único contenido
 # Markdown para el modal.
 items:
