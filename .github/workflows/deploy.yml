@@ -1,7 +1,7 @@
 # Build y despliegue del sitio estático en GitHub Pages.
 #
 # El workflow NO se ejecuta automáticamente con cada commit: solo se lanza
-# a mano, bien desde el botón "Desplegar sitio" de Pages CMS (.pages.yml ->
+# a mano, bien desde el botón "Publicar cambios" de Pages CMS (.pages.yml ->
 # actions), bien desde el botón "Run workflow" de la interfaz de GitHub.
 # En ambos casos el disparador es workflow_dispatch.
 # La plataforma de despliegue sigue siendo GitHub Pages y las ramas no
@@ -12,7 +12,7 @@
 name: Deploy
 
 on:
-  workflow_dispatch: # botón "Desplegar sitio" de Pages CMS (.pages.yml -> actions) o "Run workflow" en GitHub
+  workflow_dispatch: # botón "Publicar cambios" de Pages CMS (.pages.yml -> actions) o "Run workflow" en GitHub
 
 permissions:
   contents: read

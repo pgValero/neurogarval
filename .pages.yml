@@ -11,7 +11,7 @@
 # CÓMO SE RELACIONA CON EL SITIO:
 #   Los ficheros de content/*.yml NO los lee el navegador directamente.
 #   build.py (ejecutado por .github/workflows/deploy.yml de forma manual,
-#   desde el botón "Desplegar sitio" o "Run workflow"; nunca con cada commit)
+#   desde el botón "Publicar cambios" o "Run workflow"; nunca con cada commit)
 #   sustituye los marcadores __archivo.ruta.campo__ de src/index.html y
 #   src/firma.html por estos datos, escribe el contacto en los huecos
 #   .neuro-* del HTML generado (sin JavaScript), genera _site/data.js
@@ -599,13 +599,13 @@ content:
         description: Texto legal — no modificar sin asesoría.
 
 # ---------------------------------------------------------------------------
-# ACTIONS (opcional): botón "Desplegar sitio" en Pages CMS.
+# ACTIONS (opcional): botón "Publicar cambios" en Pages CMS.
 # Requiere que el workflow tenga workflow_dispatch (lo tiene) y que la
 # rama main esté configurada para desplegar con GitHub Actions.
 # ---------------------------------------------------------------------------
 actions:
   - name: desplegar
-    label: Desplegar sitio
+    label: Publicar cambios
     workflow: deploy.yml
 
 # ---------------------------------------------------------------------------
