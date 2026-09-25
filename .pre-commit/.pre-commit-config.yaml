@@ -51,6 +51,8 @@ repos:
           - "--exclude=file:///.*/src/favicon.svg"
           # __file.field__ markers that build.py replaces with real content:
           - "--exclude=file:///.*/src/__[a-z0-9_.]+__"
+          # Sites that block bot requests:
+          - "--exclude=https://instagram.com/neurogarval"
 
       # 5) Security audit of the GitHub Actions workflows (unpinned actions,
       #    excessive permissions, template injection, credential persistence...)
