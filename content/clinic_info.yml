@@ -1,16 +1,131 @@
 # ============================================================
-# DATOS DE LA CLÍNICA PARA LOS DATOS ESTRUCTURADOS (solo lectura)
-# No son textos visibles de la web: los usa build.py para generar el bloque
-# JSON-LD de src/index.html (schema.org), que es lo que leen los buscadores
-# y los asistentes de IA para saber quién eres, dónde estás y qué tratas.
-# Edita este archivo en el repositorio; Pages CMS lo muestra sin permitir
-# cambios. El marcador __clinic_info.datos_estructurados__ de la plantilla se
-# sustituye por el JSON-LD completo (servicios, preguntas frecuentes,
-# artículos y profesional), generado también desde el resto de content/*.yml.
+# DATOS FIJOS DEL SITIO (solo lectura en Pages CMS)
+# ============================================================
+# Aquí vive todo lo que antes estaba escrito a mano en src/index.html y
+# en build.py: el dominio, el logo, el idioma, las etiquetas SEO, Open
+# Graph y Twitter, las del menú y los textos de los datos estructurados
+# (schema.org). Ninguno de estos campos se edita desde el CMS: para
+# cambiar algo, edita este archivo en el repositorio.
+#
+# build.py sustituye los marcadores clinic_info.* de src/index.html con
+# estos datos y construye el bloque JSON-LD de la cabecera a partir de
+# este archivo y del resto de content/*.yml.
 # ============================================================
 
-# Campo técnico: solo activa el marcador anterior. No se edita ni se muestra.
+# Campo técnico: activa el marcador clinic_info.datos_estructurados, que
+# el build sustituye por el JSON-LD completo de la página. No se edita.
 datos_estructurados: true
+
+# Dominio, identidad e idioma. build.py concatena "url" con las rutas de
+# la web (por eso debe terminar en "/") para las URLs absolutas.
+site:
+  url: "https://neurogarval.es/"
+  name: NeuroGarval
+  # <html lang> e "inLanguage"/"availableLanguage" del JSON-LD.
+  language: es
+  # og:locale.
+  locale: es_ES
+  currency: EUR
+  # Ruta pública del logo (lo publica build.py en la raíz de _site/).
+  logo: logo.svg
+  # Población, provincia, código de región y país: alimentan las
+  # etiquetas geo.* del <head> y la PostalAddress del JSON-LD.
+  locality: Valdemoro
+  region: Madrid
+  region_code: ES-MD
+  country: ES
+  # Etiqueta ICBM: latitud y longitud separadas por comas.
+  geo_position: "40.199937, -3.693149"
+
+# Etiquetas SEO del <head>: título de la pestaña, descripción y palabras
+# clave (esta última es una lista que el build une con comas).
+seo:
+  title: "NeuroGarval | Neuropsicología y Psicología santiaria en Valdemoro"
+  description: "Neuropsicología y Psicología santiaria en Valdemoro y online. Teresa García Valero, colegiado M-42858. Primera consulta gratuita. Pide cita: +34 711 233 888."
+  keywords:
+    - NeuroGarval
+    - Teresa García Valero
+    - neuropsicología Valdemoro
+    - psicología sanitaria Madrid
+    - psicóloga en Valdemoro
+    - psicóloga en Madrid
+    - neuropsicóloga en Valdemoro
+    - Valdemoro
+    - Madrid
+    - rehabilitación cognitiva
+    - evaluación neuropsicológica
+    - dificultades de aprendizaje
+    - TDAH
+    - Trastorno por Déficit de Atención e Hiperactividad
+    - TEA
+    - Trastorno del Espectro Autista
+    - deterioro cognitivo
+    - daño cerebral adquirido
+    - dificultades emocionales y conductuales
+
+# Open Graph y Twitter Card: lo que WhatsApp, Facebook, X y el resto de
+# redes leen al compartir el enlace.
+social:
+  # Imagen de portada: build.py publica su URL absoluta (site.url + ruta).
+  image: media/image.png
+  image_width: 1200
+  image_height: 630
+  image_alt: "NeuroGarval, neuropsicología y psicología sanitaria en Valdemoro"
+  og_type: website
+  og_title: "NeuroGarval | Neuropsicología y Psicología sanitaria en Valdemoro"
+  og_description: "Neuropsicología y Psicología sanitaria en Valdemoro y online. Teresa García Valero, colegiado M-42858. Primera consulta gratuita."
+  twitter_card: summary_large_image
+  twitter_title: "NeuroGarval | Neuropsicología y Psicología en Valdemoro"
+  twitter_description: "Psicología y neuropsicología en Valdemoro y online. Primera consulta gratuita."
+
+# Etiquetas de los dos menús (móvil y escritorio). El enlace de cada
+# entrada apunta al id de su sección en src/index.html.
+nav:
+  inicio: Inicio
+  servicios: Servicios
+  modalidades: Modalidades
+  proceso: Proceso
+  especialista: Especialista
+  blog: Blog
+  faq: FAQ
+  contacto: Contacto
+
+# Textos de la interfaz que no dependen del contenido.
+ui:
+  close_label: Cerrar
+
+# Textos de los datos estructurados (JSON-LD) que build.py no puede
+# deducir del resto del contenido.
+schema:
+  # Nombre schema.org de la clínica y del sitio.
+  site_name: "NeuroGarval | Psicología y Neuropsicología Clínica"
+  description: "Consulta de neuropsicología y psicología sanitaria en Valdemoro y online, dirigida a niños, adolescentes y adultos."
+  # "alternateName" de la clínica: nombre de la profesional + este cargo.
+  role: Neuropsicóloga
+  job_title: "Neuropsicóloga y psicóloga general sanitaria"
+  # "credentialCategory" de la credencial de la profesional.
+  credential_category: Colegiado/a
+  # "name" del catálogo de servicios ("hasOfferCatalog").
+  catalog_name: Servicios
+  # "knowsAbout" de la clínica: los temas que trata.
+  knows_about:
+    - Neuropsicología
+    - Psicología sanitaria
+    - Evaluación neuropsicológica
+    - Rehabilitación cognitiva
+    - Dificultades de aprendizaje
+    - Trastorno por Déficit de Atención e Hiperactividad (TDAH)
+    - Trastorno del Espectro Autista (TEA)
+    - Deterioro cognitivo
+    - Daño Cerebral Adquirido (DCA)
+    - Ansiedad y estrés
+    - Dificultades emocionales y conductuales
+  # Anclas de los @id del grafo (se añaden al final de site.url).
+  anchors:
+    clinic: clinica
+    person: teresa
+    faq: faq
+    blog: blog
 
 # Municipios de la zona de atención presencial (se publican como areaServed).
 area_served:
