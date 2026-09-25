@@ -18,7 +18,8 @@ name: Deploy Page
 
 on:
   push:
-    branches: [main] # automatic deployment when the develop -> main PR is merged
+    branches:
+      - 'main' # automatic deployment when the develop -> main PR is merged
   workflow_dispatch: # manual fallback: "Run workflow" on GitHub
 
 # Least privilege: reading the repository; the deploy job adds the two
