@@ -40,8 +40,8 @@ site:
 # Etiquetas SEO del <head>: título de la pestaña, descripción y palabras
 # clave (esta última es una lista que el build une con comas).
 seo:
-  title: "NeuroGarval | Neuropsicología y Psicología santiaria en Valdemoro"
-  description: "Neuropsicología y Psicología santiaria en Valdemoro y online. Teresa García Valero, colegiado M-42858. Primera consulta gratuita. Pide cita: +34 711 233 888."
+  title: "NeuroGarval | Neuropsicología y Psicología sanitaria en Valdemoro"
+  description: "Neuropsicología y Psicología sanitaria en Valdemoro y online. Teresa García Valero, colegiado M-42858. Primera consulta gratuita. Pide cita: +34 711 233 888."
   keywords:
     - NeuroGarval
     - Teresa García Valero
