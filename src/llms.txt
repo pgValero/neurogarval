@@ -1,43 +1,43 @@
-# NeuroGarval
+# __clinic_info.site.name__
 
-> NeuroGarval es la consulta de neuropsicología y psicología sanitaria de Teresa García Valero, neuropsicóloga y psicóloga general sanitaria (Nº de colegiada M-42858, Colegio Oficial de la Psicología de Madrid). Atiende a niños, adolescentes y adultos en su clínica de Valdemoro (sur de la Comunidad de Madrid), por videollamada (terapia online) y a domicilio. La primera consulta es informativa y gratuita.
+> __clinic_info.site.name__ es la consulta de neuropsicología y psicología sanitaria de __especialista.name__ (__clinic_info.schema.job_title__; __especialista.license__). Atiende a niños, adolescentes y adultos en su clínica de __clinic_info.site.locality__ (sur de la Comunidad de __clinic_info.site.region__), por videollamada (terapia online) y a domicilio. __hero.promo__.
 
 Datos clave:
 
-- Profesional: Teresa García Valero, neuropsicóloga y psicóloga general sanitaria. Nº de colegiada M-42858.
-- Dirección de la clínica: C/ Diego de Almagro, 32, 28342 Valdemoro (Madrid), España.
-- Zona de atención presencial: Valdemoro y municipios cercanos del sur de Madrid.
-- Terapia online: por videollamada, disponible para personas de cualquier lugar.
-- Teléfono y WhatsApp: +34 711 233 888
-- Email: teresa@neurogarval.es
-- Web: https://neurogarval.es/
-- Instagram: https://instagram.com/neurogarval
-- Idioma de atención: español.
+- Profesional: __especialista.name__, __clinic_info.schema.job_title__. __especialista.license__.
+- Dirección de la clínica: __common.contact.address_lines__.
+- Zona de atención presencial (municipios del sur de __clinic_info.site.region__): __clinic_info.area_served__.
+- Terapia online: por videollamada, disponible para cualquier lugar de __clinic_info.online_area__.
+- Teléfono y WhatsApp: __common.contact.phone__
+- Email: __common.contact.mail__
+- Web: __clinic_info.site.url__
+- Instagram: __contacto.instagram.url__
+- Idioma de atención: __clinic_info.site.language_name__.
 - Primera consulta: informativa y gratuita.
-- Duración habitual de la sesión: entre 45 y 60 minutos.
+- Duración habitual de la sesión: __clinic_info.llms.session_length__.
 
-Qué trata: TDAH, Trastorno del Espectro Autista (TEA), dificultades de aprendizaje, deterioro cognitivo, daño cerebral adquirido (ictus, traumatismo craneoencefálico), ansiedad, estrés, estado de ánimo, autoestima, gestión emocional, habilidades sociales, duelo y dificultades emocionales y conductuales.
+Qué trata: __clinic_info.schema.knows_about__.
 
-## Servicios
+## __clinic_info.schema.catalog_name__
 
-- [Neuropsicología](https://neurogarval.es/#servicios): evaluación e intervención en dificultades cognitivas, conductuales y emocionales relacionadas con el funcionamiento cerebral (atención, memoria, lenguaje, funciones ejecutivas). Incluye evaluación con pruebas estandarizadas, informe y plan de intervención.
-- [Psicología sanitaria](https://neurogarval.es/#servicios): atención a ansiedad, estrés, estado de ánimo, autoestima, gestión emocional, habilidades sociales, duelo y procesos de adaptación.
-- [Rehabilitación cognitiva](https://neurogarval.es/#servicios): programas personalizados de rehabilitación, estimulación y mantenimiento de las funciones cognitivas, con asesoramiento a familiares y cuidadores.
+<!-- @foreach:servicios.items -->
+- [__servicios.items.n.title__](__clinic_info.site.url__#servicios): __servicios.items.n.card_text__
+<!-- @endforeach:servicios.items -->
 
-## Modalidades
+## __modalidades.heading__
 
-- [Clínica en Valdemoro](https://neurogarval.es/#modalidades): consulta presencial en C/ Diego de Almagro, 32, Valdemoro.
-- [Terapia online](https://neurogarval.es/#modalidades): sesiones por videollamada, sin desplazamientos.
-- [A domicilio](https://neurogarval.es/#modalidades): intervención en el entorno cotidiano de la persona, útil en casos de movilidad reducida.
+<!-- @foreach:modalidades.items -->
+- [__modalidades.items.n.title__](__clinic_info.site.url__#modalidades): __modalidades.items.n.text__
+<!-- @endforeach:modalidades.items -->
 
-## Cómo pedir cita
+## __contacto.heading__
 
-- [Contacto](https://neurogarval.es/#contacto): por WhatsApp o teléfono (+34 711 233 888) o por email (teresa@neurogarval.es). La primera consulta es gratuita.
-- [Proceso](https://neurogarval.es/#proceso): contacto, primera consulta gratuita, evaluación, plan de intervención y seguimiento.
+- [Contacto](__clinic_info.site.url__#contacto): por WhatsApp o teléfono (__common.contact.phone__) o por email (__common.contact.mail__). La primera consulta es gratuita.
+- [Proceso](__clinic_info.site.url__#proceso): __proceso.steps__.
 
-## Más información
+## __clinic_info.llms.more_heading__
 
-- [Contenido completo para LLM](https://neurogarval.es/llms-full.txt): servicios, modalidades, preguntas frecuentes y artículos completos.
-- [Preguntas frecuentes](https://neurogarval.es/#faq)
-- [Sobre la especialista](https://neurogarval.es/#especialista)
-- [Artículos](https://neurogarval.es/#blog)
+- [Contenido completo para LLM](__clinic_info.site.url__llms-full.txt): servicios, modalidades, preguntas frecuentes y artículos completos.
+- [__faq.heading__](__clinic_info.site.url__#faq)
+- [__clinic_info.llms.specialist_heading__](__clinic_info.site.url__#especialista)
+- [__blog.heading__](__clinic_info.site.url__#blog)
