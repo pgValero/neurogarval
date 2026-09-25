@@ -17,48 +17,12 @@
     <meta property="og:image" content="https://neurogarval.es/media/image.png">
     <meta property="og:url" content="https://neurogarval.es/">
 
-    <!-- Datos Estructurados (Schema.org) -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "MedicalBusiness",
-      "name": "NeuroGarval",
-      "alternateName": "Teresa García Valero Neuropsicóloga",
-      "image": "https://neurogarval.es/media/image.png",
-      "url": "https://neurogarval.es/",
-      "telephone": "+34711233888",
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "C/ Diego de Almagro, 32",
-        "addressLocality": "Valdemoro",
-        "addressRegion": "Madrid",
-        "postalCode": "28342",
-        "addressCountry": "ES"
-      },
-      "priceRange": "$",
-      "areaServed": [
-        "Valdemoro",
-        "Madrid"
-      ],
-      "keywords": "neuropsicología, psicología sanitaria, evaluación neuropsicológica, rehabilitación cognitiva, dificultades de aprendizaje, TDAH, Trastorno por Déficit de Atención e Hiperactividad, TEA, Trastorno del Espectro Autista, deterioro cognitivo, daño cerebral adquirido, dificultades emocionales y conductuales",
-      "knowsAbout": [
-        "Neuropsicología",
-        "Psicología sanitaria",
-        "Evaluación neuropsicológica",
-        "Rehabilitación cognitiva",
-        "Dificultades de aprendizaje",
-        "Trastorno por Déficit de Atención e Hiperactividad (TDAH)",
-        "Trastorno del Espectro Autista (TEA)",
-        "Deterioro cognitivo",
-        "Daño Cerebral Adquirido (DCA)",
-        "Dificultades emocionales y conductuales"
-      ],
-      "founder": {
-        "@type": "Person",
-        "name": "Teresa García Valero"
-      }
-    }
-    </script>
+    <!-- Datos Estructurados (Schema.org)
+         El bloque JSON-LD lo genera build.py (schema.org) a partir de
+         content/clinic_info.yml y del resto de content/*.yml: clínica y
+         profesional, catálogo de servicios, preguntas frecuentes y artículos.
+         No editarlo a mano: cambia el YAML. -->
+    <script type="application/ld+json">__clinic_info.datos_estructurados__</script>
 
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">

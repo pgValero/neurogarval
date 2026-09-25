@@ -1,0 +1,31 @@
+# ============================================================
+# DATOS DE LA CLÍNICA PARA LOS DATOS ESTRUCTURADOS (solo lectura)
+# No son textos visibles de la web: los usa build.py para generar el bloque
+# JSON-LD de src/index.html (schema.org), que es lo que leen los buscadores
+# y los asistentes de IA para saber quién eres, dónde estás y qué tratas.
+# Edita este archivo en el repositorio; Pages CMS lo muestra sin permitir
+# cambios. El marcador __clinic_info.datos_estructurados__ de la plantilla se
+# sustituye por el JSON-LD completo (servicios, preguntas frecuentes,
+# artículos y profesional), generado también desde el resto de content/*.yml.
+# ============================================================
+
+# Campo técnico: solo activa el marcador anterior. No se edita ni se muestra.
+datos_estructurados: true
+
+# Municipios de la zona de atención presencial (se publican como areaServed).
+area_served:
+  - Valdemoro
+  - Pinto
+  - Parla
+  - Ciempozuelos
+  - San Martín de la Vega
+  - Getafe
+  - Aranjuez
+  - Seseña
+
+# La terapia online no tiene zona: se ofrece a cualquier lugar (país).
+online_area: España
+
+# Rango de precios orientativo para los buscadores ("$$" = precio medio).
+# No se muestra en la web; solo lo leen los datos estructurados.
+price_range: "$"

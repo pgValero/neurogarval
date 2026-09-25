@@ -58,6 +58,7 @@ no exige tocar el HTML. Ver expand_loops() para la sintaxis (@foreach).
 from __future__ import annotations
 
 import html
+import json
 import re
 import shutil
 import sys
@@ -234,7 +235,7 @@ def raw_phone(phone: str) -> str:
 # ---------------------------------------------------------------------------
 # Formato: primer segmento = fichero de content/ (sin .yml), el resto es la
 # ruta dentro del YAML (los números recorren listas).
-PLACEHOLDER_RE = re.compile(r"__(?P<ref>[a-z0-9]+(?:\.[a-z0-9_]+)+)__")
+PLACEHOLDER_RE = re.compile(r"__(?P<ref>[a-z0-9_]+(?:\.[a-z0-9_]+)+)__")
 
 
 class CampoAusenteError(Exception):
@@ -469,10 +470,195 @@ def render_blog_thumb(value, parent: dict) -> str:
     return f'<img src="{esc(src)}" alt="{esc(parent.get("title"))}" loading="lazy">'
 
 
+# ---------------------------------------------------------------------------
+# Datos estructurados (JSON-LD) — schema.org
+# El bloque completo se genera aquí (no se escribe a mano en la plantilla) a
+# partir de content/clinic_info.yml y del resto de content/*.yml, de modo que
+# los datos que announced los buscadores y los asistentes de IA no se
+# desincronicen del contenido real de la web. El marcador que lo dispara es
+# __clinic_info.datos_estructurados__ (SPECIALS, más abajo).
+# ---------------------------------------------------------------------------
+SITE_URL = "https://neurogarval.es/"
+CONTEXT: dict = {}          # content/*.yml cargado, para los renderizadores
+
+
+def plain_text(md: str) -> str:
+    """Markdown -> texto plano (schema.org no admite Markdown)."""
+    text = re.sub(r"\*\*(.+?)\*\*", r"\1", str(md or ""))
+    text = re.sub(r"^\s*[-*]\s+", "", text, flags=re.M)
+    text = re.sub(r"\[([^\]]*)\]\([^)]*\)", r"\1", text)
+    text = re.sub(r"[#`_>]", "", text)
+    return " ".join(text.split())
+
+
+def maps_coordinates(embed_url: str) -> tuple[float, float] | None:
+    """Saca (latitud, longitud) del iframe de Google Maps (!2dlon!3dlat)."""
+    m = re.search(r"!2d(-?\d+\.\d+)!3d(-?\d+\.\d+)", str(embed_url or ""))
+    return (float(m.group(2)), float(m.group(1))) if m else None
+
+
+def build_jsonld() -> str:
+    """Devuelve el JSON-LD (@graph) con la clínica, la profesional, el
+    catálogo de servicios, las preguntas frecuentes y los artículos."""
+    c = CONTEXT
+    info = c["clinic_info"]
+    contact = c["common"]["contact"]
+    especialista = c["especialista"]
+    site_name = "NeuroGarval | Psicología y Neuropsicología Clínica"
+    image = SITE_URL + "media/image.png"
+    instagram = (c["contacto"].get("instagram") or {}).get("url", "")
+    same_as = [u for u in (instagram, contact.get("maps_url", "")) if u]
+
+    address_lines = list(contact.get("address_lines") or [])
+    address = {
+        "@type": "PostalAddress",
+        "streetAddress": address_lines[0] if address_lines else "",
+        "addressLocality": "Valdemoro",
+        "addressRegion": "Madrid",
+        "addressCountry": "ES",
+    }
+    if len(address_lines) > 1:
+        m = re.match(r"(\d{5})", address_lines[1])
+        if m:
+            address["postalCode"] = m.group(1)
+
+    # Municipios de atención presencial + país para la terapia online.
+    area_served = [{"@type": "City", "name": ciudad}
+                   for ciudad in info.get("area_served") or []]
+    online_area = info.get("online_area")
+    if online_area:
+        area_served.append({"@type": "Country", "name": online_area})
+
+    person = {
+        "@type": "Person",
+        "@id": SITE_URL + "#teresa",
+        "name": especialista.get("name", ""),
+        "jobTitle": "Neuropsicóloga y psicóloga general sanitaria",
+        "worksFor": {"@id": SITE_URL + "#clinica"},
+        "knowsLanguage": ["es"],
+        "sameAs": [u for u in (instagram,) if u],
+    }
+    colegiada = re.search(r"([A-Z]-\d+)", str(especialista.get("license", "")))
+    if colegiada:
+        person["hasCredential"] = {
+            "@type": "EducationalOccupationalCredential",
+            "credentialCategory": "Colegiado/a",
+            "identifier": colegiada.group(1),
+        }
+
+    knows_about = [
+        "Neuropsicología", "Psicología sanitaria", "Evaluación neuropsicológica",
+        "Rehabilitación cognitiva", "Dificultades de aprendizaje",
+        "Trastorno por Déficit de Atención e Hiperactividad (TDAH)",
+        "Trastorno del Espectro Autista (TEA)", "Deterioro cognitivo",
+        "Daño Cerebral Adquirido (DCA)", "Ansiedad y estrés",
+        "Dificultades emocionales y conductuales",
+    ]
+
+    clinica = {
+        "@type": ["MedicalBusiness", "Psychologist"],
+        "@id": SITE_URL + "#clinica",
+        "name": site_name,
+        "alternateName": f"{especialista.get('name', '')} Neuropsicóloga",
+        "description": "Consulta de neuropsicología y psicología sanitaria en "
+                       "Valdemoro y online, dirigida a niños, adolescentes y "
+                       "adultos.",
+        "url": SITE_URL,
+        "image": image,
+        "logo": SITE_URL + "logo.svg",
+        "telephone": contact.get("phone", ""),
+        "email": contact.get("mail", ""),
+        "address": address,
+        "priceRange": info.get("price_range", ""),
+        "currenciesAccepted": "EUR",
+        "availableLanguage": ["es"],
+        "areaServed": area_served,
+        "knowsAbout": knows_about,
+        "employee": {"@id": SITE_URL + "#teresa"},
+        "hasOfferCatalog": {
+            "@type": "OfferCatalog",
+            "name": "Servicios",
+            "itemListElement": [
+                {
+                    "@type": "Offer",
+                    "itemOffered": {
+                        "@type": "Service",
+                        "name": item.get("title", ""),
+                        "description": plain_text(item.get("card_text", "")),
+                        "serviceType": item.get("title", ""),
+                        "provider": {"@id": SITE_URL + "#clinica"},
+                    },
+                }
+                for item in c["servicios"]["items"]
+            ],
+        },
+    }
+    if same_as:
+        clinica["sameAs"] = same_as
+    coords = maps_coordinates(c["contacto"].get("map_embed", ""))
+    if coords:
+        clinica["geo"] = {
+            "@type": "GeoCoordinates",
+            "latitude": coords[0],
+            "longitude": coords[1],
+        }
+
+    grafo: list[dict] = [
+        {
+            "@type": "WebSite",
+            "@id": SITE_URL,
+            "url": SITE_URL,
+            "name": site_name,
+            "inLanguage": "es",
+            "publisher": {"@id": SITE_URL},
+        },
+        clinica,
+        person,
+    ]
+
+    faq_items = [
+        {
+            "@type": "Question",
+            "name": item.get("question", ""),
+            "acceptedAnswer": {"@type": "Answer",
+                               "text": plain_text(item.get("answer", ""))},
+        }
+        for item in c["faq"].get("items") or []
+    ]
+    if faq_items:
+        grafo.append({
+            "@type": "FAQPage",
+            "@id": SITE_URL + "#faq",
+            "mainEntity": faq_items,
+        })
+
+    for index, post in enumerate(c["blog"].get("posts") or []):
+        nodo = {
+            "@type": "BlogPosting",
+            "@id": f"{SITE_URL}#blog-{index}",
+            "headline": post.get("title", ""),
+            "description": plain_text(post.get("excerpt", "")),
+            "articleBody": plain_text(post.get("article", "")),
+            "inLanguage": "es",
+            "author": {"@id": SITE_URL + "#teresa"},
+            "publisher": {"@id": SITE_URL + "#clinica"},
+            "mainEntityOfPage": {"@type": "WebPage", "url": SITE_URL + "#blog"},
+        }
+        cover = media_url(post.get("image", ""))
+        nodo["image"] = SITE_URL + cover if cover else image
+        grafo.append(nodo)
+
+    return json.dumps(
+        {"@context": "https://schema.org", "@graph": grafo},
+        ensure_ascii=False, indent=2)
+
+
 SPECIALS: dict[str, dict] = {
     "src/index.html": {
         "hero.modalities": render_modalities,
         "blog.posts.*.image": render_blog_thumb,
+        # El marcador activa el bloque JSON-LD completo de la página.
+        "clinic_info.datos_estructurados": lambda v, parent: build_jsonld(),
         # Contenido completo de la modalidad: Markdown + fotos de la consulta
         # (opcionales: solo las modalidades que las declaran las incluyen).
         "modalidades.items.*.modal_content": render_modality_content,
@@ -637,8 +823,10 @@ def build_context() -> dict:
 
 
 def main() -> None:
+    global CONTEXT
     context = build_context()
     validate_service_ids(context)
+    CONTEXT = context
     fields_by_file = load_pages_types()
 
     if OUT.exists():
