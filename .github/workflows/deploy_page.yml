@@ -33,6 +33,10 @@ concurrency:
 jobs:
   build:
     uses: ./.github/workflows/build_validation.yml
+    with:
+      # El build deja _site/ como artefacto de Pages para que lo recoja el
+      # job deploy de abajo.
+      upload_artifact: true
     secrets: inherit
 
   deploy:

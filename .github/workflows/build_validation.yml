@@ -1,12 +1,14 @@
 # Workflow reutilizable: build + validación del sitio.
 #
-# Lo invocan deploy_page.yml (en push a main).
-#
-# También se ejecuta en CADA pull request contra main: construye el sitio
-# con build.py y valida con prek, igual que el despliegue. Su resultado es
-# el status check "Build Validation / build-validation" que la protección de
+# Se ejecuta en CADA pull request contra main: construye el sitio con
+# build.py y valida con prek, igual que el despliegue. Su resultado es el
+# status check "Build Validation / build-validation" que la protección de
 # rama de main exige como obligatorio: si falla, la PR no se mergea (ni el
 # auto-merge la toca).
+#
+# También lo invoca deploy_page.yml (en push a main) con upload_artifact:
+# true: ahí, además de validar, sube _site/ como artefacto de Pages para que
+# lo recoja su job deploy. En las PR el paso de subida se omite.
 #
 # REQUISITO (una sola vez, manual): en Settings -> Branches -> regla de main,
 # marcar "Require status checks to pass before merging" y añadir el check
@@ -16,6 +18,11 @@ name: Build Validation
 
 on:
   workflow_call:
+    inputs:
+      upload_artifact:
+        description: Subir _site/ como artefacto de Pages (solo lo pide deploy_page.yml; en las PR no hace falta y no se sube nada)
+        type: boolean
+        default: false
   pull_request:
     branches: [main]
 
@@ -44,3 +51,12 @@ jobs:
           # generado por build.py (HTML, CSS, JS y URLs).
           git add -f _site
           prek run --config .pre-commit/.pre-commit-config.yaml --all-files
+
+      - name: Subir artefacto de Pages (_site)
+        # Solo en el despliegue: es lo que recoge el job deploy de
+        # deploy_page.yml. En las PR el input no está definido, así que el
+        # paso se omite y no se sube ningún artefacto.
+        if: inputs.upload_artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
