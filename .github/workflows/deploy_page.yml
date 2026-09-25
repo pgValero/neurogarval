@@ -6,7 +6,8 @@
 #    CMS, ver .github/workflows/create_pr.yml), main recibe el push y este
 #    workflow hace "build + deploy" publicando _site/.
 #  - workflow_dispatch: botón "Run workflow" en GitHub (fallback manual para
-#    re-desplegar sin cambios de contenido; el botón del CMS ya usa publicar).
+#    re-desplegar sin cambios de contenido; el botón del CMS ya usa
+#    create_pr.yml).
 # Se despliega siempre desde main: si se lanza a mano desde otra rama, el job
 # deploy se omite (if: github.ref == 'refs/heads/main') y solo se construye.
 #

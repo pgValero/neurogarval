@@ -2,13 +2,15 @@
 #
 # Lo invocan deploy_page.yml (en push a main).
 #
-# TAmbién se ejecuta en CADA pull request contra main: construye el sitio
+# También se ejecuta en CADA pull request contra main: construye el sitio
 # con build.py y valida con prek, igual que el despliegue. Su resultado es
-# el status check "checks" que la protección de rama de main exige como
-# obligatorio: si falla, la PR no se mergea (ni el auto-merge la toca).
+# el status check "Build Validation / build-validation" que la protección de
+# rama de main exige como obligatorio: si falla, la PR no se mergea (ni el
+# auto-merge la toca).
 #
 # REQUISITO (una sola vez, manual): en Settings -> Branches -> regla de main,
-# marcar "Require status checks to pass before merging" y añadir el check.
+# marcar "Require status checks to pass before merging" y añadir el check
+# "Build Validation / build-validation".
 
 name: Build Validation
 

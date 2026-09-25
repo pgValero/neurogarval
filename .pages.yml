@@ -10,13 +10,13 @@
 #
 # CÓMO SE RELACIONA CON EL SITIO:
 #   Los ficheros de content/*.yml NO los lee el navegador directamente.
-#   build.py (ejecutado por .github/workflows/deploy.yml de forma automática
-#   al mergear en main la PR de publicación, y también a mano con "Run
-#   workflow"; nunca con commits de contenido) sustituye los marcadores
-#   __archivo.ruta.campo__ de src/index.html y src/firma.html por estos datos,
-#   escribe el contacto en los huecos .neuro-* del HTML generado (sin
-#   JavaScript), escribe el contenido de los modales en el propio HTML y publica
-#   el resultado.
+#   build.py (ejecutado por .github/workflows/build_validation.yml de forma
+#   automática en cada PR contra main, y por .github/workflows/deploy_page.yml
+#   al hacer push a main; nunca con commits de contenido) sustituye los
+#   marcadores __archivo.ruta.campo__ de src/index.html y src/firma.html por
+#   estos datos, escribe el contacto en los huecos .neuro-* del HTML generado
+#   (sin JavaScript), escribe el contenido de los modales en el propio HTML y
+#   publica el resultado.
 #
 #   Este archivo es también el REGISTRO DE TIPOS del build: cada campo que
 #   aparece en un marcador debe estar declarado aquí con su tipo; build.py
@@ -42,10 +42,10 @@
 # develop: se abre en https://app.pagescms.org/pgValero/neurogarval/develop y
 # todos los commits de contenido caen en develop. main está protegida (solo PR)
 # y no recibe empujes directos. El botón "Publicar cambios" (acciones abajo)
-# lanza .github/workflows/publicar.yml, que crea/reutiliza la PR develop -> main
+# lanza .github/workflows/create_pr.yml, que crea/reutiliza la PR develop -> main
 # y la deja marcada para auto-merge con rebase: GitHub la mergea sola cuando
 # pasan los checks obligatorios; al mergear, el push a
-# main dispara el despliegue (deploy.yml). desarrollos técnicos fuera del CMS
+# main dispara el despliegue (deploy_page.yml). desarrollos técnicos fuera del CMS
 # también van por develop y entran en main por la misma PR.
 # ============================================================================
 
@@ -966,16 +966,17 @@ content:
 
 # ---------------------------------------------------------------------------
 # ACTIONS (opcional): botón "Publicar cambios" en Pages CMS.
-# El botón lanza .github/workflows/publicar.yml (workflow_dispatch sobre la
+# El botón lanza .github/workflows/create_pr.yml (workflow_dispatch sobre la
 # rama en la que se está editando, develop): crea/reutiliza la PR
 # develop -> main, la marca para auto-merge con rebase y, al mergear, se
-# dispara el despliegue automático (deploy.yml con push a main).
+# dispara el despliegue automático (deploy_page.yml con push a main).
 # Requiere que las ramas main y develop tengan el workflow (lo tendrán tras la
 # primera PR de migración) y que main esté protegida con el status check
-# "checks" como obligatorio (ver AGENTS.md, sección "Layout & deploy").
+# "Build Validation / build-validation" como obligatorio (ver AGENTS.md,
+# sección "Layout & deploy").
 # IMPORTANTE: Pages CMS envía siempre un input "payload" (JSON) al lanzar el
-# workflow; por eso on.workflow_dispatch de publicar.yml (y de deploy.yml)
-# declara el input payload, o la API de GitHub rechaza el evento con
+# workflow; por eso on.workflow_dispatch de create_pr.yml declara el input
+# payload, o la API de GitHub rechaza el evento con
 # "Unexpected inputs provided: [\"payload\"]".
 # ---------------------------------------------------------------------------
 actions:

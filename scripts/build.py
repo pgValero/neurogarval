@@ -43,9 +43,10 @@ Uso
     # Sin pip (p. ej. entorno aislado):
     uv run --with pyyaml --with markdown --with pillow python scripts/build.py
 
-La GitHub Action (.github/workflows/deploy.yml) hace exactamente esto en
-cada push a main y publica _site/ en GitHub Pages. No hay framework ni
-generador de sitio: solo este script.
+La GitHub Actions (.github/workflows/build_validation.yml en cada PR y
+.github/workflows/deploy_page.yml al hacer push a main) hace exactamente esto
+y publica _site/ en GitHub Pages. No hay framework ni generador de sitio: solo
+este script.
 
 Marcadores
 ----------
