@@ -19,7 +19,7 @@
 #    permitido (GH mergea con rebase cuando pasen los checks).
 #  - Protección de rama en main: "Require a pull request before merging" y el
 #    status check "checks" como obligatorio.
-name: Publicar
+name: Create PR
 
 on:
   workflow_dispatch: # botón "Publicar cambios" de Pages CMS (.pages.yml -> actions)
