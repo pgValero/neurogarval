@@ -170,6 +170,7 @@
                         <h3>__servicios.items.n.title__</h3>
                         <div class="markdown-content">__servicios.items.n.card_text__</div>
                         <span class="service-more">__servicios.more_label__ <i class="bi bi-arrow-right"></i></span>
+                        <div class="card-full markdown-content" hidden>__servicios.items.n.modal_content__</div>
                     </div>
                     <!-- @endforeach:servicios.items -->
                 </div>
@@ -193,6 +194,7 @@
                             <h4>__modalidades.items.n.title__</h4>
                             <div class="markdown-content">__modalidades.items.n.text__</div>
                             <span class="service-more">__modalidades.more_label__ <i class="bi bi-arrow-right"></i></span>
+                            <div class="card-full markdown-content" hidden>__modalidades.items.n.modal_content__</div>
                         </div>
                     </div>
                     <!-- @endforeach:modalidades.items -->
@@ -260,6 +262,7 @@
                             <h4>__blog.posts.n.title__</h4>
                             <div class="markdown-content">__blog.posts.n.excerpt__</div>
                             <span class="read-more">__blog.read_more__ <i class="bi bi-arrow-right"></i></span>
+                            <div class="card-full markdown-content" hidden>__blog.posts.n.article__</div>
                         </div>
                     </article>
                     <!-- @endforeach:blog.posts -->
@@ -393,7 +396,6 @@
         <div class="modal-body markdown-content" id="blogModalBody"></div>
     </dialog>
 
-    <script src="data.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

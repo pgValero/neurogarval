@@ -1,19 +1,23 @@
-// Modales de servicios, modalidades y artículos del blog: el contenido lo
-// genera build.py desde content/servicios.yml, content/modalidades.yml y
-// content/blog.yml (edición en Pages CMS) y se publica como _site/data.js, que
-// se carga antes que este archivo. Sin data.js (preview sin build) la página
-// carga, pero los modales no tienen contenido.
+// Modales de servicios, modalidades y artículos del blog. El texto completo
+// de cada tarjeta ya está en el HTML (bloque .card-full oculto, generado por
+// build.py desde content/*.yml), así que buscadores y asistentes de IA lo
+// leen sin ejecutar JS. Aquí solo se copia ese contenido al modal.
 // El contacto NO se gestiona aquí: build.py lo escribe directamente en
 // index.html (huecos .neuro-*) desde content/common.yml.
-const siteData = window.SITE_DATA || {};
+
+function fillModal(prefix, card, iconSelector, titleSelector) {
+    const icon = card.querySelector(iconSelector);
+    document.getElementById(prefix + 'Icon').innerHTML = icon ? icon.innerHTML : '';
+    document.getElementById(prefix + 'Title').textContent =
+        card.querySelector(titleSelector).textContent;
+    document.getElementById(prefix + 'Body').innerHTML =
+        card.querySelector('.card-full').innerHTML;
+}
 
 function openServiceModal(key) {
-    const info = siteData.services && siteData.services[key];
-    if (!info) return;
-    const icons = siteData.icons || {};
-    document.getElementById('modalIcon').innerHTML = icons[info.icon] || '';
-    document.getElementById('modalTitle').textContent = info.title;
-    document.getElementById('modalBody').innerHTML = info.html;
+    const card = document.querySelector('.service-card[data-service="' + key + '"]');
+    if (!card) return;
+    fillModal('modal', card, '.service-icon', 'h3');
     const modal = document.getElementById('serviceModal');
     if (!modal.open) modal.showModal();
 }
@@ -24,12 +28,9 @@ function closeServiceModal() {
 }
 
 function openModalityModal(key) {
-    const info = siteData.modalities && siteData.modalities[key];
-    if (!info) return;
-    const icons = siteData.icons || {};
-    document.getElementById('modalityModalIcon').innerHTML = icons[info.icon] || '';
-    document.getElementById('modalityModalTitle').textContent = info.title;
-    document.getElementById('modalityModalBody').innerHTML = info.html;
+    const card = document.querySelector('.modality-item[data-modality="' + key + '"]');
+    if (!card) return;
+    fillModal('modalityModal', card, '.modality-icon', 'h4');
     const modal = document.getElementById('modalityModal');
     if (!modal.open) modal.showModal();
 }
@@ -40,15 +41,21 @@ function closeModalityModal() {
 }
 
 function openBlogModal(key) {
-    const info = siteData.posts && siteData.posts[key];
-    if (!info) return;
+    const card = document.querySelector('.blog-card[data-blog="' + key + '"]');
+    if (!card) return;
+    const img = card.querySelector('.blog-thumb img');
     const cover = document.getElementById('blogModalCover');
-    cover.innerHTML = info.cover
-        ? '<img src="' + info.cover + '" alt="' + info.title + '">'
-        : '';
-    cover.hidden = !info.cover;
-    document.getElementById('blogModalTitle').textContent = info.title;
-    document.getElementById('blogModalBody').innerHTML = info.html;
+    cover.innerHTML = '';
+    if (img) {
+        const copy = img.cloneNode();
+        copy.removeAttribute('loading');
+        cover.appendChild(copy);
+    }
+    cover.hidden = !img;
+    document.getElementById('blogModalTitle').textContent =
+        card.querySelector('h4').textContent;
+    document.getElementById('blogModalBody').innerHTML =
+        card.querySelector('.card-full').innerHTML;
     const modal = document.getElementById('blogModal');
     if (!modal.open) modal.showModal();
 }

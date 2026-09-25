@@ -15,7 +15,7 @@
 #   workflow"; nunca con commits de contenido) sustituye los marcadores
 #   __archivo.ruta.campo__ de src/index.html y src/firma.html por estos datos,
 #   escribe el contacto en los huecos .neuro-* del HTML generado (sin
-#   JavaScript), genera _site/data.js (contenido de los modales) y publica
+#   JavaScript), escribe el contenido de los modales en el propio HTML y publica
 #   el resultado.
 #
 #   Este archivo es también el REGISTRO DE TIPOS del build: cada campo que
@@ -231,7 +231,7 @@ content:
             type: string
             required: true
             pattern: "^[a-z0-9-]+$"
-            description: "Identificador interno único. Abre el modal de la tarjeta (openServiceModal('id')) y sirve de clave en data.js; minúsculas, números y guiones. Evita cambiarlo tras publicar si alguien enlaza a él."
+            description: "Identificador interno único. Abre el modal de la tarjeta (openServiceModal('id')); minúsculas, números y guiones. Evita cambiarlo tras publicar si alguien enlaza a él."
           - name: icon
             component: icono
           - name: title
