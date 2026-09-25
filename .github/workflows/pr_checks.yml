@@ -8,7 +8,7 @@
 # REQUISITO (una sola vez, manual): en Settings -> Branches -> regla de main,
 # marcar "Require status checks to pass before merging" y añadir el check
 # "checks". Ver AGENTS.md.
-name: Checks
+name: PR Checks
 
 on:
   pull_request:

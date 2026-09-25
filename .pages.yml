@@ -623,7 +623,7 @@ content:
 actions:
   - name: publicar
     label: Publicar cambios
-    workflow: publicar.yml
+    workflow: create_pr.yml
 
 # ---------------------------------------------------------------------------
 # EXTENSIÓN FUTURA — colección de artículos del blog (Markdown):

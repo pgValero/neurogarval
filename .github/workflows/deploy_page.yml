@@ -12,7 +12,7 @@
 #
 # REQUISITO (una sola vez, manual): en Settings -> Pages del repositorio,
 # cambiar la fuente a "GitHub Actions".
-name: Deploy
+name: Deploy Page
 
 on:
   push:
