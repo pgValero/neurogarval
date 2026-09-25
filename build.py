@@ -160,7 +160,7 @@ ICONS: dict[str, str] = {
 STATIC_FILES = [
     (SRC / "styles.css", "styles.css"),
     (SRC / "script.js", "script.js"),
-    (ROOT / "CNAME", "CNAME"),
+    (SRC / "CNAME", "CNAME"),
     (ROOT / "media/favicon.svg", "favicon.svg"),
     (ROOT / "media/logo.svg", "logo.svg"),
     (ROOT / "media/aviso_legal.pdf", "aviso_legal.pdf"),
