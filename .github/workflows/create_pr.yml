@@ -76,6 +76,6 @@ jobs:
           PR_URL="https://github.com/$GITHUB_REPOSITORY/pull/$PR_NUMBER"
           echo "PR: $PR_URL"
 
-          # 3) Auto-merge with rebase: GitHub merges it when the checks pass.
-          gh pr merge "$PR_URL" --auto --rebase
+          # 3) Auto-merge with merge: GitHub merges it when the checks pass.
+          gh pr merge "$PR_URL" --auto --merge
           echo "::notice::PR $PR_URL marked for rebase auto-merge when the checks pass."
