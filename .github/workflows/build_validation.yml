@@ -32,8 +32,8 @@ jobs:
       - name: Instalar dependencias
         run: pip install pyyaml markdown pillow prek
 
-      - name: Construir sitio (build.py)
-        run: python build.py
+      - name: Construir sitio (scripts/build.py)
+        run: python scripts/build.py
 
       - name: Validar _site generado (prek)
         run: |

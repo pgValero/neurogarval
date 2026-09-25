@@ -39,9 +39,9 @@ Qué hace
 Uso
 ---
     pip install pyyaml markdown pillow  # dependencias del generador
-    python build.py              # genera ./_site
+    python scripts/build.py              # genera ./_site
     # Sin pip (p. ej. entorno aislado):
-    uv run --with pyyaml --with markdown --with pillow python build.py
+    uv run --with pyyaml --with markdown --with pillow python scripts/build.py
 
 La GitHub Action (.github/workflows/deploy.yml) hace exactamente esto en
 cada push a main y publica _site/ en GitHub Pages. No hay framework ni
@@ -82,7 +82,7 @@ except ImportError as exc:  # pragma: no cover
     missing = "Markdown" if exc.name == "markdown" else "PyYAML"
     sys.exit(f"Falta {missing}. Instálalo con:  pip install pyyaml markdown")
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parent.parent
 SRC = ROOT / "src"
 CONTENT = ROOT / "content"
 OUT = ROOT / "_site"
@@ -1100,7 +1100,7 @@ def pillow_image():
                  "Instálalo con: pip install pillow\n"
                  "(o ejecuta el build con: "
                  "uv run --with pyyaml --with markdown --with pillow "
-                 "python build.py)")
+                 "python scripts/build.py)")
     return Image
 
 
