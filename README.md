@@ -17,6 +17,7 @@ fully-owned website which a non-programmer can update safely on their own.
 - [Why it exists](#why-it-exists)
 - [Feature overview](#feature-overview)
 - [Architecture](#architecture)
+  - [Architecture at a glance](#architecture-at-a-glance)
   - [The content pipeline](#the-content-pipeline)
   - [Markers: `__file.path.field__`](#markers-filepathfield)
   - [Loops: repeated cards without copy-paste](#loops-repeated-cards-without-copy-paste)
@@ -95,23 +96,89 @@ generation instead of editing, and Git as the review/audit trail.
 
 ## Architecture
 
+### Architecture at a glance
+
+The whole system exists to answer one question: *how does a non-technical owner change
+the website?* The answer is a chain with no manual step: **the content is data in Git,
+GitHub turns a commit into a validated build, and the build is the live page.** Nobody
+edits HTML, nobody uploads files by hand, and nothing is published without passing the
+build first.
+
+```mermaid
+flowchart TB
+    subgraph L1["1 · EDIT — the editor only fills in a form"]
+        CMS["<b>Pages CMS</b> · web app in the browser<br/>Spanish field labels · Markdown long text · image upload<br/>reads and writes the repository files directly"]
+    end
+
+    subgraph L2["2 · REPOSITORY — Git is the database, the CMS and the audit trail"]
+        DEV["<b>branch develop</b><br/>content/*.yml — the copy<br/>hero · services · modalities · process · blog · faq · contact"]
+        SCHEMA[".pages.yml<br/>the form the editor sees<br/>+ the type registry the build reads"]
+        TPL["src/index.html · signature.html<br/>robots.txt · sitemap.xml · llms.txt · llms-full.txt<br/>structure only: markers __file.path.field__ and @foreach loops"]
+        GEN["scripts/build.py<br/>the generator: resolves markers, expands loops,<br/>renders Markdown, builds the JSON-LD, makes WebP"]
+        ASSETS["media/ · images, logo, PDFs<br/>src/CNAME · the domain"]
+    end
+
+    subgraph L3["3 · AUTOMATION — free, hosted by GitHub, no server to maintain"]
+        W1["create_pr.yml<br/>triggered by the Publicar cambios button"]
+        PR["pull request <b>develop → main</b><br/>the diff is visible · auto-merge with rebase"]
+        W2["build_validation.yml<br/>python scripts/build.py + prek linters<br/>required check: without green, no merge"]
+        MAIN["<b>branch main</b> · protected<br/>the only branch that deploys"]
+        W3["deploy_page.yml<br/>reuses the same build · uploads _site/"]
+        W4["check_site.yml<br/>twice a day: is the published site still answering?"]
+    end
+
+    LIVE["<b>GitHub Pages</b> · https://neurogarval.es<br/>index.html · styles.css · script.js · images · llms.txt<br/>static files only: no database, no server, no runtime"]
+    READ["visitors · Google · AI crawlers<br/>read HTML, JSON-LD, sitemap.xml and llms.txt"]
+
+    CMS -->|"1 · saves the form → YAML on develop"| DEV
+    CMS -->|"1 · uploads photos"| ASSETS
+    CMS -->|"2 · clicks Publicar cambios"| W1
+    SCHEMA -.->|"drives the fields and labels of the form"| CMS
+    DEV -->|"the values"| GEN
+    SCHEMA -->|"the type of every field"| GEN
+    TPL -->|"the structure"| GEN
+    ASSETS -->|"the images"| GEN
+    W1 -->|"creates or reuses the PR, unless there is nothing to publish"| PR
+    PR -->|"runs on every PR"| W2
+    GEN -->|"generates _site/"| W2
+    W2 -->|"all checks pass → GitHub merges the PR"| MAIN
+    MAIN -->|"push to main triggers the deploy"| W3
+    W3 -->|"artifact _site/"| LIVE
+    LIVE --> READ
+    LIVE -.->|"checked twice a day"| W4
+```
+
+Read it as four guarantees:
+
+| Question | Answer given by the architecture |
+| --- | --- |
+| *What does the editor touch?* | Only `content/*.yml` (+ `media/`) through a form. No HTML, no code, no local tools. |
+| *Where is the truth?* | In Git. Every change is a commit with an author, a date and a reviewable diff — no proprietary database to lose or migrate. |
+| *What stops a typo from reaching production?* | `build.py` fails on any missing or undeclared field, the linters check the generated HTML/CSS/JS, and `main` cannot be merged without a green check. |
+| *What is actually deployed?* | The output of the build, uploaded as an artifact. The templates and YAML never ship; only the finished static files do. |
+
+Technical work follows the exact same door: changes are developed on `develop` and
+reach `main` through the same reviewed PR, so there is a single publishing path for
+both the editor and a developer.
+
 ### The content pipeline
 
+Zooming into the middle of the diagram above: the generator is the only piece of code
+that turns data into a page.
+
 ```
-        EDITOR (no code)                REPOSITORY                      CI / PUBLISHING
-   ┌──────────────────────────┐   ┌───────────────────────────┐   ┌──────────────────────────┐
-   │  Pages CMS (develop)     │   │  content/*.yml   (data)   │   │  build.py                │
-   │  - form fields           │──▶│  .pages.yml  (types)     │──▶│  - resolve markers       │
-   │  - Markdown long text    │   │  src/*.html,*.txt,*.xml   │   │  - expand @foreach loops │
-   │  - image uploads         │   │       (templates)         │   │  - Markdown → HTML       │
-   │  - "Publish changes" btn │   │  media/       (assets)    │   │  - generate JSON-LD      │
-   └──────────────────────────┘   │  src/CNAME   (domain)     │   │  - inject contact data   │
-                                  │  scripts/build.py         │   │  - PNG/JPEG → WebP       │
-                                  └───────────────────────────┘   │  - lint with prek        │
-                                                                    │  - deploy to Pages       │
-             ┌──────────────────────────────────────────────────────┘
-             ▼
-      _site/  →  https://neurogarval.es  (static files only, no runtime)
+  content/*.yml  ─┐                          ┌─ index.html      (page + JSON-LD)
+  .pages.yml     ─┤  types + field values     ├─ signature.html  (email signature)
+  src/*.html     ─┤                          ├─ robots.txt      (all crawlers allowed)
+  src/*.txt/.xml ─┼─▶  scripts/build.py  ───▶ ├─ sitemap.xml     (with image entries)
+  media/         ─┤   resolve __markers__     ├─ llms.txt        (summary for AI)
+  src/CNAME      ─┘   expand @foreach loops  ├─ llms-full.txt   (full text for AI)
+                       Markdown → HTML         └─ media/*.webp    (optimized images)
+                       JSON-LD · contact · WebP
+                                    │
+                                    ▼
+                     _site/  →  https://neurogarval.es
+                     (static files only, no runtime, deleted and rebuilt every run)
 ```
 
 ### Markers: `__file.path.field__`
@@ -275,25 +342,41 @@ menu.
 
 ## Publishing workflow
 
+The same chain as a timeline — from the click in the browser to the live page, with no
+human step in the middle once the button is pressed:
+
+```mermaid
+sequenceDiagram
+    actor E as Editor · no code
+    participant C as Pages CMS · branch develop
+    participant G as GitHub repository
+    participant W as GitHub Actions
+    participant P as GitHub Pages
+
+    E->>C: fills the form, writes Markdown, uploads a photo, clicks "Publicar cambios"
+    C->>G: commit to develop — content/*.yml + media/
+    C->>W: dispatch create_pr.yml (the button is the trigger)
+    W->>G: diff develop vs main
+    alt no changes
+        W-->>C: nothing to publish, the run ends
+    else there are changes
+        W->>G: create or reuse PR develop → main, mark it for auto-merge (rebase)
+        W->>W: build_validation.yml — build.py + prek on the generated _site/
+        alt a check fails
+            W-->>G: the PR is blocked, main keeps the previous site
+        else all checks pass
+            W->>G: GitHub merges the PR (rebase) into protected main
+            G->>W: push to main triggers deploy_page.yml
+            W->>W: same build, upload _site/ as the Pages artifact
+            W->>P: deploy (only from main)
+            P-->>E: the visitor sees the new page
+        end
+    end
+    Note over C,P: check_site.yml runs twice a day and fails if the live site stops answering
 ```
-editor clicks "Publish changes" in Pages CMS
-        │
-        ▼
-create_pr.yml  (workflow_dispatch on develop)
-        │   no changes vs main → nothing happens
-        │   else → create (or reuse) PR develop → main, enable auto-merge (rebase)
-        ▼
-GitHub runs "Build Validation / build-validation" (required check on main)
-        │   build.py + prek linters on the generated output
-        ▼
-merge lands on main
-        │
-        ▼
-deploy_page.yml  (push to main) → build again → upload artifact → GitHub Pages
-        │
-        ▼
-check_site.yml  (twice a day) verifies the published site still answers
-```
+
+Every arrow is automatic: the editor never opens GitHub, never runs a command and never
+uploads a file. The only button is **"Publicar cambios"**.
 
 Technical work follows the same path: changes are developed on `develop` and reach
 `main` through the same reviewed PR. `main` is protected (PR required, status check
