@@ -22,8 +22,8 @@ Qué hace
 3. Escribe el contacto de content/common.yml (fuente única) directamente en
    el index.html generado: los huecos .neuro-* (teléfono, WhatsApp, email,
    dirección y Maps) quedan resueltos sin JavaScript.
-4. Genera _site/data.js (window.SITE_DATA: servicios, modalidades, artículos
-   del blog e iconos), que script.js usa al abrir sus respectivos modales.
+4. Escribe el contenido completo de servicios, modalidades y artículos en el
+   propio HTML (bloques .card-full ocultos); script.js lo copia a los modales.
 5. Copia los estáticos (CSS, JS, CNAME, favicon, logo y PDFs) y las imágenes
    de media/ a _site/, manteniendo la estructura pública actual.
 
@@ -58,7 +58,6 @@ no exige tocar el HTML. Ver expand_loops() para la sintaxis (@foreach).
 from __future__ import annotations
 
 import html
-import json
 import re
 import shutil
 import sys
@@ -455,6 +454,13 @@ def render_modalities(value, parent: dict) -> str:
     return esc(parts[0])
 
 
+def render_modality_content(value, parent: dict) -> str:
+    """Modalidad: Markdown del contenido + galería de fotos de la consulta."""
+    content = markdown_html(value)
+    gallery = modality_gallery(parent.get("images") or [])
+    return f"{content}\n{gallery}" if gallery else content
+
+
 def render_blog_thumb(value, parent: dict) -> str:
     """Miniatura del blog: <img> con la foto o icono de reserva si no hay."""
     src = media_url(value)
@@ -467,6 +473,9 @@ SPECIALS: dict[str, dict] = {
     "src/index.html": {
         "hero.modalities": render_modalities,
         "blog.posts.*.image": render_blog_thumb,
+        # Contenido completo de la modalidad: Markdown + fotos de la consulta
+        # (opcionales: solo las modalidades que las declaran las incluyen).
+        "modalidades.items.*.modal_content": render_modality_content,
     },
     "src/firma.html": {
         # La firma muestra la dirección en una sola línea.
@@ -572,51 +581,23 @@ def fill_contact(doc: str, contact: dict) -> str:
 
 
 # ---------------------------------------------------------------------------
-# data.js — puente con script.js (modales: servicios, modalidades, artículos
-# del blog e iconos). Los servicios se indexan por su campo "id" (los onclick
-# de la plantilla pasan ese id, p. ej. openServiceModal('neuro')); las
-# modalidades y los artículos, por su índice. El contacto NO viaja aquí: se
-# escribe en el index.html generado con fill_contact().
+# Modales: su contenido completo se escribe en el HTML (bloques .card-full
+# ocultos de cada tarjeta) para que buscadores y asistentes de IA lo lean sin
+# JavaScript; script.js solo lo copia al modal. Los servicios se abren por su
+# campo "id" (openServiceModal('neuro') busca data-service="neuro"), así que
+# debe existir y ser único.
 # ---------------------------------------------------------------------------
-def write_data_js(c: dict) -> None:
-    services: dict[str, dict] = {}
+def validate_service_ids(c: dict) -> None:
+    seen: set[str] = set()
     for item in c["servicios"]["items"]:
         sid = item.get("id")
         if not sid:
             sys.exit("Un servicio de content/servicios.yml no tiene 'id'. "
-                     "Es obligatorio: abre su modal (openServiceModal('id')) "
-                     "y es la clave del servicio en data.js.")
-        if sid in services:
+                     "Es obligatorio: abre su modal (openServiceModal('id')).")
+        if sid in seen:
             sys.exit(f"Identificador duplicado en content/servicios.yml: "
                      f"'{sid}'. Debe ser único por servicio.")
-        services[sid] = {
-            "title": item["title"],
-            "icon": item.get("icon", ""),
-            "html": markdown_html(item["modal_content"]),
-        }
-    modalities = [
-        {
-            "title": item["title"],
-            "icon": item.get("icon", ""),
-            "html": modality_modal_html(item),
-        }
-        for item in c["modalidades"]["items"]
-    ]
-    posts = [
-        {
-            "title": item["title"],
-            "cover": media_url(item.get("image", "")),
-            "html": markdown_html(item["article"]),
-        }
-        for item in c["blog"]["posts"]
-    ]
-    payload = {"services": services, "modalities": modalities,
-               "posts": posts, "icons": ICONS}
-    js = ("// Generado por build.py desde content/*.yml — NO editar a mano.\n"
-          "window.SITE_DATA = "
-          + json.dumps(payload, ensure_ascii=False, indent=2)
-          + ";\n")
-    (OUT / "data.js").write_text(js, encoding="utf-8")
+        seen.add(sid)
 
 
 def modality_gallery(images: list[dict]) -> str:
@@ -644,13 +625,6 @@ def modality_gallery(images: list[dict]) -> str:
             + "\n</div>")
 
 
-def modality_modal_html(item: dict) -> str:
-    """Convierte a HTML el Markdown y añade las fotos de la modalidad."""
-    content = markdown_html(item.get("modal_content", ""))
-    gallery = modality_gallery(item.get("images") or [])
-    return f"{content}\n{gallery}" if gallery else content
-
-
 # ---------------------------------------------------------------------------
 # Build
 # ---------------------------------------------------------------------------
@@ -664,6 +638,7 @@ def build_context() -> dict:
 
 def main() -> None:
     context = build_context()
+    validate_service_ids(context)
     fields_by_file = load_pages_types()
 
     if OUT.exists():
@@ -677,7 +652,6 @@ def main() -> None:
             doc = fill_contact(doc, context["common"]["contact"])
         (OUT / path.name).write_text(doc, encoding="utf-8")
 
-    write_data_js(context)
 
     for src, name in STATIC_FILES:
         if not src.exists():
