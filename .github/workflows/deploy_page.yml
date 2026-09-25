@@ -3,7 +3,7 @@
 # Se lanza de DOS formas:
 #  - push a main: automático. Es el camino normal de producción: al mergear
 #    la PR develop -> main (creada por el botón "Publicar cambios" de Pages
-#    CMS, ver .github/workflows/publicar.yml), main recibe el push y este
+#    CMS, ver .github/workflows/create_pr.yml), main recibe el push y este
 #    workflow hace "build + deploy" publicando _site/.
 #  - workflow_dispatch: botón "Run workflow" en GitHub (fallback manual para
 #    re-desplegar sin cambios de contenido; el botón del CMS ya usa publicar).
@@ -31,34 +31,8 @@ concurrency:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Configurar Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-
-      - name: Instalar dependencias
-        run: pip install pyyaml markdown prek
-
-      - name: Construir sitio (build.py)
-        run: python build.py
-
-      - name: Validar _site generado (prek run --all-files)
-        run: |
-          # prek --all-files solo lintea ficheros rastreados por git y _site/
-          # está en .gitignore; se indexa _site para que la validación cubra
-          # todo lo generado por build.py (HTML, CSS, JS y URLs).
-          git add -f _site
-          prek run --all-files
-
-      - name: Subir artefacto (_site)
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: _site
+    uses: ./.github/workflows/build_validation.yml
+    secrets: inherit
 
   deploy:
     # Solo se despliega desde main: un dispatch manual lanzado desde una
@@ -70,6 +44,10 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      - name: Descargar artefacto (_site)
+        uses: actions/download-pages-artifact@v3
+        with:
+          path: _site
       - name: Desplegar en GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
