@@ -1,0 +1,20 @@
+# Ruff configuration for the Python code of the repository (scripts/build.py).
+# The rule list is curated, like .pre-commit/eslint.config.js: only checks that
+# catch real problems, no plugins needed.
+target-version = "py312"
+line-length = 88
+
+[lint]
+select = [
+  "E4", # pycodestyle: imports, whitespace and statements
+  "E7", # pycodestyle: statements that are very likely wrong
+  "E9", # pycodestyle: syntax and runtime errors
+  "W", # pycodestyle warnings (trailing whitespace, missing final newline...)
+  "F", # pyflakes: undefined names, unused imports and variables
+  "B", # flake8-bugbear: common sources of bugs
+  "C4", # flake8-comprehensions: cleaner comprehensions
+  "I", # isort: sorted and grouped imports
+  "UP", # pyupgrade: outdated syntax for the target version
+]
+# E501 (line too long) is not selected on purpose: the ICONS dict of build.py
+# has single-line SVG path data that cannot be wrapped.

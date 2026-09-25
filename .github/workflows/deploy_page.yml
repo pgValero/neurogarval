@@ -21,10 +21,10 @@ on:
     branches: [main] # automatic deployment when the develop -> main PR is merged
   workflow_dispatch: # manual fallback: "Run workflow" on GitHub
 
+# Least privilege: reading the repository; the deploy job adds the two
+# permissions it needs (pages and id-token) at job level.
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 # Only one deployment at a time; if another manual one starts, the previous one
 # is cancelled.
@@ -34,12 +34,13 @@ concurrency:
 
 jobs:
   build:
-    uses: ./.github/workflows/build_validation.yml
+    # $/ is the recommended syntax to call a reusable workflow of the same
+    # repository (it always uses the same commit as this one).
+    uses: $/.github/workflows/build_validation.yml
     with:
       # The build leaves _site/ as the Pages artifact for the deploy job below
       # to pick up.
       upload_artifact: true
-    secrets: inherit
 
   deploy:
     # Only deploys from main: a manual dispatch from a different branch builds
@@ -47,14 +48,22 @@ jobs:
     if: github.ref == 'refs/heads/main'
     needs: build
     runs-on: ubuntu-latest
+    # The deployment is the only job that publishes: it needs to write the
+    # Pages and to get the OIDC token to authenticate.
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Download artifact (_site)
-        uses: actions/download-pages-artifact@v3
+        # The artifact that build_validation.yml uploads with
+        # actions/upload-pages-artifact has the name "github-pages".
+        uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5.0.0
         with:
+          name: github-pages
           path: _site
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4.0.5

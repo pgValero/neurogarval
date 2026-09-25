@@ -269,11 +269,24 @@ def image_size(rel_path: str) -> tuple[int, int] | None:
             continue
         if marker == 0xD9:
             break
-        length = int.from_bytes(data[i + 2:i + 4], "big")
-        if marker in (0xC0, 0xC1, 0xC2, 0xC3, 0xC5, 0xC6, 0xC7,
-                      0xC9, 0xCA, 0xCB, 0xCD, 0xCE, 0xCF):
-            height = int.from_bytes(data[i + 5:i + 7], "big")
-            width = int.from_bytes(data[i + 7:i + 9], "big")
+        length = int.from_bytes(data[i + 2 : i + 4], "big")
+        if marker in (
+            0xC0,
+            0xC1,
+            0xC2,
+            0xC3,
+            0xC5,
+            0xC6,
+            0xC7,
+            0xC9,
+            0xCA,
+            0xCB,
+            0xCD,
+            0xCE,
+            0xCF,
+        ):
+            height = int.from_bytes(data[i + 5 : i + 7], "big")
+            width = int.from_bytes(data[i + 7 : i + 9], "big")
             return width, height
         i += 2 + length
     return None
@@ -282,19 +295,24 @@ def image_size(rel_path: str) -> tuple[int, int] | None:
 def webp_size(data: bytes) -> tuple[int, int] | None:
     """(width, height) of a WebP (VP8, VP8L or VP8X) reading its header."""
     if data[12:16] == b"VP8X" and len(data) >= 30:
-        return (int.from_bytes(data[24:27], "little") + 1,
-                int.from_bytes(data[27:30], "little") + 1)
+        return (
+            int.from_bytes(data[24:27], "little") + 1,
+            int.from_bytes(data[27:30], "little") + 1,
+        )
     if data[12:16] == b"VP8L" and len(data) >= 25:
         b = int.from_bytes(data[21:25], "little")
         return (b & 0x3FFF) + 1, ((b >> 14) & 0x3FFF) + 1
     if data[12:16] == b"VP8 " and len(data) >= 30:
-        return (int.from_bytes(data[26:28], "little") & 0x3FFF,
-                int.from_bytes(data[28:30], "little") & 0x3FFF)
+        return (
+            int.from_bytes(data[26:28], "little") & 0x3FFF,
+            int.from_bytes(data[28:30], "little") & 0x3FFF,
+        )
     return None
 
 
-def img_tag(src: str, alt: str, attrs: str = "",
-            size: tuple[int, int] | None = None) -> str:
+def img_tag(
+    src: str, alt: str, attrs: str = "", size: tuple[int, int] | None = None
+) -> str:
     """<img> with width/height so the page does not jump while loading."""
     size = size or image_size(src)
     dim = f' width="{size[0]}" height="{size[1]}"' if size else ""
@@ -320,8 +338,9 @@ def image_html(path: str, alt: str, attrs: str = "") -> str:
 
 def icon_html(key: str | None) -> str:
     if key and key not in ICONS:
-        sys.exit(f"Unknown icon in content/*.yml: {key!r} "
-                 f"(valid values: {', '.join(ICONS)})")
+        sys.exit(
+            f"Unknown icon in content/*.yml: {key!r} (valid values: {', '.join(ICONS)})"
+        )
     return ICONS.get(key or "", "")
 
 
@@ -344,7 +363,8 @@ def read_cname() -> str:
         sys.exit(f"{path} must contain a single valid domain.")
     domain = lines[0].strip()
     if len(domain) > 253 or not re.fullmatch(
-            r"[A-Za-z0-9](?:[A-Za-z0-9.-]*[A-Za-z0-9])?", domain):
+        r"[A-Za-z0-9](?:[A-Za-z0-9.-]*[A-Za-z0-9])?", domain
+    ):
         sys.exit(f"{path} must contain a single valid domain.")
     return domain
 
@@ -374,24 +394,25 @@ class MissingFieldError(Exception):
         self.template = template
         self.route = route
         self.reason = reason
-        super().__init__(
-            f"Field not found: {route} (template {template}) — {reason}."
-        )
+        super().__init__(f"Field not found: {route} (template {template}) — {reason}.")
 
 
 # Derived fields: they exist neither in content/*.yml nor in .pages.yml; build.py
 # computes them from other fields or from src/CNAME (e.g. the phone and the
 # signature URL). These markers skip the .pages.yml registry.
-DERIVED_FIELDS = frozenset({
-    "clinic_info.site.url",
-    "common.contact.phone_tel",
-    "signature.web_label",
-    "signature.web_url",
-})
+DERIVED_FIELDS = frozenset(
+    {
+        "clinic_info.site.url",
+        "common.contact.phone_tel",
+        "signature.web_label",
+        "signature.web_url",
+    }
+)
 
 
-def resolve_data(template: str, ref: str, file: str, route: list[str],
-                 context: dict) -> tuple:
+def resolve_data(
+    template: str, ref: str, file: str, route: list[str], context: dict
+) -> tuple:
     """Looks up the value of a marker in the loaded YAML.
 
     Returns (value, container): the field value and the node that holds it
@@ -401,8 +422,8 @@ def resolve_data(template: str, ref: str, file: str, route: list[str],
     data = context.get(file)
     if data is None:
         raise MissingFieldError(
-            template, ref,
-            f"content/{file}.yml does not exist (check the file name)")
+            template, ref, f"content/{file}.yml does not exist (check the file name)"
+        )
     node = data
     parent = data
     for seg in route:
@@ -410,20 +431,24 @@ def resolve_data(template: str, ref: str, file: str, route: list[str],
         if seg.isdigit():
             if not isinstance(node, (list, tuple)):
                 raise MissingFieldError(
-                    template, ref,
-                    f"'{seg}' is not a list index in content/{file}.yml")
+                    template, ref, f"'{seg}' is not a list index in content/{file}.yml"
+                )
             idx = int(seg)
             if idx >= len(node):
                 raise MissingFieldError(
-                    template, ref,
+                    template,
+                    ref,
                     f"index {idx} is out of range: content/{file}.yml has "
-                    f"{len(node)} entries")
+                    f"{len(node)} entries",
+                )
             node = node[idx]
         else:
             if not isinstance(node, dict) or seg not in node:
                 raise MissingFieldError(
-                    template, ref,
-                    f"'{'.'.join(route)}' does not exist in content/{file}.yml")
+                    template,
+                    ref,
+                    f"'{'.'.join(route)}' does not exist in content/{file}.yml",
+                )
             node = node[seg]
     return node, parent
 
@@ -465,10 +490,10 @@ def expand_loop(template: str, ref: str, body: str, items: list) -> str:
     fragments = []
     for idx in range(len(items)):
 
-        def repl(m: "re.Match", i: int = idx) -> str:
+        def repl(m: re.Match, i: int = idx) -> str:
             r = m.group("ref")
             if r.startswith(prefix):
-                return f"__{ref}.{i}.{r[len(prefix):]}__"
+                return f"__{ref}.{i}.{r[len(prefix) :]}__"
             if r == "loop.index":
                 return str(i + 1)
             if r == "loop.index0":
@@ -494,9 +519,11 @@ def expand_loops(template: str, source: str, context: dict) -> str:
         if token.startswith("foreach:"):
             ref = m.group("ref")
             if stack:
-                sys.exit(f"{template}: nested @foreach ('{ref}' inside "
-                         f"'{stack[-1]}') not supported")
-            parts.append(source[pos:m.start()])
+                sys.exit(
+                    f"{template}: nested @foreach ('{ref}' inside "
+                    f"'{stack[-1]}') not supported"
+                )
+            parts.append(source[pos : m.start()])
             pos = m.end()
             stack.append(ref)
         else:
@@ -505,17 +532,20 @@ def expand_loops(template: str, source: str, context: dict) -> str:
             ref = stack.pop()
             close_ref = m.group("close_ref")
             if close_ref and close_ref != ref:
-                sys.exit(f"{template}: @endforeach closes '{close_ref}' but "
-                         f"the @foreach opened '{ref}'")
-            body = source[pos:m.start()]
+                sys.exit(
+                    f"{template}: @endforeach closes '{close_ref}' but "
+                    f"the @foreach opened '{ref}'"
+                )
+            body = source[pos : m.start()]
             file, _, route_str = ref.partition(".")
-            node, _ = resolve_data(template, ref, file, route_str.split("."),
-                                   context)
+            node, _ = resolve_data(template, ref, file, route_str.split("."), context)
             if not isinstance(node, (list, tuple)):
                 raise MissingFieldError(
-                    template, ref,
+                    template,
+                    ref,
                     f"'{ref}' is not a list in content/{file}.yml "
-                    "(an @foreach only repeats over lists)")
+                    "(an @foreach only repeats over lists)",
+                )
             parts.append(expand_loop(template, ref, body, node))
             pos = m.end()
     if stack:
@@ -524,8 +554,9 @@ def expand_loops(template: str, source: str, context: dict) -> str:
     return "".join(parts)
 
 
-def resolve_type(template: str, ref: str, file: str, route: list[str],
-                 fields_by_file: dict) -> dict:
+def resolve_type(
+    template: str, ref: str, file: str, route: list[str], fields_by_file: dict
+) -> dict:
     """Looks up the field in the type registry (.pages.yml).
 
     Returns the field definition (type, component, list...). If the field is
@@ -534,9 +565,11 @@ def resolve_type(template: str, ref: str, file: str, route: list[str],
     fields = fields_by_file.get(file)
     if fields is None:
         raise MissingFieldError(
-            template, ref,
+            template,
+            ref,
             f"the collection '{file}' does not exist in .pages.yml (did you "
-            "add it to the type registry?)")
+            "add it to the type registry?)",
+        )
     node = fields
     for i, seg in enumerate(route):
         if seg.isdigit():
@@ -544,17 +577,21 @@ def resolve_type(template: str, ref: str, file: str, route: list[str],
         field = next((f for f in node if f.get("name") == seg), None)
         if field is None:
             raise MissingFieldError(
-                template, ref,
+                template,
+                ref,
                 f"the field '{seg}' is not declared in .pages.yml "
-                f"(collection '{file}': {', '.join(f.get('name') or '?' for f in node)})")
+                f"(collection '{file}': {', '.join(f.get('name') or '?' for f in node)})",
+            )
         if i == len(route) - 1:
             return field
         sub = field.get("fields")
         if not sub:
             raise MissingFieldError(
-                template, ref,
+                template,
+                ref,
                 f"the '{seg}' field of .pages.yml has no subfields to hold "
-                f"the path '{ref}'")
+                f"the path '{ref}'",
+            )
         node = sub
     raise MissingFieldError(template, ref, "empty path in .pages.yml")
 
@@ -582,8 +619,7 @@ def render_modalities(value, parent: dict) -> str:
     parts = [p.strip() for p in str(value).split("·")]
     if len(parts) > 1:
         head = " · ".join(esc(p) for p in parts[:-1])
-        return (f'{head} <span style="white-space: nowrap;">'
-                f"· {esc(parts[-1])}</span>")
+        return f'{head} <span style="white-space: nowrap;">· {esc(parts[-1])}</span>'
     return esc(parts[0])
 
 
@@ -596,8 +632,9 @@ def render_modality_content(value, parent: dict) -> str:
 
 def render_blog_thumb(value, parent: dict) -> str:
     """Blog thumbnail: <picture> with the cover photo or a fallback icon."""
-    image = image_html(value, parent.get("title", ""),
-                       ' loading="lazy" decoding="async"')
+    image = image_html(
+        value, parent.get("title", ""), ' loading="lazy" decoding="async"'
+    )
     return image or icon_html("journal")
 
 
@@ -702,8 +739,10 @@ def build_jsonld() -> str:
     try:
         return jsonld_graph()
     except KeyError as exc:
-        sys.exit(f"content/clinic_info.yml: missing the field '{exc.args[0]}' "
-                 "required by the JSON-LD block of src/index.html.")
+        sys.exit(
+            f"content/clinic_info.yml: missing the field '{exc.args[0]}' "
+            "required by the JSON-LD block of src/index.html."
+        )
 
 
 def jsonld_graph() -> str:
@@ -741,8 +780,9 @@ def jsonld_graph() -> str:
             address["postalCode"] = m.group(1)
 
     # In-person municipalities + country for the online therapy.
-    area_served = [{"@type": "City", "name": city}
-                   for city in info.get("area_served") or []]
+    area_served = [
+        {"@type": "City", "name": city} for city in info.get("area_served") or []
+    ]
     online_area = info.get("online_area")
     if online_area:
         area_served.append({"@type": "Country", "name": online_area})
@@ -827,17 +867,21 @@ def jsonld_graph() -> str:
         {
             "@type": "Question",
             "name": item.get("question", ""),
-            "acceptedAnswer": {"@type": "Answer",
-                               "text": plain_text(item.get("answer", ""))},
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": plain_text(item.get("answer", "")),
+            },
         }
         for item in c["faq"].get("items") or []
     ]
     if faq_items:
-        graph.append({
-            "@type": "FAQPage",
-            "@id": faq_id,
-            "mainEntity": faq_items,
-        })
+        graph.append(
+            {
+                "@type": "FAQPage",
+                "@id": faq_id,
+                "mainEntity": faq_items,
+            }
+        )
 
     for index, post in enumerate(c["blog"].get("posts") or []):
         node = {
@@ -857,7 +901,9 @@ def jsonld_graph() -> str:
 
     return json.dumps(
         {"@context": "https://schema.org", "@graph": graph},
-        ensure_ascii=False, indent=2)
+        ensure_ascii=False,
+        indent=2,
+    )
 
 
 SPECIALS: dict[str, dict] = {
@@ -873,10 +919,11 @@ SPECIALS: dict[str, dict] = {
         # Images: <picture> with WebP + fallback, with width/height and the
         # right loading (the hero is immediate; the rest, on scroll).
         "hero.image": lambda v, parent: image_html(
-            v, parent.get("image_alt", ""),
-            ' fetchpriority="high" decoding="async"'),
+            v, parent.get("image_alt", ""), ' fetchpriority="high" decoding="async"'
+        ),
         "specialist.image": lambda v, parent: image_html(
-            v, parent.get("image_alt", ""), ' loading="lazy" decoding="async"'),
+            v, parent.get("image_alt", ""), ' loading="lazy" decoding="async"'
+        ),
         # Full modality content: Markdown + consultation photos (optional:
         # only the modalities that declare them include them).
         "modalities.items.*.modal_content": render_modality_content,
@@ -885,7 +932,8 @@ SPECIALS: dict[str, dict] = {
         "clinic_info.site.logo": render_site_logo,
         # The signature shows the address on a single line.
         "common.contact.address_lines": lambda v, parent: " - ".join(
-            esc(line) for line in v),
+            esc(line) for line in v
+        ),
     },
     "src/sitemap.xml": {
         # The sitemap covers are published at the real path (WebP if they were
@@ -923,13 +971,14 @@ SPECIALS: dict[str, dict] = {
 }
 
 
-def apply_template(template_key: str, source: str, context: dict,
-                   fields_by_file: dict) -> str:
+def apply_template(
+    template_key: str, source: str, context: dict, fields_by_file: dict
+) -> str:
     """Substitutes the __file.path.field__ markers of a template."""
     specials = SPECIALS.get(template_key, {})
     source = expand_loops(template_key, source, context)
 
-    def repl(m: "re.Match") -> str:
+    def repl(m: re.Match) -> str:
         ref = m.group("ref")
         file, _, route_str = ref.partition(".")
         route = route_str.split(".")
@@ -956,8 +1005,7 @@ def load_pages_types() -> dict[str, list]:
     content = (cfg or {}).get("content")
     if not isinstance(content, list):
         sys.exit(f"{path}: the 'content' list was not found.")
-    return {col["name"]: col.get("fields") or []
-            for col in content if col.get("name")}
+    return {col["name"]: col.get("fields") or [] for col in content if col.get("name")}
 
 
 # ---------------------------------------------------------------------------
@@ -977,7 +1025,10 @@ def fill_contact(doc: str, contact: dict) -> str:
     c = contact
     attrs = {
         "neuro-phone-link": ("href", f"tel:{raw_phone(c['phone'])}"),
-        "neuro-whatsapp-link": ("href", f"https://wa.me/{raw_phone(c['phone']).lstrip('+')}"),
+        "neuro-whatsapp-link": (
+            "href",
+            f"https://wa.me/{raw_phone(c['phone']).lstrip('+')}",
+        ),
         "neuro-mail-link": ("href", f"mailto:{c['mail']}"),
         "neuro-address-link": ("href", c["maps_url"]),
     }
@@ -987,7 +1038,7 @@ def fill_contact(doc: str, contact: dict) -> str:
         "neuro-address": "<br>".join(esc(line) for line in c["address_lines"]),
     }
 
-    def repl_tag(m: "re.Match") -> str:
+    def repl_tag(m: re.Match) -> str:
         tag = m.group(0)
         cm = re.search(r'class="([^"]*)"', tag)
         if not cm:
@@ -996,13 +1047,14 @@ def fill_contact(doc: str, contact: dict) -> str:
         for cls, (attr, value) in attrs.items():
             if cls in classes:
                 if re.search(rf'\s{attr}="', tag):
-                    tag = re.sub(rf'\s{attr}="[^"]*"', f' {attr}="{value}"',
-                                 tag, count=1)
+                    tag = re.sub(
+                        rf'\s{attr}="[^"]*"', f' {attr}="{value}"', tag, count=1
+                    )
                 else:
                     tag = tag[:-1].rstrip() + f' {attr}="{value}">'
         return tag
 
-    def repl_elem(m: "re.Match") -> str:
+    def repl_elem(m: re.Match) -> str:
         if m.group(1) != m.group(3):  # do not cross <a ...></span>
             return m.group(0)
         cm = re.search(r'class="([^"]*)"', m.group(2))
@@ -1030,12 +1082,16 @@ def validate_service_ids(c: dict) -> None:
     for item in c["services"]["items"]:
         sid = item.get("id")
         if not sid:
-            sys.exit("A service in content/services.yml has no 'id'. "
-                     "It is mandatory: it opens its modal "
-                     "(openServiceModal('id')).")
+            sys.exit(
+                "A service in content/services.yml has no 'id'. "
+                "It is mandatory: it opens its modal "
+                "(openServiceModal('id'))."
+            )
         if sid in seen:
-            sys.exit(f"Duplicated identifier in content/services.yml: "
-                     f"'{sid}'. It must be unique per service.")
+            sys.exit(
+                f"Duplicated identifier in content/services.yml: "
+                f"'{sid}'. It must be unique per service."
+            )
         seen.add(sid)
 
 
@@ -1046,12 +1102,14 @@ def modality_gallery(images: list[dict]) -> str:
         src = media_url(image.get("image"))
         if src:
             photo = image_html(
-                image.get("image"), image.get("alt", ""),
-                ' loading="lazy" decoding="async" onerror="this.remove()"')
+                image.get("image"),
+                image.get("alt", ""),
+                ' loading="lazy" decoding="async" onerror="this.remove()"',
+            )
             figures.append(
                 '<figure class="modality-gallery-item">'
                 '<i class="bi bi-camera"></i>'
-                f'{photo}</figure>'
+                f"{photo}</figure>"
             )
         else:
             figures.append(
@@ -1060,9 +1118,11 @@ def modality_gallery(images: list[dict]) -> str:
             )
     if not figures:
         return ""
-    return ('<div class="modality-gallery">\n'
-            + "\n".join(f"    {f}" for f in figures)
-            + "\n</div>")
+    return (
+        '<div class="modality-gallery">\n'
+        + "\n".join(f"    {f}" for f in figures)
+        + "\n</div>"
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -1094,11 +1154,13 @@ def pillow_image():
     try:
         from PIL import Image
     except ModuleNotFoundError:
-        sys.exit("Missing Pillow to convert the images to WebP.\n"
-                 "Install it with: pip install pillow\n"
-                 "(or run the build with: "
-                 "uv run --with pyyaml --with markdown --with pillow "
-                 "python scripts/build.py)")
+        sys.exit(
+            "Missing Pillow to convert the images to WebP.\n"
+            "Install it with: pip install pillow\n"
+            "(or run the build with: "
+            "uv run --with pyyaml --with markdown --with pillow "
+            "python scripts/build.py)"
+        )
     return Image
 
 
