@@ -1,48 +1,48 @@
-# __clinic_info.site.name__ — contenido completo
+# __clinic_info.site.name__ — full content
 
-> __clinic_info.site.name__ es la consulta de neuropsicología y psicología sanitaria de __especialista.name__ (__clinic_info.schema.job_title__; __especialista.license__). Atiende a niños, adolescentes y adultos en su clínica de __clinic_info.site.locality__ (sur de la Comunidad de __clinic_info.site.region__), por videollamada (terapia online) y a domicilio. __hero.promo__.
+> __clinic_info.site.name__ is the neuropsychology and general health psychology practice of __specialist.name__ (__clinic_info.schema.job_title__; __specialist.license__). It works with children, teenagers and adults at the clinic in __clinic_info.site.locality__ (southern __clinic_info.site.region__), by video call (online therapy) and at home. __hero.promo__.
 
 ## __clinic_info.llms.contact_heading__
 
-- Nombre: __clinic_info.schema.site_name__
-- Profesional: __especialista.name__, __clinic_info.schema.job_title__. __especialista.license__.
-- Dirección: __common.contact.address_lines__.
-- Cómo llegar (Google Maps): __common.contact.maps_url__
-- Teléfono y WhatsApp: __common.contact.phone__
+- Name: __clinic_info.schema.site_name__
+- Professional: __specialist.name__, __clinic_info.schema.job_title__. __specialist.license__.
+- Address: __common.contact.address_lines__.
+- How to get there (Google Maps): __common.contact.maps_url__
+- Phone and WhatsApp: __common.contact.phone__
 - Email: __common.contact.mail__
 - Web: __clinic_info.site.url__
-- Instagram: __contacto.instagram.url__
-- Zona de atención presencial (municipios del sur de __clinic_info.site.region__): __clinic_info.area_served__.
-- Terapia online: por videollamada, disponible para cualquier lugar de __clinic_info.online_area__.
-- Primera consulta: informativa y gratuita.
+- Instagram: __contact.instagram.url__
+- In-person service area (municipalities in southern __clinic_info.site.region__): __clinic_info.area_served__.
+- Online therapy: by video call, available anywhere in __clinic_info.online_area__.
+- First consultation: informative and free.
 
 ## __clinic_info.llms.specialist_heading__
 
-__especialista.content__
+__specialist.content__
 
 ## __clinic_info.schema.catalog_name__
 
-<!-- @foreach:servicios.items -->
-### __servicios.items.n.title__
+<!-- @foreach:services.items -->
+### __services.items.n.title__
 
-__servicios.items.n.card_text__
+__services.items.n.card_text__
 
-__servicios.items.n.modal_content__
-<!-- @endforeach:servicios.items -->
+__services.items.n.modal_content__
+<!-- @endforeach:services.items -->
 
-## __modalidades.heading__
+## __modalities.heading__
 
-<!-- @foreach:modalidades.items -->
-### __modalidades.items.n.title__
+<!-- @foreach:modalities.items -->
+### __modalities.items.n.title__
 
-__modalidades.items.n.modal_content__
-<!-- @endforeach:modalidades.items -->
+__modalities.items.n.modal_content__
+<!-- @endforeach:modalities.items -->
 
-## __proceso.heading__
+## __process.heading__
 
-<!-- @foreach:proceso.steps -->
-__loop.index__. __proceso.steps.n.title__: __proceso.steps.n.text__
-<!-- @endforeach:proceso.steps -->
+<!-- @foreach:process.steps -->
+__loop.index__. __process.steps.n.title__: __process.steps.n.text__
+<!-- @endforeach:process.steps -->
 
 ## __faq.heading__
 

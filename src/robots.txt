@@ -1,11 +1,11 @@
-# robots.txt de __clinic_info.site.name__
-# Se permite el acceso a todos los rastreadores, incluidos buscadores y
-# asistentes de IA (búsqueda en tiempo real y entrenamiento de modelos).
+# robots.txt for __clinic_info.site.name__
+# Every crawler is allowed, including search engines and AI assistants
+# (real-time search and model training).
 
 User-agent: *
 Allow: /
 
-# Buscadores
+# Search engines
 User-agent: Googlebot
 Allow: /
 
@@ -43,7 +43,7 @@ Allow: /
 User-agent: Perplexity-User
 Allow: /
 
-# Apple, Meta, Common Crawl y otros
+# Apple, Meta, Common Crawl and others
 User-agent: Applebot
 Allow: /
 

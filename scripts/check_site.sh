@@ -5,7 +5,7 @@ script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 repo_root="$(cd -- "$script_dir/.." && pwd)"
 site_domain="$(< "$repo_root/src/CNAME")"
 if [[ ! "$site_domain" =~ ^[A-Za-z0-9.-]+$ ]]; then
-  echo "::error::src/CNAME no contiene un dominio válido"
+  echo "::error::src/CNAME does not contain a valid domain"
   exit 1
 fi
 
@@ -26,53 +26,53 @@ check_url() {
   local body
 
   if ! body="$(curl "${curl_options[@]}" "$url")"; then
-    echo "::error::No se pudo acceder a $url"
+    echo "::error::Could not reach $url"
     return 1
   fi
 
   if [[ -z "$body" ]]; then
-    echo "::error::La respuesta de $url está vacía"
+    echo "::error::The response of $url is empty"
     return 1
   fi
 }
 
 if ! homepage="$(curl "${curl_options[@]}" "$site_url/")"; then
-  echo "::error::No se pudo acceder a $site_url/"
+  echo "::error::Could not reach $site_url/"
   exit 1
 fi
 
 if [[ -z "$homepage" ]]; then
-  echo "::error::La portada está vacía"
+  echo "::error::The homepage is empty"
   exit 1
 fi
 
 if [[ "$homepage" =~ __[a-zA-Z0-9_.]+__ ]]; then
-  echo "::error::La portada contiene marcadores de plantilla sin resolver"
+  echo "::error::The homepage still contains unresolved template markers"
   exit 1
 fi
 
 if [[ "$homepage" != *"<title>"* || "$homepage" != *"</title>"* ]]; then
-  echo "::error::La portada no contiene un título HTML válido"
+  echo "::error::The homepage does not contain a valid HTML <title>"
   exit 1
 fi
 
 if [[ "$homepage" != *"$site_url"* ]]; then
-  echo "::error::La portada no contiene la URL canónica esperada"
+  echo "::error::The homepage does not contain the expected canonical URL"
   exit 1
 fi
 
 if ! grep -Eq '<(h1|p|li)([[:space:]][^>]*)?>[[:space:]]*[^<[:space:]]' <<< "$homepage"; then
-  echo "::error::La portada no contiene texto visible"
+  echo "::error::The homepage does not contain visible text"
   exit 1
 fi
 
 if ! grep -Eq '<img[[:space:]][^>]*src="[^"]+"' <<< "$homepage"; then
-  echo "::error::La portada no contiene una imagen con URL"
+  echo "::error::The homepage does not contain an image with a URL"
   exit 1
 fi
 
 if ! grep -Eq '(href|src)="https?://[^"]+"' <<< "$homepage"; then
-  echo "::error::La portada no contiene una URL absoluta"
+  echo "::error::The homepage does not contain an absolute URL"
   exit 1
 fi
 
@@ -83,4 +83,4 @@ check_url "$site_url/llms-full.txt"
 check_url "$site_url/logo.svg"
 check_url "$site_url/favicon.svg"
 
-echo "::notice::Sitio accesible correctamente en $site_url/"
+echo "::notice::Site reachable and healthy at $site_url/"

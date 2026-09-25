@@ -1,4 +1,4 @@
-name: Comprobar sitio
+name: Check Site
 
 on:
   schedule:
@@ -11,11 +11,11 @@ permissions:
 
 jobs:
   check:
-    name: Comprobar página publicada
+    name: Check published page
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Obtener dominio publicado
+      - name: Get published domain
         uses: actions/checkout@v4
         with:
           ref: main
@@ -24,6 +24,6 @@ jobs:
             scripts
           persist-credentials: false
 
-      - name: Comprobar página y recursos
+      - name: Check page and assets
         shell: bash
         run: bash scripts/check_site.sh
