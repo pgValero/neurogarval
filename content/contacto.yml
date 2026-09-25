@@ -1,17 +1,8 @@
-# ============================================================
-# SECCIÓN CONTACTO — edición en Pages CMS
-# Sus campos se insertan en src/index.html mediante marcadores archivo.ruta.campo.
-# Teléfono, email, dirección y Maps vienen de common.yml (solo lectura);
-# aquí solo vive lo propio de la sección, incluido Instagram.
-# ============================================================
-
 heading: Pide tu cita
 highlight: Primera consulta informativa para resolver dudas y valorar cada situación.
 lead: |-
   Puedes ponerte en contacto conmigo a través de cualquiera de los siguientes canales:
-# URL del iframe de Google Maps (Compartir > Insertar un mapa > copiar src).
 map_embed: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3047.4102062110496!2d-3.6931494!3d40.199937299999995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd421fc6ce867025%3A0x1abf8630d9ed5e9b!2sNeuroGarval%20%7C%20Psicolog%C3%ADa%20y%20Neuropsicolog%C3%ADa%20Cl%C3%ADnica!5e0!3m2!1sen!2ses!4v1774983440789!5m2!1sen!2ses"
-# Instagram (tarjeta dentro de la cuadrícula de contacto).
 instagram:
   url: "https://instagram.com/neurogarval"
   handle: "@neurogarval"

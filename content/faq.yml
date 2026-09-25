@@ -1,9 +1,3 @@
-# ============================================================
-# SECCIÓN PREGUNTAS FRECUENTES (FAQ) — edición en Pages CMS
-# Sus campos se insertan en src/index.html mediante marcadores archivo.ruta.campo.
-# Los textos largos se escriben en Markdown.
-# ============================================================
-
 heading: Preguntas frecuentes
 lead: |-
   Si tu duda no aparece aquí, puedo resolverla personalmente en la primera consulta.

@@ -1,15 +1,8 @@
-# ============================================================
-# SECCIÓN ESPECIALISTA — edición en Pages CMS
-# Sus campos se insertan en src/index.html mediante marcadores archivo.ruta.campo.
-# Los textos largos se escriben en Markdown; build.py los convierte a HTML.
-# ============================================================
-
 image: /media/photo.jpeg
 image_alt: Teresa García Valero
 name: Teresa García Valero
 license: "Nº Colegiada: M-42858"
 heading: Compromiso con tu salud mental
-# Todos los párrafos de la sección se editan en un único campo Markdown.
 content: |-
   Bienvenido/a!
 

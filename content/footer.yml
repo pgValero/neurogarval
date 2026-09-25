@@ -1,16 +1,6 @@
-# ============================================================
-# FOOTER (solo lectura en Pages CMS)
-# Datos fijos del pie de la página. Para cambiarlos, edita este archivo
-# en el repositorio; el CMS los muestra sin permitir modificaciones.
-# ============================================================
-
-# Exactamente dos líneas fijas de texto bajo el logo (se unen con <br>).
 lines:
   - Neuropsicología y Psicología Sanitaria.
   - Teresa García Valero (Col. M-42858).
-# Enlace "Información legal" (PDF en media/ en el repositorio y publicado
-# en la raíz para conservar la ruta pública; no es editable en el CMS).
 legal_label: Información legal
 legal_file: aviso_legal.pdf
-# Aparece tras el símbolo ©; recuerda actualizar el año.
 copyright: "2026 NeuroGarval"

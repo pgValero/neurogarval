@@ -1,13 +1,6 @@
-# ============================================================
-# SECCIÓN PROCESO — edición en Pages CMS
-# Sus campos se insertan en src/index.html mediante marcadores archivo.ruta.campo.
-# Los textos largos se escriben en Markdown.
-# ============================================================
-
 heading: Cómo empezar la terapia
 lead: |-
   Un proceso claro y sin prisas, adaptado al ritmo y a las necesidades de cada persona.
-# El número de cada paso (1, 2, 3...) se genera solo por orden de la lista.
 steps:
   - icon: message
     title: Contacto
