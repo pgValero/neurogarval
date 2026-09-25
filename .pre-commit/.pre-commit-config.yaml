@@ -2,7 +2,7 @@
 # Instalar los hooks:   prek install --config .pre-commit/.pre-commit-config.yaml
 # Ejecutar a mano:      prek run --config .pre-commit/.pre-commit-config.yaml --all-files
 repos:
-  # Linters locales: HTML, CSS y JavaScript
+  # Hooks locales: HTML, CSS, JavaScript y enlaces
   - repo: local
     hooks:
       # 1) Linter de HTML
@@ -38,12 +38,12 @@ repos:
           - --config
           - .pre-commit/eslint.config.js
 
-  # 4) Validador de URLs rotas (HTML, enlaces locales y externos)
-  - repo: https://github.com/lycheeverse/lychee
-    rev: lychee-v0.24.2
-    hooks:
+      # 4) Validador multiplataforma de URLs rotas (HTML, enlaces locales y externos)
       - id: lychee
         name: Lychee (URLs rotas)
+        language: python
+        entry: lychee
+        additional_dependencies: [lychee-bin==0.24.2]
         files: \.html?$
         args:
           - --no-progress
