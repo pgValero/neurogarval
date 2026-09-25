@@ -24,15 +24,17 @@ Qué hace
    dirección y Maps) quedan resueltos sin JavaScript.
 4. Escribe el contenido completo de servicios, modalidades y artículos en el
    propio HTML (bloques .card-full ocultos); script.js lo copia a los modales.
-5. Copia los estáticos (CSS, JS, CNAME, favicon, logo y PDFs) y las imágenes
-   de media/ a _site/, manteniendo la estructura pública actual.
+5. Convierte a WebP las imágenes de media/ que sigan en PNG o JPEG (fotos
+   subidas desde el CMS) y publica solo esa versión.
+6. Copia los estáticos (CSS, JS, CNAME, favicon, logo y PDFs) a _site/,
+   manteniendo la estructura pública actual.
 
 Uso
 ---
-    pip install pyyaml markdown  # dependencias del generador
+    pip install pyyaml markdown pillow  # dependencias del generador
     python build.py              # genera ./_site
     # Sin pip (p. ej. entorno aislado):
-    uv run --with pyyaml --with markdown python build.py
+    uv run --with pyyaml --with markdown --with pillow python build.py
 
 La GitHub Action (.github/workflows/deploy.yml) hace exactamente esto en
 cada push a main y publica _site/ en GitHub Pages. No hay framework ni
@@ -160,6 +162,20 @@ STATIC_FILES = [
 ]
 MEDIA_EXCLUDES = ("favicon.svg", "logo.svg", "aviso_legal.pdf", "tarjeta.pdf")
 
+# Formatos que el build convierte a WebP al publicar: los originales no se
+# publican, así que todas las imágenes del sitio quedan en WebP.
+RASTER_FORMATS = (".png", ".jpg", ".jpeg")
+
+# Imágenes que se publican tal cual aunque sean PNG: image.png es la og:image
+# que leen WhatsApp, Facebook y otras redes al compartir el enlace, y algunas
+# de esas plataformas no admiten WebP.
+KEEP_AS_IS = ("image.png",)
+
+# Imágenes ya convertidas en este build: ruta del original (tal y como la
+# escribe media_url) -> (ruta del WebP publicado, (ancho, alto)). Lo rellena
+# prepare_media() antes de renderizar las plantillas.
+WEBP_SUBSTITUTES: dict[str, tuple[str, tuple[int, int]]] = {}
+
 # Avisos no fatales (p. ej. fotos de modalidades aún no subidas).
 WARNINGS: list[str] = []
 
@@ -257,31 +273,29 @@ def webp_size(data: bytes) -> tuple[int, int] | None:
     return None
 
 
-def img_tag(src: str, alt: str, attrs: str = "") -> str:
+def img_tag(src: str, alt: str, attrs: str = "",
+            size: tuple[int, int] | None = None) -> str:
     """<img> con width/height para que la página no salte al cargar."""
-    size = image_size(src)
+    size = size or image_size(src)
     dim = f' width="{size[0]}" height="{size[1]}"' if size else ""
     return f'<img src="{esc(src)}"{dim} alt="{esc(alt)}"{attrs}>'
 
 
-def picture_html(path: str, alt: str, attrs: str = "") -> str:
-    """<picture> con la versión WebP y el original de reserva.
+def image_html(path: str, alt: str, attrs: str = "") -> str:
+    """<img> con la versión WebP de la imagen y sus dimensiones.
 
-    Evita el peso de descarga en los navegadores modernos y reserva
-    width/height para que la página no salte al cargar. Si la imagen ya es
-    WebP (o no hay original de reserva) se emite un <img> simple. attrs
+    Si prepare_media() convirtió esta imagen (un PNG o JPEG subido al CMS),
+    se sirve el WebP generado; si ya era WebP, se sirve tal cual. attrs
     empieza por un espacio (p. ej. ' loading="lazy" decoding="async"').
     """
     src = media_url(path)
     if not src:
         return ""
-    if src.lower().endswith(".webp"):
-        return img_tag(src, alt, attrs)
-    webp = re.sub(r"\.(png|jpe?g)$", ".webp", src)
-    if not (ROOT / webp).exists():
-        return img_tag(src, alt, attrs)
-    return (f'<picture><source srcset="{esc(webp)}" type="image/webp">'
-            f"{img_tag(src, alt, attrs)}</picture>")
+    convertido = WEBP_SUBSTITUTES.get(src)
+    if convertido:
+        webp, size = convertido
+        return img_tag(webp, alt, attrs, size)
+    return img_tag(src, alt, attrs)
 
 
 def icon_html(key: str | None) -> str:
@@ -540,9 +554,9 @@ def render_modality_content(value, parent: dict) -> str:
 
 def render_blog_thumb(value, parent: dict) -> str:
     """Miniatura del blog: <picture> con la foto o icono de reserva si no hay."""
-    picture = picture_html(value, parent.get("title", ""),
-                           ' loading="lazy" decoding="async"')
-    return picture or icon_html("journal")
+    imagen = image_html(value, parent.get("title", ""),
+                        ' loading="lazy" decoding="async"')
+    return imagen or icon_html("journal")
 
 
 # ---------------------------------------------------------------------------
@@ -736,10 +750,10 @@ SPECIALS: dict[str, dict] = {
         "clinic_info.datos_estructurados": lambda v, parent: build_jsonld(),
         # Imágenes: <picture> con WebP + reserva, con width/height y la carga
         # adecuada (la hero inmediata; el resto, al hacer scroll).
-        "hero.image": lambda v, parent: picture_html(
+        "hero.image": lambda v, parent: image_html(
             v, parent.get("image_alt", ""),
             ' fetchpriority="high" decoding="async"'),
-        "especialista.image": lambda v, parent: picture_html(
+        "especialista.image": lambda v, parent: image_html(
             v, parent.get("image_alt", ""), ' loading="lazy" decoding="async"'),
         # Contenido completo de la modalidad: Markdown + fotos de la consulta
         # (opcionales: solo las modalidades que las declaran las incluyen).
@@ -874,7 +888,7 @@ def modality_gallery(images: list[dict]) -> str:
     for image in images:
         src = media_url(image.get("image"))
         if src:
-            foto = picture_html(
+            foto = image_html(
                 image.get("image"), image.get("alt", ""),
                 ' loading="lazy" decoding="async" onerror="this.remove()"')
             figures.append(
@@ -905,6 +919,60 @@ def build_context() -> dict:
     return context
 
 
+# ---------------------------------------------------------------------------
+# Imágenes — media/ -> _site/media/
+# Las fotos que se suben desde Pages CMS pueden llegar en PNG o JPEG. Al
+# construir (localmente y en cada publicación) se convierten a WebP y se
+# publica solo esa versión, que pesa mucho menos; el original no se publica.
+# Así la web sirve siempre imágenes ligeras sin que haya que convertir nada a
+# mano. Requiere Pillow (pip install pillow).
+# ---------------------------------------------------------------------------
+def pillow_image():
+    """Importa PIL.Image; si falta, detiene el build con un mensaje claro."""
+    try:
+        from PIL import Image
+    except ModuleNotFoundError:
+        sys.exit("Falta Pillow para convertir las imágenes a WebP.\n"
+                 "Instálalo con: pip install pillow\n"
+                 "(o ejecuta el build con: "
+                 "uv run --with pyyaml --with markdown --with pillow "
+                 "python build.py)")
+    return Image
+
+
+def convert_to_webp(src: Path, dst: Path) -> tuple[int, int]:
+    """Convierte un PNG/JPEG de media/ a WebP y lo deja en dst."""
+    image = pillow_image()
+    with image.open(src) as original:
+        if original.mode not in ("RGB", "RGBA"):
+            modo = "RGBA" if "transparency" in original.info else "RGB"
+            convertida = original.convert(modo)
+        else:
+            convertida = original
+        size = convertida.size
+        convertida.save(dst, "WEBP", quality=82, method=6)
+    return size
+
+
+def prepare_media() -> None:
+    """Copia media/ a _site/media/ convirtiendo los PNG/JPEG a WebP."""
+    origen = ROOT / "media"
+    if not origen.is_dir():
+        return
+    destino = OUT / "media"
+    destino.mkdir(parents=True, exist_ok=True)
+    for src in sorted(origen.iterdir()):
+        if not src.is_file() or src.name in MEDIA_EXCLUDES:
+            continue
+        if src.suffix.lower() in RASTER_FORMATS and src.name not in KEEP_AS_IS:
+            webp = destino / (src.stem + ".webp")
+            size = convert_to_webp(src, webp)
+            WEBP_SUBSTITUTES[f"media/{src.name}"] = (f"media/{webp.name}", size)
+            print(f"  {src.name} -> {webp.name} ({size[0]}x{size[1]})")
+        else:
+            shutil.copy2(src, destino / src.name)
+
+
 def main() -> None:
     global CONTEXT
     context = build_context()
@@ -915,6 +983,10 @@ def main() -> None:
     if OUT.exists():
         shutil.rmtree(OUT)
     OUT.mkdir()
+
+    # Antes de renderizar: convierte las imágenes a WebP para que las
+    # plantillas puedan enlazar ya con la versión definitiva.
+    prepare_media()
 
     for key, path in TEMPLATES.items():
         source = path.read_text(encoding="utf-8")
@@ -928,14 +1000,6 @@ def main() -> None:
         if not src.exists():
             sys.exit(f"Falta el fichero estático: {src}")
         shutil.copy2(src, OUT / name)
-
-    if (ROOT / "media").is_dir():
-        shutil.copytree(
-            ROOT / "media",
-            OUT / "media",
-            dirs_exist_ok=True,
-            ignore=shutil.ignore_patterns(*MEDIA_EXCLUDES),
-        )
 
     print(f"OK: sitio generado en {OUT}")
     for warning in WARNINGS:

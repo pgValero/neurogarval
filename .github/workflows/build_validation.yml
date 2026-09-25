@@ -30,7 +30,7 @@ jobs:
           python-version: "3.12"
 
       - name: Instalar dependencias
-        run: pip install pyyaml markdown prek
+        run: pip install pyyaml markdown pillow prek
 
       - name: Construir sitio (build.py)
         run: python build.py
