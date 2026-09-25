@@ -1,6 +1,5 @@
 datos_estructurados: true
 site:
-  url: "https://neurogarval.es/"
   name: NeuroGarval
   language: es
   language_name: español

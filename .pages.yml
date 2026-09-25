@@ -30,10 +30,11 @@
 #   Las tarjetas e ítems de esas listas se repiten en la plantilla con
 #   bloques @foreach (ver expand_loops en build.py): añadir o quitar
 #   entradas aquí no exige tocar el HTML.
-#   Todo lo que no es contenido editable de una sección (dominio, logo,
-#   idioma, etiquetas SEO/Open Graph/Twitter, etiquetas del menú y textos de
-#   los datos estructurados) vive en content/clinic_info.yml, también de solo
-#   lectura: src/index.html y build.py lo leen de ahí, no lo llevan escrito.
+#   El dominio del sitio se lee de src/CNAME durante el build. El resto de
+#   los datos fijos (identidad, logo, idioma, etiquetas SEO/Open Graph/Twitter,
+#   etiquetas del menú y textos de los datos estructurados) vive en
+#   content/clinic_info.yml, también de solo lectura: src/index.html y build.py
+#   lo leen de ahí, no lo llevan escrito.
 #   El bloque JSON-LD lo genera entero build.py desde ese mismo archivo y
 #   desde servicios, modalidades, faq, blog y especialista.
 #
@@ -551,19 +552,12 @@ content:
         readonly: true
         description: "Campo técnico de solo lectura que acompaña al marcador clinic_info.datos_estructurados de src/index.html. Al resolver ese marcador, build.py inserta el bloque JSON-LD completo generado con clinic_info.yml y el resto de content/*.yml; el valor booleano no controla la inserción."
       - name: site
-        label: Dominio, idioma y ubicación
+        label: Identidad, idioma y ubicación
         type: object
         required: true
         readonly: true
-        description: "Datos fijos de dominio, identidad, idioma y ubicación, editables únicamente en el repositorio. La URL base debe terminar en «/» porque build.py le concatena las rutas del sitio."
+        description: "Datos fijos de identidad, idioma y ubicación, editables únicamente en el repositorio. El dominio y la URL base se obtienen de src/CNAME durante el build."
         fields:
-          - name: url
-            label: URL del sitio
-            type: string
-            required: true
-            readonly: true
-            pattern: "^https://[^/]+/$"
-            description: "URL base del sitio. Debe terminar en «/»: build.py la usa para componer las URLs absolutas de las imágenes, el sitemap y los identificadores de los datos estructurados."
           - name: name
             label: Nombre
             type: string
@@ -665,7 +659,7 @@ content:
             type: image
             required: true
             readonly: true
-            description: "Imagen usada al compartir el sitio. build.py publica su URL absoluta, basada en site.url, en og:image y twitter:image; el archivo debe residir en media/."
+            description: "Imagen usada al compartir el sitio. build.py publica su URL absoluta, basada en el dominio de src/CNAME, en og:image y twitter:image; el archivo debe residir en media/."
           - name: image_width
             label: Anchura de la imagen
             type: string
@@ -853,7 +847,7 @@ content:
             type: object
             required: true
             readonly: true
-            description: "Anclas de los identificadores @id del grafo JSON-LD. build.py las concatena al final de site.url."
+            description: "Anclas de los identificadores @id del grafo JSON-LD. build.py las concatena a la URL base derivada de src/CNAME."
             fields:
               - name: clinic
                 label: Clínica
@@ -957,17 +951,6 @@ content:
         type: string
         required: true
         description: "Profesión o cargo que aparece bajo la identidad de la firma."
-      - name: web_label
-        label: Web (texto visible)
-        type: string
-        required: true
-        description: "Texto visible del enlace web de la firma."
-      - name: web_url
-        label: Web (enlace)
-        type: string
-        required: true
-        pattern: "^https://[^/\\s]+$"
-        description: "Destino del enlace web de la firma."
       - name: legal_aviso
         label: Aviso legal
         type: text
