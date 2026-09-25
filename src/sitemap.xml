@@ -6,16 +6,16 @@
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
     <image:image>
-      <image:loc>https://neurogarval.es/media/hero-image.png</image:loc>
+      <image:loc>https://neurogarval.es/media/hero-image.webp</image:loc>
     </image:image>
     <image:image>
-      <image:loc>https://neurogarval.es/media/photo.jpeg</image:loc>
+      <image:loc>https://neurogarval.es/media/photo.webp</image:loc>
     </image:image>
     <image:image>
-      <image:loc>https://neurogarval.es/media/blog-neuropsicologia.png</image:loc>
+      <image:loc>https://neurogarval.es/media/blog-neuropsicologia.webp</image:loc>
     </image:image>
     <image:image>
-      <image:loc>https://neurogarval.es/media/blog-ansiedad-estres.png</image:loc>
+      <image:loc>https://neurogarval.es/media/blog-ansiedad-estres.webp</image:loc>
     </image:image>
   </url>
   <url>

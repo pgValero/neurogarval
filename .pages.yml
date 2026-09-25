@@ -49,7 +49,7 @@
 # ---------------------------------------------------------------------------
 # MEDIA: subida de recursos estáticos desde el CMS.
 # input  = carpeta física en el repo; output = URL pública que el CMS escribe
-# (p. ej. "/media/photo.jpeg"). build.py la convierte a ruta relativa
+# (p. ej. "/media/photo.webp"). build.py la convierte a ruta relativa
 # "media/..." para el HTML. Los PDFs y el favicon también están en media/ en
 # el repositorio, pero el build los publica en la raíz para conservar las
 # rutas públicas actuales; no son contenido editable del CMS.
