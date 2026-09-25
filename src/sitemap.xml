@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <url>
+    <loc>https://neurogarval.es/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://neurogarval.es/media/hero-image.png</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://neurogarval.es/media/photo.jpeg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://neurogarval.es/media/blog-neuropsicologia.png</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://neurogarval.es/media/blog-ansiedad-estres.png</image:loc>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://neurogarval.es/llms.txt</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://neurogarval.es/llms-full.txt</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+  </url>
+</urlset>

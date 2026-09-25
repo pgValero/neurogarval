@@ -146,6 +146,12 @@ STATIC_FILES = [
     (SRC / "styles.css", "styles.css"),
     (SRC / "script.js", "script.js"),
     (ROOT / "CNAME", "CNAME"),
+    # SEO y LLM: ficheros fijos (no se generan desde content/*.yml; si cambia
+    # el contenido del CMS, actualizar llms.txt y llms-full.txt a mano).
+    (SRC / "robots.txt", "robots.txt"),
+    (SRC / "sitemap.xml", "sitemap.xml"),
+    (SRC / "llms.txt", "llms.txt"),
+    (SRC / "llms-full.txt", "llms-full.txt"),
     (ROOT / "media/favicon.svg", "favicon.svg"),
     (ROOT / "media/logo.svg", "logo.svg"),
     (ROOT / "media/aviso_legal.pdf", "aviso_legal.pdf"),
