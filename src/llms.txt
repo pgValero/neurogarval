@@ -1,0 +1,43 @@
+# NeuroGarval
+
+> NeuroGarval es la consulta de neuropsicología y psicología sanitaria de Teresa García Valero, neuropsicóloga y psicóloga general sanitaria (Nº de colegiada M-42858, Colegio Oficial de la Psicología de Madrid). Atiende a niños, adolescentes y adultos en su clínica de Valdemoro (sur de la Comunidad de Madrid), por videollamada (terapia online) y a domicilio. La primera consulta es informativa y gratuita.
+
+Datos clave:
+
+- Profesional: Teresa García Valero, neuropsicóloga y psicóloga general sanitaria. Nº de colegiada M-42858.
+- Dirección de la clínica: C/ Diego de Almagro, 32, 28342 Valdemoro (Madrid), España.
+- Zona de atención presencial: Valdemoro y municipios cercanos del sur de Madrid.
+- Terapia online: por videollamada, disponible para personas de cualquier lugar.
+- Teléfono y WhatsApp: +34 711 233 888
+- Email: teresa@neurogarval.es
+- Web: https://neurogarval.es/
+- Instagram: https://instagram.com/neurogarval
+- Idioma de atención: español.
+- Primera consulta: informativa y gratuita.
+- Duración habitual de la sesión: entre 45 y 60 minutos.
+
+Qué trata: TDAH, Trastorno del Espectro Autista (TEA), dificultades de aprendizaje, deterioro cognitivo, daño cerebral adquirido (ictus, traumatismo craneoencefálico), ansiedad, estrés, estado de ánimo, autoestima, gestión emocional, habilidades sociales, duelo y dificultades emocionales y conductuales.
+
+## Servicios
+
+- [Neuropsicología](https://neurogarval.es/#servicios): evaluación e intervención en dificultades cognitivas, conductuales y emocionales relacionadas con el funcionamiento cerebral (atención, memoria, lenguaje, funciones ejecutivas). Incluye evaluación con pruebas estandarizadas, informe y plan de intervención.
+- [Psicología sanitaria](https://neurogarval.es/#servicios): atención a ansiedad, estrés, estado de ánimo, autoestima, gestión emocional, habilidades sociales, duelo y procesos de adaptación.
+- [Rehabilitación cognitiva](https://neurogarval.es/#servicios): programas personalizados de rehabilitación, estimulación y mantenimiento de las funciones cognitivas, con asesoramiento a familiares y cuidadores.
+
+## Modalidades
+
+- [Clínica en Valdemoro](https://neurogarval.es/#modalidades): consulta presencial en C/ Diego de Almagro, 32, Valdemoro.
+- [Terapia online](https://neurogarval.es/#modalidades): sesiones por videollamada, sin desplazamientos.
+- [A domicilio](https://neurogarval.es/#modalidades): intervención en el entorno cotidiano de la persona, útil en casos de movilidad reducida.
+
+## Cómo pedir cita
+
+- [Contacto](https://neurogarval.es/#contacto): por WhatsApp o teléfono (+34 711 233 888) o por email (teresa@neurogarval.es). La primera consulta es gratuita.
+- [Proceso](https://neurogarval.es/#proceso): contacto, primera consulta gratuita, evaluación, plan de intervención y seguimiento.
+
+## Más información
+
+- [Contenido completo para LLM](https://neurogarval.es/llms-full.txt): servicios, modalidades, preguntas frecuentes y artículos completos.
+- [Preguntas frecuentes](https://neurogarval.es/#faq)
+- [Sobre la especialista](https://neurogarval.es/#especialista)
+- [Artículos](https://neurogarval.es/#blog)
