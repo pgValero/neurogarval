@@ -218,6 +218,8 @@ def image_size(rel_path: str) -> tuple[int, int] | None:
     if data[:8] == b"\x89PNG\r\n\x1a\n":
         w, h = struct.unpack(">II", data[16:24])
         return int(w), int(h)
+    if data[:4] == b"RIFF" and data[8:12] == b"WEBP":
+        return webp_size(data)
     if data[:2] != b"\xff\xd8":
         return None
     i = 2
@@ -241,24 +243,45 @@ def image_size(rel_path: str) -> tuple[int, int] | None:
     return None
 
 
+def webp_size(data: bytes) -> tuple[int, int] | None:
+    """(ancho, alto) de un WebP (VP8, VP8L o VP8X) leyendo su cabecera."""
+    if data[12:16] == b"VP8X" and len(data) >= 30:
+        return (int.from_bytes(data[24:27], "little") + 1,
+                int.from_bytes(data[27:30], "little") + 1)
+    if data[12:16] == b"VP8L" and len(data) >= 25:
+        b = int.from_bytes(data[21:25], "little")
+        return (b & 0x3FFF) + 1, ((b >> 14) & 0x3FFF) + 1
+    if data[12:16] == b"VP8 " and len(data) >= 30:
+        return (int.from_bytes(data[26:28], "little") & 0x3FFF,
+                int.from_bytes(data[28:30], "little") & 0x3FFF)
+    return None
+
+
+def img_tag(src: str, alt: str, attrs: str = "") -> str:
+    """<img> con width/height para que la página no salte al cargar."""
+    size = image_size(src)
+    dim = f' width="{size[0]}" height="{size[1]}"' if size else ""
+    return f'<img src="{esc(src)}"{dim} alt="{esc(alt)}"{attrs}>'
+
+
 def picture_html(path: str, alt: str, attrs: str = "") -> str:
-    """<picture> con la versión WebP (si existe) y el original de reserva.
+    """<picture> con la versión WebP y el original de reserva.
 
     Evita el peso de descarga en los navegadores modernos y reserva
-    width/height para que la página no salte al cargar. attrs empieza por
-    un espacio (p. ej. ' loading="lazy" decoding="async"').
+    width/height para que la página no salte al cargar. Si la imagen ya es
+    WebP (o no hay original de reserva) se emite un <img> simple. attrs
+    empieza por un espacio (p. ej. ' loading="lazy" decoding="async"').
     """
     src = media_url(path)
     if not src:
         return ""
+    if src.lower().endswith(".webp"):
+        return img_tag(src, alt, attrs)
     webp = re.sub(r"\.(png|jpe?g)$", ".webp", src)
     if not (ROOT / webp).exists():
-        webp = ""
-    size = image_size(src)
-    dim = f' width="{size[0]}" height="{size[1]}"' if size else ""
-    source = f'<source srcset="{esc(webp)}" type="image/webp">' if webp else ""
-    return (f'<picture>{source}<img src="{esc(src)}"{dim} alt="{esc(alt)}"'
-            f"{attrs}></picture>")
+        return img_tag(src, alt, attrs)
+    return (f'<picture><source srcset="{esc(webp)}" type="image/webp">'
+            f"{img_tag(src, alt, attrs)}</picture>")
 
 
 def icon_html(key: str | None) -> str:
