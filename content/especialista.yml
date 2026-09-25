@@ -4,7 +4,7 @@
 # Los textos largos se escriben en Markdown; build.py los convierte a HTML.
 # ============================================================
 
-image: /media/photo.webp
+image: /media/photo.jpeg
 image_alt: Teresa García Valero
 name: Teresa García Valero
 license: "Nº Colegiada: M-42858"
