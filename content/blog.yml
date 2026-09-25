@@ -1,16 +1,7 @@
-# ============================================================
-# SECCIÓN BLOG (tarjetas) — edición en Pages CMS
-# Sus campos se insertan en src/index.html mediante marcadores archivo.ruta.campo.
-# "excerpt" es el resumen de la tarjeta y "article" el texto completo que se
-# muestra al abrir la tarjeta como un modal (ambos en Markdown).
-# ============================================================
-
 heading: Publicaciones
 lead: |-
   Artículos cortos con información útil sobre neuropsicología, aprendizaje y bienestar emocional.
 read_more: Leer más
-# "image" es la imagen de portada (tarjeta y modal). Sin imagen se muestra un
-# icono de reserva.
 posts:
   - title: "¿Qué es la neuropsicología y cuándo conviene consultar?"
     excerpt: |-

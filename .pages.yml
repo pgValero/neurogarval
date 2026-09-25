@@ -126,14 +126,14 @@ content:
         label: Contacto
         type: object
         readonly: true
-        description: Datos fijos; no se pueden modificar desde Pages CMS.
+        description: "Datos de contacto comunes, de solo lectura y editables únicamente en el repositorio. Son la fuente única para el hero, la sección Contacto, el footer y la firma; build.py los inserta directamente en el HTML generado, sin JavaScript."
         fields:
           - name: phone
             label: Teléfono
             type: string
             required: true
             pattern: "^\\+34[\\s-]?\\d{3}[\\s-]?\\d{3}[\\s-]?\\d{3}$"
-            description: Formato +34 XXX XXX XXX. Se usa en la web (hero, contacto, footer) y en la firma.
+            description: "Formato +34 XXX XXX XXX. Se usa en la web, en los enlaces de teléfono y WhatsApp y en la firma de email."
           - name: mail
             label: Email
             type: string
@@ -146,11 +146,12 @@ content:
             list:
               min: 2
               max: 2
-            description: "Dos líneas fijas: 1) calle y número; 2) CP, ciudad y provincia."
+            description: "Exactamente dos líneas fijas: 1) calle y número; 2) CP, ciudad y provincia. En la firma de email se unen con \" - \"; también se usan en el footer, en Contacto y en la dirección de los datos estructurados."
           - name: maps_url
             label: Enlace de Google Maps
             type: string
             required: true
+            description: "Enlace público de Google Maps. Se usa en el footer, en la firma y en los datos estructurados."
 
   # ---------------------------------------------------------------------
   # 2) Secciones de la página (src/index.html), una por fichero.
@@ -171,15 +172,16 @@ content:
         label: Título
         type: string
         required: true
+        description: "Primera parte del título. La segunda se edita en «Título (parte de acento)» y se muestra envuelta en <i> y con color azul."
       - name: title_accent
         label: Título (parte de acento)
         type: string
-        description: Se muestra en <i> con color azul. Déjalo vacío si no quieres acento.
+        description: "Parte de acento del título. Se muestra envuelta en <i> y con color azul, pero sin cursiva; déjalo vacío si no quieres acento."
       - name: modalities
         label: Línea de modalidades
         type: string
         required: true
-        description: Separada por "·", p. ej. "Clínica en Valdemoro · Online · A domicilio".
+        description: "Partes separadas por «·», p. ej. «Clínica en Valdemoro · Online · A domicilio». build.py las une con ese separador y evita que la última se parta en pantallas estrechas."
       - name: paragraph
         label: Párrafo (Markdown)
         type: rich-text
@@ -229,13 +231,14 @@ content:
           collapsible:
             collapsed: true
             summary: "{title}"
+        description: "Cada elemento crea una tarjeta y su modal. El orden de la lista determina el orden de las tarjetas."
         fields:
           - name: id
             label: Identificador
             type: string
             required: true
             pattern: "^[a-z0-9-]+$"
-            description: "Identificador interno único. Abre el modal de la tarjeta (openServiceModal('id')); minúsculas, números y guiones. Evita cambiarlo tras publicar si alguien enlaza a él."
+            description: "Identificador interno obligatorio y único; build.py valida ambas cosas. Abre el modal de la tarjeta (openServiceModal('id')) y se usa en data-service. Solo puede contener minúsculas, números y guiones; evita cambiarlo tras publicar si alguien enlaza a él."
           - name: icon
             component: icono
           - name: title
@@ -254,7 +257,7 @@ content:
             required: true
             options:
               format: markdown
-            description: Lo que se ve al pulsar "Más información". Escribe párrafos y listas en Markdown.
+            description: "Contenido completo y único del modal de este servicio. Es lo que se ve al pulsar «Más información»; escribe párrafos y listas en Markdown."
 
   - name: modalidades
     label: "Sección: Modalidades"
@@ -286,6 +289,7 @@ content:
           collapsible:
             collapsed: true
             summary: "{title}"
+        description: "Cada elemento conserva los datos de su tarjeta, el contenido Markdown de su modal y sus fotos opcionales. El orden de la lista determina el orden de las tarjetas."
         fields:
           - name: icon
             component: icono
@@ -311,11 +315,12 @@ content:
             type: object
             list: true
             collapsible: true
-            description: Se muestran al final del contenido de la modalidad. Deja la lista vacía si no necesita fotos.
+            description: "Fotos de esta modalidad que se muestran al final de su modal. Déjalas vacías si no necesita imágenes; cada una usa un icono de reserva mientras no tenga archivo."
             fields:
               - name: image
-                label: Imagen (vacío = icono de reserva)
+                label: Imagen (opcional)
                 type: image
+                description: "Selecciona una imagen de media/. Si se deja vacía, se muestra el icono de cámara de reserva."
               - name: alt
                 label: Texto alternativo
                 type: string
@@ -346,6 +351,7 @@ content:
           collapsible:
             collapsed: true
             summary: "{title}"
+        description: "Cada elemento es un paso. El número (1, 2, 3...) se genera automáticamente según el orden de la lista y no se edita."
         fields:
           - name: icon
             component: icono
@@ -394,7 +400,7 @@ content:
         required: true
         options:
           format: markdown
-        description: Escribe aquí todos los párrafos de la sección. Separa los párrafos con una línea en blanco.
+        description: "Contenido completo de la sección: todos los párrafos se editan en este único campo Markdown. Separa los párrafos con una línea en blanco; build.py lo convierte a HTML."
 
   - name: blog
     label: "Sección: Blog (tarjetas)"
@@ -425,6 +431,7 @@ content:
         collapsible:
           collapsed: true
           summary: "{title}"
+        description: "Cada elemento crea una tarjeta de blog y su artículo en modal. El orden de la lista determina el orden de las tarjetas."
         fields:
           - name: title
             label: Título
@@ -436,18 +443,18 @@ content:
             required: true
             options:
               format: markdown
-            description: Texto corto que se muestra en la tarjeta del blog.
+            description: "Resumen corto que se muestra en la tarjeta. Para el contenido completo, usa el campo de texto del artículo."
           - name: article
             label: Texto del artículo (Markdown)
             type: rich-text
             required: true
             options:
               format: markdown
-            description: Texto completo del artículo; se muestra al abrir la tarjeta como un modal.
+            description: "Texto completo del artículo en Markdown. Se muestra en el modal al abrir la tarjeta, junto con la portada si existe."
           - name: image
             label: Imagen de portada (opcional)
             type: image
-            description: Se usa en la tarjeta y en el modal. Sin imagen se muestra un icono de reserva.
+            description: "Se usa en la tarjeta y en el modal. Si se deja vacía, se muestra un icono de reserva."
 
   - name: faq
     label: "Sección: Preguntas frecuentes"
@@ -513,11 +520,11 @@ content:
         label: Mapa de Google (src del iframe)
         type: text
         required: true
-        description: "En Google Maps: Compartir > Insertar un mapa > copiar la URL del iframe."
+        description: "Pega únicamente la URL del atributo src del iframe, no todo el código. En Google Maps: Compartir > Insertar un mapa > copiar la URL del iframe."
       - name: instagram
         label: Instagram (tarjeta de contacto)
         type: object
-        description: Teléfono, email, dirección y Maps vienen de Datos comunes.
+        description: "Datos de Instagram para la tarjeta de contacto. El teléfono, el email, la dirección y el enlace a Maps provienen de Datos comunes (solo lectura)."
         fields:
           - name: url
             label: Perfil (URL)
@@ -542,13 +549,13 @@ content:
         type: boolean
         required: true
         readonly: true
-        description: Campo técnico; activa el bloque JSON-LD de src/index.html. No se edita.
+        description: "Campo técnico de solo lectura que acompaña al marcador clinic_info.datos_estructurados de src/index.html. Al resolver ese marcador, build.py inserta el bloque JSON-LD completo generado con clinic_info.yml y el resto de content/*.yml; el valor booleano no controla la inserción."
       - name: site
         label: Dominio, idioma y ubicación
         type: object
         required: true
         readonly: true
-        description: Datos fijos; no se pueden modificar desde Pages CMS.
+        description: "Datos fijos de dominio, identidad, idioma y ubicación, editables únicamente en el repositorio. La URL base debe terminar en «/» porque build.py le concatena las rutas del sitio."
         fields:
           - name: url
             label: URL del sitio
@@ -556,7 +563,7 @@ content:
             required: true
             readonly: true
             pattern: "^https://[^/]+/$"
-            description: 'Debe terminar en "/": el build le añade las rutas del sitio para las URLs absolutas.'
+            description: "URL base del sitio. Debe terminar en «/»: build.py la usa para componer las URLs absolutas de las imágenes, el sitemap y los identificadores de los datos estructurados."
           - name: name
             label: Nombre
             type: string
@@ -567,64 +574,67 @@ content:
             type: string
             required: true
             readonly: true
-            description: Atributo lang del <html> e "inLanguage" de los datos estructurados.
+            description: "Atributo lang del <html> y valores inLanguage/availableLanguage de los datos estructurados."
           - name: language_name
             label: Nombre del idioma
             type: string
             required: true
             readonly: true
-            description: Nombre del idioma en español, para llms.txt.
+            description: "Nombre del idioma en español. Solo se usa en el resumen src/llms.txt."
           - name: locale
             label: Idioma regional
             type: string
             required: true
             readonly: true
-            description: Etiqueta og:locale.
+            description: "Valor de la etiqueta Open Graph og:locale."
           - name: currency
             label: Moneda
             type: string
             required: true
             readonly: true
+            description: "Código ISO de la moneda aceptada; se publica como currenciesAccepted en los datos estructurados."
           - name: logo
             label: Ruta del logo
             type: string
             required: true
             readonly: true
-            description: Ruta pública del logo (lo publica el build en la raíz del sitio).
+            description: "Ruta pública del logo. build.py lo publica en la raíz de _site/ para conservar la ruta actual."
           - name: locality
             label: Población
             type: string
             required: true
             readonly: true
-            description: Etiqueta geo.placename y dirección de la clínica en los datos estructurados.
+            description: "Población de la clínica. Alimenta la etiqueta geo.placename del <head> y addressLocality en los datos estructurados."
           - name: region
             label: Provincia
             type: string
             required: true
             readonly: true
+            description: "Provincia o región de la clínica; se publica como addressRegion en los datos estructurados."
           - name: region_code
             label: Código de región
             type: string
             required: true
             readonly: true
-            description: Etiqueta geo.region (código de país y comunidad).
+            description: "Código de país y región, por ejemplo ES-MD. Alimenta la etiqueta geo.region del <head>."
           - name: country
             label: País
             type: string
             required: true
             readonly: true
+            description: "Código de país de la clínica; se publica como addressCountry en los datos estructurados."
           - name: geo_position
             label: Coordenadas (ICBM)
             type: string
             required: true
             readonly: true
-            description: Latitud y longitud separadas por comas, para la etiqueta ICBM del <head>.
+            description: "Latitud y longitud separadas por una coma (latitud,longitud) para la etiqueta ICBM del <head>."
       - name: seo
         label: SEO (title, description, keywords)
         type: object
         required: true
         readonly: true
-        description: Etiquetas de la cabecera que leen los buscadores. No se editan desde Pages CMS.
+        description: "Etiquetas SEO de la cabecera que leen los buscadores. Son datos fijos, editables únicamente en el repositorio; la lista de palabras clave se une con comas durante la compilación."
         fields:
           - name: title
             label: Título de la pestaña
@@ -648,14 +658,14 @@ content:
         type: object
         required: true
         readonly: true
-        description: Lo que muestran WhatsApp, Facebook, X y el resto de redes al compartir el enlace.
+        description: "Metadatos de Open Graph y Twitter Card que muestran WhatsApp, Facebook, X y otras redes al compartir el enlace. Son datos fijos, editables únicamente en el repositorio."
         fields:
           - name: image
             label: Imagen de portada
             type: image
             required: true
             readonly: true
-            description: El build publica su URL absoluta en og:image y twitter:image.
+            description: "Imagen usada al compartir el sitio. build.py publica su URL absoluta, basada en site.url, en og:image y twitter:image; el archivo debe residir en media/."
           - name: image_width
             label: Anchura de la imagen
             type: string
@@ -706,7 +716,7 @@ content:
         type: object
         required: true
         readonly: true
-        description: Texto de los dos menús; el enlace de cada entrada es el id de su sección.
+        description: "Etiquetas fijas de los menús para móvil y escritorio. Los enlaces y los ids de sección están definidos en src/index.html; estos campos solo sustituyen el texto visible."
         fields:
           - name: inicio
             label: Inicio
@@ -753,7 +763,7 @@ content:
         type: object
         required: true
         readonly: true
-        description: Textos de la interfaz que no dependen del contenido.
+        description: "Textos fijos de la interfaz que no dependen del contenido editable de las secciones."
         fields:
           - name: close_label
             label: Texto accesible del botón de cerrar
@@ -766,7 +776,7 @@ content:
         type: object
         required: true
         readonly: true
-        description: Datos que solo usan llms.txt y llms-full.txt; el resto sale de las secciones de la web.
+        description: "Datos que solo se usan para generar src/llms.txt y src/llms-full.txt. El resto del contenido de esos archivos sale de las secciones de la web."
         fields:
           - name: contact_heading
             label: Título de la sección de contacto
@@ -793,51 +803,57 @@ content:
         type: object
         required: true
         readonly: true
-        description: Textos del bloque JSON-LD que el build no puede deducir del contenido.
+        description: "Textos y valores del grafo JSON-LD que build.py no puede deducir del resto del contenido. Son datos fijos, editables únicamente en el repositorio."
         fields:
           - name: site_name
             label: Nombre schema.org
             type: string
             required: true
             readonly: true
+            description: "Nombre schema.org de la clínica y del sitio web."
           - name: description
             label: Descripción de la clínica
             type: string
             required: true
             readonly: true
+            description: "Descripción de la clínica publicada en el nodo JSON-LD."
           - name: role
             label: Cargo de la profesional
             type: string
             required: true
             readonly: true
-            description: Se añade al nombre de la especialista en el "alternateName" de la clínica.
+            description: "Se añade al nombre de la especialista para formar el alternateName de la clínica en los datos estructurados."
           - name: job_title
             label: Profesión
             type: string
             required: true
             readonly: true
+            description: "Profesión de la especialista; se publica como jobTitle de su nodo JSON-LD."
           - name: credential_category
             label: Categoría de la credencial
             type: string
             required: true
             readonly: true
+            description: "Categoría de la credencial profesional; se publica como credentialCategory en los datos estructurados."
           - name: catalog_name
             label: Nombre del catálogo de servicios
             type: string
             required: true
             readonly: true
+            description: "Nombre del catálogo schema.org que agrupa los servicios; se publica como hasOfferCatalog.name."
           - name: knows_about
             label: Temas que trata
             type: string
             required: true
             readonly: true
             list: true
+            description: "Lista de temas tratados por la clínica; se publica como knowsAbout en los datos estructurados."
           - name: anchors
             label: Anclas de los @id
             type: object
             required: true
             readonly: true
-            description: Se añaden al final de site.url en el bloque JSON-LD.
+            description: "Anclas de los identificadores @id del grafo JSON-LD. build.py las concatena al final de site.url."
             fields:
               - name: clinic
                 label: Clínica
@@ -865,19 +881,19 @@ content:
         required: true
         readonly: true
         list: true
-        description: Municipios que se publican como "areaServed" en los datos estructurados (SEO local).
+        description: "Lista de municipios de atención presencial. Se publica como areaServed en los datos estructurados para el SEO local."
       - name: online_area
         label: Zona de la terapia online
         type: string
         required: true
         readonly: true
-        description: "La terapia online no tiene zona; se indica el país desde el que se atiende."
+        description: "País en el que se ofrece la terapia online para cualquier lugar. Se usa en src/llms.txt y src/llms-full.txt y se añade como Country a areaServed en los datos estructurados."
       - name: price_range
         label: Rango de precio orientativo
         type: string
         required: true
         readonly: true
-        description: Solo para los buscadores ($, $$ o $$$). No se muestra en la web.
+        description: "Rango orientativo para los buscadores ($, $$ o $$$; «$$» significa precio medio). Solo se publica como priceRange en los datos estructurados, nunca en la web."
 
   - name: footer
     label: Footer (solo lectura)
@@ -895,7 +911,7 @@ content:
         list:
           min: 2
           max: 2
-        description: Dos líneas fijas; se unen con un salto de línea.
+        description: "Exactamente dos líneas fijas de texto bajo el logo. En el HTML se unen con un salto de línea."
       - name: legal_label
         label: Texto del enlace legal
         type: string
@@ -905,13 +921,13 @@ content:
         label: Archivo del enlace legal
         type: string
         readonly: true
-        description: aviso_legal.pdf vive en media/ en el repositorio y se publica en la raíz; no se edita desde el CMS.
+        description: "Archivo del enlace legal, de solo lectura. aviso_legal.pdf vive en media/ en el repositorio y build.py lo publica en la raíz de _site/ para conservar la ruta pública."
       - name: copyright
         label: Copyright
         type: string
         required: true
         readonly: true
-        description: Va tras el ©. Actualiza el año cuando cambie.
+        description: "Texto que aparece tras el símbolo ©. Recuerda actualizar el año cuando corresponda."
 
   # ---------------------------------------------------------------------
   # 3) Firma de email (src/firma.html, archivo aparte del sitio).
@@ -930,35 +946,40 @@ content:
         label: Nombre
         type: string
         required: true
+        description: "Nombre mostrado en la primera línea de la identidad de la firma. El teléfono, la dirección y el mapa se toman de Datos comunes (solo lectura)."
       - name: license
         label: Nº de colegiada
         type: string
         required: true
+        description: "Se muestra tal cual en la segunda línea de la identidad de la firma."
       - name: role
         label: Cargo
         type: string
         required: true
+        description: "Profesión o cargo que aparece bajo la identidad de la firma."
       - name: web_label
         label: Web (texto visible)
         type: string
         required: true
+        description: "Texto visible del enlace web de la firma."
       - name: web_url
         label: Web (enlace)
         type: string
         required: true
         pattern: "^https://[^/\\s]+$"
+        description: "Destino del enlace web de la firma."
       - name: legal_aviso
         label: Aviso legal
         type: text
         required: true
         readonly: true
-        description: Texto legal — no modificar sin asesoría.
+        description: "Texto legal de solo lectura para la firma de email. No modificar sin asesoría jurídica."
       - name: legal_proteccion
         label: Protección de datos
         type: text
         required: true
         readonly: true
-        description: Texto legal — no modificar sin asesoría.
+        description: "Texto legal de solo lectura para la firma de email. No modificar sin asesoría jurídica."
 
 # ---------------------------------------------------------------------------
 # ACTIONS (opcional): botón "Publicar cambios" en Pages CMS.

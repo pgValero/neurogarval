@@ -1,17 +1,7 @@
-# ============================================================
-# SECCIÓN MODALIDADES — edición en Pages CMS
-# Sus campos se insertan en src/index.html (marcadores archivo.ruta.campo) y
-# en los modales vía _site/data.js.
-# Los textos largos se escriben en Markdown; build.py los convierte a HTML.
-# ============================================================
-
 heading: Modalidades de atención
 lead: |-
   Elegir el entorno adecuado para tus sesiones es importante: facilita el trabajo terapéutico y tu comodidad durante el proceso.
-# Texto del enlace de cada tarjeta.
 more_label: Más información
-# Cada modalidad conserva sus datos de tarjeta, su contenido Markdown y las
-# fotos opcionales del modal.
 items:
   - icon: building
     title: Atención en Clínica
@@ -28,8 +18,6 @@ items:
 
       El ambiente de consulta está pensado para recibirte con calma, cuidar tu privacidad y favorecer un trabajo cercano y personalizado.
     images:
-      # Sube las fotos de la consulta desde el CMS (media/).
-      # Mientras "image" esté vacío se muestra el icono de cámara de reserva.
       - image: ""
         alt: Consulta NeuroGarval
       - image: ""

@@ -1,20 +1,6 @@
-# ============================================================
-# DATOS COMUNES (solo lectura en Pages CMS)
-# Fuente única del contacto que se repite en varios sitios: hero,
-# sección Contacto, footer y firma de email. Para cambiar estos datos,
-# edita este archivo en el repositorio; el CMS los muestra sin permitir
-# modificaciones. build.py escribe el contacto en los huecos .neuro-*
-# del HTML generado (sin JavaScript) y alimenta también la firma.
-# El dominio, el logo, el SEO y los datos estructurados son parte fija
-# de src/index.html.
-# ============================================================
-
 contact:
-  # build.py lo escribe en el index.html generado (hero, sección Contacto
-  # y footer) y en la firma de email: editar aquí y ningún otro sitio.
   phone: "+34 711 233 888"
   mail: teresa@neurogarval.es
-  # Dirección: exactamente dos líneas fijas. La firma las une con " - ".
   address_lines:
     - C/ Diego de Almagro, 32
     - 28342, Valdemoro, Madrid
