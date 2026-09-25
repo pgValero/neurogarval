@@ -1,0 +1,29 @@
+name: Comprobar sitio
+
+on:
+  schedule:
+    - cron: "0 9,21 * * *"
+      timezone: "Europe/Madrid"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Comprobar página publicada
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Obtener dominio publicado
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          sparse-checkout: |
+            src
+            scripts
+          persist-credentials: false
+
+      - name: Comprobar página y recursos
+        shell: bash
+        run: bash scripts/check_site.sh
