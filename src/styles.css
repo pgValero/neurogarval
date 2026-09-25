@@ -865,6 +865,13 @@ footer a:hover {
     border-radius: 16px;
     margin-bottom: 1rem;
     overflow: hidden;
+    transition: var(--transition);
+}
+
+.faq-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px var(--color-shadow);
+    border-color: var(--color-primary);
 }
 
 .faq-item summary {
