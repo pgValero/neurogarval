@@ -3,3 +3,6 @@
 _site/
 
 __pycache__
+
+# Cache of the ruff hook (prek)
+.ruff_cache/

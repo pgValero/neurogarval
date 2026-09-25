@@ -34,3 +34,22 @@ To run all the hooks manually:
 ```bash
 prek run --config .pre-commit/.pre-commit-config.yaml --all-files
 ```
+
+The hooks are, in order: HTMLHint (HTML), Stylelint (CSS), ESLint (JavaScript), Lychee (links in
+the HTML), zizmor (security of `.github/workflows/*.yml`), ShellCheck (`scripts/check_site.sh`),
+ruff (lint + format of `scripts/build.py`) and markdownlint-cli2 (Markdown). Their configuration
+files are `.pre-commit/.stylelintrc.json`, `.pre-commit/eslint.config.js`, `.pre-commit/ruff.toml`
+and `.pre-commit/.markdownlint-cli2.jsonc`. The tools of the last four hooks are installed by
+`prek` itself, so nothing else is needed; when a hook reports a problem, run it by hand to get the
+full report, e.g.:
+
+```bash
+uvx zizmor@latest .github/workflows/*.yml
+uvx --from shellcheck-py shellcheck scripts/check_site.sh
+uvx ruff@latest check --config .pre-commit/ruff.toml scripts/build.py
+uvx ruff@latest format --config .pre-commit/ruff.toml scripts/build.py
+npx markdownlint-cli2 --config .pre-commit/.markdownlint-cli2.jsonc "**/*.md"
+```
+
+Note that `prek` only checks the files that git tracks: `_site/` is gitignored, so `git add -f
+_site` first if you want the generated site validated (that is what the CI does).

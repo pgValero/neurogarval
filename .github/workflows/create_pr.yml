@@ -42,7 +42,11 @@ jobs:
       GH_TOKEN: ${{ github.token }} # gh needs the token explicitly in the environment
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        # zizmor: ignore[artipacked] the credentials are needed on purpose: the
+        # script below fetches from origin.
+        # Pinned to a commit SHA (zizmor, see .pre-commit/); the comment is
+        # the version, for the humans.
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           fetch-depth: 0
 

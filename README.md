@@ -19,7 +19,7 @@ fully-owned website which a non-programmer can update safely on their own.
 - [Architecture](#architecture)
   - [Architecture at a glance](#architecture-at-a-glance)
   - [The content pipeline](#the-content-pipeline)
-  - [Markers: `__file.path.field__`](#markers-filepathfield)
+  - [Markers: `__file.path.field__`](#markers-__filepathfield__)
   - [Loops: repeated cards without copy-paste](#loops-repeated-cards-without-copy-paste)
   - [`.pages.yml` doubles as the type registry](#pagesyml-doubles-as-the-type-registry)
   - [One single source of truth for contact data](#one-single-source-of-truth-for-contact-data)
@@ -166,7 +166,7 @@ both the editor and a developer.
 Zooming into the middle of the diagram above: the generator is the only piece of code
 that turns data into a page.
 
-```
+```text
   content/*.yml  ─┐                          ┌─ index.html      (page + JSON-LD)
   .pages.yml     ─┤  types + field values     ├─ signature.html  (email signature)
   src/*.html     ─┤                          ├─ robots.txt      (all crawlers allowed)
@@ -199,7 +199,7 @@ and renders it accordingly:
 | `rich-text` (Markdown) | converted to HTML with the `extra` extension |
 | `image` | normalized `media/...` path plus a full `<img>` tag with dimensions and lazy loading |
 | `component: icon` | inline SVG or a Bootstrap Icons class (single icon dictionary in `build.py`) |
-| list of strings | joined (`, ` in the page, `·` in the hero modality line, new lines in `.txt` templates) |
+| list of strings | joined (", " in the page, `·` in the hero modality line, new lines in `.txt` templates) |
 | everything else | HTML-escaped plain text |
 
 A few fields need more than their own value (the social image needs the site URL,
@@ -290,7 +290,7 @@ afterthought:
 
 ## Repository layout
 
-```
+```text
 .
 ├── content/            # All editable content, one YAML file per page section
 ├── media/              # Images, favicon, logo, QR and PDFs (uploaded via the CMS)
@@ -309,7 +309,7 @@ afterthought:
 │   └── check_site.sh   # smoke test of the published site (curl only)
 ├── .pages.yml          # Pages CMS config + the build's type registry
 ├── .github/workflows/  # build validation, deploy, PR creation, live site check
-├── .pre-commit/        # HTMLHint, Stylelint, ESLint and Lychee hooks
+├── .pre-commit/        # HTMLHint, Stylelint, ESLint, Lychee, zizmor, ShellCheck, ruff and markdownlint hooks
 ├── CONTRIBUTING.md     # short contributor guide
 ├── AGENTS.md           # detailed architecture/conventions for AI agents
 └── _site/              # build output (gitignored, deleted and rebuilt every run)
@@ -391,6 +391,10 @@ required) and is the only branch that deploys.
 | **Stylelint** | CSS errors, unknown properties, bad syntax |
 | **ESLint** | JavaScript problems |
 | **Lychee** | Broken local and external links in the HTML (skips `tel:` links and template markers) |
+| **zizmor** | GitHub Actions security: unpinned actions, excessive permissions, credential persistence, template injection |
+| **ShellCheck** | Bugs and portability problems in `scripts/check_site.sh` |
+| **ruff** | Lint and format of `scripts/build.py` (pyflakes, bugbear, pyupgrade, import order...) |
+| **markdownlint-cli2** | Markdown structure: broken anchors, missing code-fence language, heading levels, list and spacing rules |
 | `check_site.sh` | Live site unreachable, empty, unresolved `__markers__`, missing `<title>`, missing canonical URL, no visible text, missing image, missing `robots.txt` / `sitemap.xml` / `llms*.txt` / logo / favicon |
 
 `_site/` is gitignored, so CI stages it (`git add -f _site`) before running the
@@ -410,7 +414,7 @@ linters — the checks run against the **generated** site, not just the sources.
 | Images | Pillow | WebP conversion at build time |
 | Hosting | GitHub Pages | Free, HTTPS, versioned, globally cached |
 | CI/CD | GitHub Actions (4 workflows) | Free, required checks, auto-merge, scheduled checks |
-| Hooks | `prek` (pre-commit compatible) with HTMLHint, Stylelint, ESLint, Lychee | Runs the same checks locally and in CI |
+| Hooks | `prek` (pre-commit compatible) with HTMLHint, Stylelint, ESLint, Lychee, zizmor, ShellCheck, ruff and markdownlint | Runs the same checks locally and in CI |
 | Validation | Bash + `curl` | Live smoke test with no dependencies |
 
 ## Local development
@@ -445,14 +449,14 @@ the mobile menu, and the contact links (phone, WhatsApp, email, Maps).
 
 ## Benefits
 
-**For the business owner**
+### For the business owner
 
 - Update prices, copy, services, photos, FAQ and blog posts from a browser, in minutes.
 - Nothing to install, no hosting bill, no plugin updates, no maintenance windows.
 - The website keeps working even if every third-party service disappears tomorrow.
 - A clear audit trail: who changed what, when, and the change passed the build.
 
-**For a developer or maintainer**
+### For a developer or maintainer
 
 - No framework to upgrade, no lockfile drift, no supply-chain surface.
 - Content changes and structural changes are separated: most PRs touch one YAML file.
@@ -461,7 +465,7 @@ the mobile menu, and the contact links (phone, WhatsApp, email, Maps).
   (template, CSS, JS) and ~1,200 for the generator.
 - Easy to fork: same pattern works for a restaurant, a law firm, a dental clinic or a portfolio.
 
-**For visitors and search engines**
+### For visitors and search engines
 
 - Static HTML: fast first paint, no client-side rendering, no layout shift.
 - Readable with JavaScript disabled; accessible with keyboard and screen readers.
