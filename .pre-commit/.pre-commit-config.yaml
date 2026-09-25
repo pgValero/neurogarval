@@ -1,6 +1,6 @@
 # Configuración de hooks para usar con prek (compatible también con pre-commit).
-# Instalar los hooks:   prek install
-# Ejecutar a mano:      prek run --all-files
+# Instalar los hooks:   prek install --config .pre-commit/.pre-commit-config.yaml
+# Ejecutar a mano:      prek run --config .pre-commit/.pre-commit-config.yaml --all-files
 repos:
   # Linters locales: HTML, CSS y JavaScript
   - repo: local
@@ -16,21 +16,27 @@ repos:
           - --rules
           - tag-pair,tagname-lowercase,attr-no-duplication,attr-value-double-quotes,id-unique
 
-      # 2) Linter de CSS (lee .stylelintrc.json)
+      # 2) Linter de CSS (lee .pre-commit/.stylelintrc.json)
       - id: stylelint
         name: Stylelint (CSS)
         language: node
         entry: stylelint
         files: \.css$
         additional_dependencies: [stylelint]
+        args:
+          - --config
+          - .pre-commit/.stylelintrc.json
 
-      # 3) Linter de JavaScript (lee eslint.config.js)
+      # 3) Linter de JavaScript (lee .pre-commit/eslint.config.js)
       - id: eslint
         name: ESLint (JavaScript)
         language: node
         entry: eslint
         files: \.m?js$
         additional_dependencies: [eslint]
+        args:
+          - --config
+          - .pre-commit/eslint.config.js
 
   # 4) Validador de URLs rotas (HTML, enlaces locales y externos)
   - repo: https://github.com/lycheeverse/lychee

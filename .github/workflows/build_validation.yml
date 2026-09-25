@@ -35,10 +35,10 @@ jobs:
       - name: Construir sitio (build.py)
         run: python build.py
 
-      - name: Validar _site generado (prek run --all-files)
+      - name: Validar _site generado (prek)
         run: |
-          # prek --all-files solo lintea ficheros rastreados por git y _site/
-          # está en .gitignore; se indexa _site para que la validación cubra
-          # todo lo generado por build.py (HTML, CSS, JS y URLs).
+          # prek solo lintea ficheros rastreados por git y _site/ está en
+          # .gitignore; se indexa _site para que la validación cubra todo lo
+          # generado por build.py (HTML, CSS, JS y URLs).
           git add -f _site
-          prek run --all-files
+          prek run --config .pre-commit/.pre-commit-config.yaml --all-files
