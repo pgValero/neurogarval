@@ -61,6 +61,7 @@ import html
 import json
 import re
 import shutil
+import struct
 import sys
 from fnmatch import fnmatch
 from pathlib import Path
@@ -206,6 +207,58 @@ def media_url(path: str | None) -> str:
     if not (ROOT / p).exists():
         WARNINGS.append(f"La imagen referenciada no existe: {p}")
     return p
+
+
+def image_size(rel_path: str) -> tuple[int, int] | None:
+    """(ancho, alto) de un PNG o JPEG leyendo solo su cabecera."""
+    try:
+        data = (ROOT / rel_path).read_bytes()
+    except OSError:
+        return None
+    if data[:8] == b"\x89PNG\r\n\x1a\n":
+        w, h = struct.unpack(">II", data[16:24])
+        return int(w), int(h)
+    if data[:2] != b"\xff\xd8":
+        return None
+    i = 2
+    while i + 9 < len(data):
+        if data[i] != 0xFF:
+            i += 1
+            continue
+        marcador = data[i + 1]
+        if marcador == 0xD8 or 0xD0 <= marcador <= 0xD7:
+            i += 2
+            continue
+        if marcador == 0xD9:
+            break
+        largo = int.from_bytes(data[i + 2:i + 4], "big")
+        if marcador in (0xC0, 0xC1, 0xC2, 0xC3, 0xC5, 0xC6, 0xC7,
+                        0xC9, 0xCA, 0xCB, 0xCD, 0xCE, 0xCF):
+            alto = int.from_bytes(data[i + 5:i + 7], "big")
+            ancho = int.from_bytes(data[i + 7:i + 9], "big")
+            return ancho, alto
+        i += 2 + largo
+    return None
+
+
+def picture_html(path: str, alt: str, attrs: str = "") -> str:
+    """<picture> con la versión WebP (si existe) y el original de reserva.
+
+    Evita el peso de descarga en los navegadores modernos y reserva
+    width/height para que la página no salte al cargar. attrs empieza por
+    un espacio (p. ej. ' loading="lazy" decoding="async"').
+    """
+    src = media_url(path)
+    if not src:
+        return ""
+    webp = re.sub(r"\.(png|jpe?g)$", ".webp", src)
+    if not (ROOT / webp).exists():
+        webp = ""
+    size = image_size(src)
+    dim = f' width="{size[0]}" height="{size[1]}"' if size else ""
+    source = f'<source srcset="{esc(webp)}" type="image/webp">' if webp else ""
+    return (f'<picture>{source}<img src="{esc(src)}"{dim} alt="{esc(alt)}"'
+            f"{attrs}></picture>")
 
 
 def icon_html(key: str | None) -> str:
@@ -463,11 +516,10 @@ def render_modality_content(value, parent: dict) -> str:
 
 
 def render_blog_thumb(value, parent: dict) -> str:
-    """Miniatura del blog: <img> con la foto o icono de reserva si no hay."""
-    src = media_url(value)
-    if not src:
-        return icon_html("journal")
-    return f'<img src="{esc(src)}" alt="{esc(parent.get("title"))}" loading="lazy">'
+    """Miniatura del blog: <picture> con la foto o icono de reserva si no hay."""
+    picture = picture_html(value, parent.get("title", ""),
+                           ' loading="lazy" decoding="async"')
+    return picture or icon_html("journal")
 
 
 # ---------------------------------------------------------------------------
@@ -659,6 +711,13 @@ SPECIALS: dict[str, dict] = {
         "blog.posts.*.image": render_blog_thumb,
         # El marcador activa el bloque JSON-LD completo de la página.
         "clinic_info.datos_estructurados": lambda v, parent: build_jsonld(),
+        # Imágenes: <picture> con WebP + reserva, con width/height y la carga
+        # adecuada (la hero inmediata; el resto, al hacer scroll).
+        "hero.image": lambda v, parent: picture_html(
+            v, parent.get("image_alt", ""),
+            ' fetchpriority="high" decoding="async"'),
+        "especialista.image": lambda v, parent: picture_html(
+            v, parent.get("image_alt", ""), ' loading="lazy" decoding="async"'),
         # Contenido completo de la modalidad: Markdown + fotos de la consulta
         # (opcionales: solo las modalidades que las declaran las incluyen).
         "modalidades.items.*.modal_content": render_modality_content,
@@ -791,13 +850,14 @@ def modality_gallery(images: list[dict]) -> str:
     figures = []
     for image in images:
         src = media_url(image.get("image"))
-        alt = esc(image.get("alt"))
         if src:
+            foto = picture_html(
+                image.get("image"), image.get("alt", ""),
+                ' loading="lazy" decoding="async" onerror="this.remove()"')
             figures.append(
-                f'<figure class="modality-gallery-item">'
+                '<figure class="modality-gallery-item">'
                 '<i class="bi bi-camera"></i>'
-                f'<img src="{esc(src)}" alt="{alt}" loading="lazy" '
-                'onerror="this.remove()"></figure>'
+                f'{foto}</figure>'
             )
         else:
             figures.append(
