@@ -8,8 +8,8 @@
 #       - crea (o reutiliza) la PR develop -> main;
 #       - la marca para AUTO-MERGE con rebase: GitHub la mergea sola en cuanto
 #         pasen los checks obligatorios de la protección de rama de main.
-#  3. El merge en main dispara depspués .github/workflows/deploy.yml (push a
-#     main), que construye el sitio y lo publica en GitHub Pages.
+#  3. El merge en main dispara después .github/workflows/deploy_page.yml (push
+#     a main), que construye el sitio y lo publica en GitHub Pages.
 #
 # Solo tiene efecto si el botón se pulsa desde develop; desde cualquier otra
 # rama el trabajo se omite (el botón del CMS solo se usa sobre develop).
@@ -18,7 +18,7 @@
 #  - Settings -> General: "Allow auto-merge" activado y "Rebase and merging"
 #    permitido (GH mergea con rebase cuando pasen los checks).
 #  - Protección de rama en main: "Require a pull request before merging" y el
-#    status check "checks" como obligatorio.
+#    status check "Build Validation / build-validation" como obligatorio.
 name: Create PR
 
 on:
