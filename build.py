@@ -87,9 +87,15 @@ CONTENT = ROOT / "content"
 OUT = ROOT / "_site"
 
 # Plantillas que procesa build.py: (clave para mensajes, ruta al fichero).
+# Los .txt y el .xml son plantillas de SEO/LLM: también llevan marcadores
+# __archivo.ruta.campo__ y se generan con los datos de content/*.yml.
 TEMPLATES = {
     "src/index.html": SRC / "index.html",
     "src/firma.html": SRC / "firma.html",
+    "src/robots.txt": SRC / "robots.txt",
+    "src/sitemap.xml": SRC / "sitemap.xml",
+    "src/llms.txt": SRC / "llms.txt",
+    "src/llms-full.txt": SRC / "llms-full.txt",
 }
 
 # ---------------------------------------------------------------------------
@@ -155,12 +161,6 @@ STATIC_FILES = [
     (SRC / "styles.css", "styles.css"),
     (SRC / "script.js", "script.js"),
     (ROOT / "CNAME", "CNAME"),
-    # SEO y LLM: ficheros fijos (no se generan desde content/*.yml; si cambia
-    # el contenido del CMS, actualizar llms.txt y llms-full.txt a mano).
-    (SRC / "robots.txt", "robots.txt"),
-    (SRC / "sitemap.xml", "sitemap.xml"),
-    (SRC / "llms.txt", "llms.txt"),
-    (SRC / "llms-full.txt", "llms-full.txt"),
     (ROOT / "media/favicon.svg", "favicon.svg"),
     (ROOT / "media/logo.svg", "logo.svg"),
     (ROOT / "media/aviso_legal.pdf", "aviso_legal.pdf"),
@@ -458,6 +458,12 @@ def expand_loop(plantilla: str, ref: str, body: str, items: list) -> str:
             return m.group(0)
 
         fragments.append(PLACEHOLDER_RE.sub(repl, body).strip())
+    # En los ficheros de texto los elementos de un bucle son secciones
+    # completas y se separan con una línea en blanco; las listas de una línea
+    # se mantienen juntas. En el HTML se conserva siempre una sola línea, tal
+    # como se ha generado siempre.
+    if plantilla.endswith(".txt") and any("\n" in f for f in fragments):
+        return "\n\n".join(fragments)
     return "\n".join(fragments)
 
 
@@ -588,6 +594,57 @@ def render_keywords(value, parent: dict) -> str:
 def render_social_image(value, parent: dict) -> str:
     """Imagen de Open Graph/Twitter: URL absoluta (site.url + ruta)."""
     return absolute_url(value)
+
+
+# ---------------------------------------------------------------------------
+# Ficheros de texto (robots.txt, llms.txt, llms-full.txt) y sitemap.xml: los
+# marcadores se insertan tal cual, sin escapes de HTML ni etiquetas, y el
+# Markdown de las secciones se pasa a texto plano conservando sus párrafos.
+# ---------------------------------------------------------------------------
+def render_plain(value, parent: dict) -> str:
+    """Valor tal cual para un fichero .txt (sin escapes de HTML)."""
+    if isinstance(value, (list, tuple)):
+        return ", ".join(str(item).strip() for item in value if item is not None)
+    return "" if value is None else str(value)
+
+
+def render_comma_list(value, parent: dict) -> str:
+    """Lista de cadenas o de objetos con "title" -> texto unido con comas."""
+    if isinstance(value, (list, tuple)):
+        partes = []
+        for item in value:
+            if isinstance(item, dict):
+                item = item.get("title", "")
+            if item is not None and str(item).strip():
+                partes.append(str(item).strip())
+        return ", ".join(partes)
+    return render_plain(value, parent)
+
+
+def markdown_text(value, parent: dict) -> str:
+    """Markdown -> texto plano conservando párrafos y listas (ficheros .txt).
+
+    Quita los énfasis y los enlaces, pero deja la estructura en líneas
+    separadas para que el texto siga siendo legible.
+    """
+    source = "" if value is None else str(value)
+    source = source.replace("\r\n", "\n").replace("\r", "\n").strip()
+    source = re.sub(r"\*\*(.+?)\*\*", r"\1", source, flags=re.S)
+    source = re.sub(r"\[([^\]]*)\]\([^)]*\)", r"\1", source)
+    return source
+
+
+def render_sitemap_image(value, parent: dict) -> str:
+    """<image:loc> del sitemap: URL absoluta de la imagen ya publicada.
+
+    prepare_media() deja la versión WebP en WEBP_SUBSTITUTES, así que se
+    publica esa; si el artículo no tiene portada se usa la imagen del sitio.
+    """
+    ruta = media_url(value)
+    sustituto = WEBP_SUBSTITUTES.get(ruta)
+    if sustituto:
+        ruta = sustituto[0]
+    return site_url() + (ruta or media_url(CONTEXT["clinic_info"]["social"]["image"]))
 
 
 # ---------------------------------------------------------------------------
@@ -807,6 +864,39 @@ SPECIALS: dict[str, dict] = {
         # La firma muestra la dirección en una sola línea.
         "common.contact.address_lines": lambda v, parent: " - ".join(
             esc(line) for line in v),
+    },
+    "src/sitemap.xml": {
+        # Las portadas del sitemap se publican en la ruta real (WebP si se
+        # convirtió) y con la URL absoluta del sitio.
+        "hero.image": render_sitemap_image,
+        "especialista.image": render_sitemap_image,
+        "blog.posts.*.image": render_sitemap_image,
+    },
+    "src/llms.txt": {
+        # Listas del YAML (servicios que se cubren, municipios, temas...) en
+        # una línea de texto plano separada por comas.
+        "clinic_info.area_served": render_comma_list,
+        "clinic_info.schema.knows_about": render_comma_list,
+        # El proceso resumido son los títulos de sus pasos.
+        "proceso.steps": render_comma_list,
+        # Descripción de cada servicio, sin las etiquetas de la tarjeta.
+        "servicios.items.*.card_text": markdown_text,
+        "*": render_plain,
+    },
+    "src/llms-full.txt": {
+        "clinic_info.area_served": render_comma_list,
+        "clinic_info.schema.knows_about": render_comma_list,
+        "proceso.steps": render_comma_list,
+        # Markdown completo de cada sección, como texto plano.
+        "servicios.items.*.card_text": markdown_text,
+        "servicios.items.*.modal_content": markdown_text,
+        "modalidades.items.*.modal_content": markdown_text,
+        "proceso.steps.*.text": markdown_text,
+        "especialista.content": markdown_text,
+        "faq.items.*.answer": markdown_text,
+        "blog.posts.*.excerpt": markdown_text,
+        "blog.posts.*.article": markdown_text,
+        "*": render_plain,
     },
 }
 

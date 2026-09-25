@@ -568,6 +568,12 @@ content:
             required: true
             readonly: true
             description: Atributo lang del <html> e "inLanguage" de los datos estructurados.
+          - name: language_name
+            label: Nombre del idioma
+            type: string
+            required: true
+            readonly: true
+            description: Nombre del idioma en español, para llms.txt.
           - name: locale
             label: Idioma regional
             type: string
@@ -755,6 +761,33 @@ content:
             required: true
             readonly: true
             description: aria-label de los botones "x" de los modales.
+      - name: llms
+        label: Ficheros para asistentes de IA
+        type: object
+        required: true
+        readonly: true
+        description: Datos que solo usan llms.txt y llms-full.txt; el resto sale de las secciones de la web.
+        fields:
+          - name: contact_heading
+            label: Título de la sección de contacto
+            type: string
+            required: true
+            readonly: true
+          - name: specialist_heading
+            label: Título de la sección de la especialista
+            type: string
+            required: true
+            readonly: true
+          - name: more_heading
+            label: Título de la sección final
+            type: string
+            required: true
+            readonly: true
+          - name: session_length
+            label: Duración habitual de la sesión
+            type: string
+            required: true
+            readonly: true
       - name: schema
         label: Datos estructurados (schema.org)
         type: object

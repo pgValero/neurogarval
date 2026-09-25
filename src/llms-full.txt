@@ -1,156 +1,63 @@
-# NeuroGarval — contenido completo
+# __clinic_info.site.name__ — contenido completo
 
-> NeuroGarval es la consulta de neuropsicología y psicología sanitaria de Teresa García Valero, neuropsicóloga y psicóloga general sanitaria (Nº de colegiada M-42858). Atiende a niños, adolescentes y adultos en su clínica de Valdemoro (sur de la Comunidad de Madrid), por videollamada (terapia online) y a domicilio. La primera consulta es informativa y gratuita.
+> __clinic_info.site.name__ es la consulta de neuropsicología y psicología sanitaria de __especialista.name__ (__clinic_info.schema.job_title__; __especialista.license__). Atiende a niños, adolescentes y adultos en su clínica de __clinic_info.site.locality__ (sur de la Comunidad de __clinic_info.site.region__), por videollamada (terapia online) y a domicilio. __hero.promo__.
 
-## Datos de contacto
+## __clinic_info.llms.contact_heading__
 
-- Nombre: NeuroGarval | Psicología y Neuropsicología Clínica
-- Profesional: Teresa García Valero, neuropsicóloga y psicóloga general sanitaria. Nº de colegiada M-42858.
-- Dirección: C/ Diego de Almagro, 32, 28342 Valdemoro (Madrid), España.
-- Cómo llegar (Google Maps): https://maps.app.goo.gl/pwGjVP2YtA6mQypG9
-- Teléfono y WhatsApp: +34 711 233 888
-- Email: teresa@neurogarval.es
-- Web: https://neurogarval.es/
-- Instagram: https://instagram.com/neurogarval
-- Zona de atención presencial: Valdemoro y municipios cercanos del sur de Madrid.
-- Terapia online: por videollamada, para personas de cualquier lugar.
+- Nombre: __clinic_info.schema.site_name__
+- Profesional: __especialista.name__, __clinic_info.schema.job_title__. __especialista.license__.
+- Dirección: __common.contact.address_lines__.
+- Cómo llegar (Google Maps): __common.contact.maps_url__
+- Teléfono y WhatsApp: __common.contact.phone__
+- Email: __common.contact.mail__
+- Web: __clinic_info.site.url__
+- Instagram: __contacto.instagram.url__
+- Zona de atención presencial (municipios del sur de __clinic_info.site.region__): __clinic_info.area_served__.
+- Terapia online: por videollamada, disponible para cualquier lugar de __clinic_info.online_area__.
 - Primera consulta: informativa y gratuita.
 
-## Sobre la especialista
+## __clinic_info.llms.specialist_heading__
 
-Soy Teresa, neuropsicóloga y psicóloga general sanitaria. Estoy especializada en el trabajo con dificultades cognitivas, emocionales y del aprendizaje. Acompaño a niños, adolescentes y adultos en este proceso, adaptando cada intervención a sus necesidades.
+__especialista.content__
 
-Trabajo desde un enfoque cercano y personalizado, con el objetivo de mejorar el funcionamiento y el bienestar en el día a día. Me mantengo en formación continua para ofrecer una atención actualizada y basada en la evidencia.
+## __clinic_info.schema.catalog_name__
 
-## Servicios
+<!-- @foreach:servicios.items -->
+### __servicios.items.n.title__
 
-### Neuropsicología
+__servicios.items.n.card_text__
 
-Evaluación e intervención en dificultades cognitivas, conductuales y emocionales relacionadas con el funcionamiento cerebral.
+__servicios.items.n.modal_content__
+<!-- @endforeach:servicios.items -->
 
-La neuropsicología estudia la relación entre el funcionamiento del cerebro y la conducta: atención, memoria, lenguaje, funciones ejecutivas, visopercepción y velocidad de procesamiento, entre otras. El objetivo es comprender cómo estas funciones influyen en el día a día y diseñar una intervención ajustada a cada persona.
+## __modalidades.heading__
 
-- Entrevista inicial con la persona y/o la familia.
-- Evaluación con pruebas estandarizadas.
-- Devolución de resultados y orientaciones.
-- Plan de intervención personalizado.
+<!-- @foreach:modalidades.items -->
+### __modalidades.items.n.title__
 
-Dirigido a niños, adolescentes y adultos con TDAH, TEA, dificultades de aprendizaje, daño cerebral adquirido o deterioro cognitivo, entre otros.
+__modalidades.items.n.modal_content__
+<!-- @endforeach:modalidades.items -->
 
-### Psicología sanitaria
+## __proceso.heading__
 
-Un espacio profesional y seguro para atender dificultades emocionales y conductuales, entendiendo el momento vital de cada persona. Se trabaja desde un enfoque cercano y basado en la evidencia, con objetivos claros y revisables.
+<!-- @foreach:proceso.steps -->
+__loop.index__. __proceso.steps.n.title__: __proceso.steps.n.text__
+<!-- @endforeach:proceso.steps -->
 
-- Ansiedad, estrés y estado de ánimo.
-- Autoestima y gestión emocional.
-- Habilidades sociales y pautas para la familia.
-- Duelo y procesos de adaptación.
+## __faq.heading__
 
-Atención a niños, adolescentes y adultos, de forma individual o con la familia cuando es necesario.
+<!-- @foreach:faq.items -->
+### __faq.items.n.question__
 
-### Rehabilitación cognitiva
+__faq.items.n.answer__
+<!-- @endforeach:faq.items -->
 
-Programas personalizados orientados a rehabilitar, estimular y mantener las funciones cognitivas, partiendo de los objetivos y la rutina de cada persona.
+## __blog.heading__
 
-- Estimulación cognitiva individual.
-- Entrenamiento en estrategias y compensación.
-- Asesoramiento a familiares y cuidadores.
-- Seguimiento periódico de avances.
+<!-- @foreach:blog.posts -->
+### __blog.posts.n.title__
 
-Disponible en clínica, online o a domicilio, según las necesidades.
+__blog.posts.n.excerpt__
 
-## Modalidades de atención
-
-### Atención en clínica (Valdemoro)
-
-Consulta presencial en C/ Diego de Almagro, 32, Valdemoro, en un entorno profesional y tranquilo. Permite realizar evaluaciones neuropsicológicas con las pruebas necesarias, trabajar las dificultades del día a día y compartir con la persona y, cuando corresponda, con su familia las orientaciones del plan de intervención.
-
-### Terapia online
-
-Sesiones por videollamada que permiten mantener el proceso terapéutico sin desplazarse. Antes de empezar se comprueban los medios necesarios y se organiza un espacio adecuado para la confidencialidad y la concentración.
-
-- Evita desplazamientos y facilita el acceso a quien tiene horarios limitados o dificultad para desplazarse.
-- Ofrece mayor flexibilidad para organizar las sesiones.
-- Permite mantener la continuidad de la intervención desde un lugar cómodo.
-
-### A domicilio
-
-Intervención en el lugar donde vive la persona, cuando la modalidad es adecuada y hay un espacio suficiente. Permite conocer el contexto cotidiano y las rutinas, y facilita la intervención cuando existen dificultades de movilidad. La idoneidad se valora previamente.
-
-## Cómo empezar la terapia
-
-1. Contacto: por WhatsApp, teléfono o email, contando brevemente qué necesitas.
-2. Primera consulta: entrevista informativa y gratuita para conocernos y resolver dudas.
-3. Evaluación: valoración de la situación y, cuando procede, pruebas para conocer el punto de partida.
-4. Plan de intervención: propuesta personalizada con objetivos concretos y revisables.
-5. Seguimiento: sesiones periódicas y revisiones para ajustar el trabajo a los avances.
-
-## Preguntas frecuentes
-
-### ¿La primera consulta es gratuita?
-
-Sí. La primera consulta es informativa y gratuita, para resolver dudas y valorar si puedo ayudarte.
-
-### ¿Cuánto dura una sesión?
-
-Habitualmente entre 45 y 60 minutos, aunque la duración puede variar según el tipo de intervención y las necesidades de cada persona.
-
-### ¿Cuántas sesiones voy a necesitar?
-
-Depende de cada caso y de los objetivos que nos marquemos. En la propuesta de intervención se concreta una orientación y se revisa periódicamente.
-
-### ¿Hace falta una evaluación previa?
-
-En muchos casos sí, para conocer el punto de partida y ajustar el plan. En la primera consulta se valora si es necesaria.
-
-### ¿Atiendes a niños, adolescentes y adultos?
-
-Sí. Trabajo con niños, adolescentes y adultos, adaptando cada intervención a la etapa y al momento vital de cada persona.
-
-### ¿Puedo elegir entre clínica, online o domicilio?
-
-Sí. Puedes elegir la modalidad que mejor te encaje: atención presencial en consulta, por videollamada o a domicilio.
-
-### ¿Qué llevo a la primera consulta?
-
-El motivo de consulta y, si los tienes, informes o pruebas previas. No es imprescindible para la primera toma de contacto.
-
-## Artículos
-
-### ¿Qué es la neuropsicología y cuándo conviene consultar?
-
-La neuropsicología estudia la relación entre el funcionamiento del cerebro y nuestra conducta: la atención, la memoria, el lenguaje, la capacidad de organización y planificación o la velocidad con la que procesamos la información.
-
-Su objetivo no es «etiquetar» a nadie, sino comprender cómo funciona cada persona en su día a día para diseñar una intervención ajustada a sus necesidades.
-
-¿Qué ocurre en una consulta habitual?
-
-- Entrevista inicial con la persona y/o su familia.
-- Evaluación con pruebas estandarizadas y tareas cotidianas.
-- Devolución de los resultados en un lenguaje claro.
-- Plan de intervención personalizado.
-
-¿Cuándo conviene consultar? Algunas señales:
-
-- Despistes u olvidos frecuentes que empiezan a afectar a la vida diaria.
-- Dificultades de atención, aprendizaje u organización, en niños, adolescentes o adultos.
-- Cambios tras un ictus, un traumatismo craneal u otra alteración del sistema nervioso.
-- Sensación de que la mente «va más lenta» o de que cuesta concentrarse.
-
-Si te resuena alguna de estas situaciones, no hace falta esperar a que sea «grave»: cuanto antes se consulta, más fácil es orientar, entender qué pasa y ponerle remedio.
-
-### Ansiedad, estrés y concentración: por qué se te va la cabeza
-
-¿Te pasa que llegas a casa y no recuerdas qué comiste al mediodía? ¿O que necesitas leer un párrafo tres veces para enterarte? No eres tú: es el estrés.
-
-Cuando estamos en alerta, el cerebro prioriza la supervivencia y deja en segundo plano funciones como la memoria de trabajo o la atención sostenida. El resultado son olvidos tontos, dificultad para concentrarse y una mente que «va a mil por hora».
-
-Algunas ideas para frenar la espiral:
-
-- Haz pausas reales de dos o tres minutos a lo largo del día.
-- Haz una sola cosa cada vez: centrarse en una tarea cansa menos.
-- Reduce el ruido y las notificaciones mientras trabajas o estudias.
-- Descansa bien: el sueño consolida la memoria y regula las emociones.
-- Respira despacio: unas cuantas respiraciones profundas bajan la activación.
-
-Si la ansiedad o el estrés se vuelven constantes y afectan a tu día a día, pedir ayuda también es una forma de cuidarte. En consulta podemos trabajar juntos para recuperar la calma y que tu mente vuelva a rendir.
+__blog.posts.n.article__
+<!-- @endforeach:blog.posts -->

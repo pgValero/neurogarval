@@ -2,29 +2,26 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
-    <loc>https://neurogarval.es/</loc>
+    <loc>__clinic_info.site.url__</loc>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
     <image:image>
-      <image:loc>https://neurogarval.es/media/hero-image.webp</image:loc>
+      <image:loc>__hero.image__</image:loc>
     </image:image>
     <image:image>
-      <image:loc>https://neurogarval.es/media/photo.webp</image:loc>
+      <image:loc>__especialista.image__</image:loc>
     </image:image>
-    <image:image>
-      <image:loc>https://neurogarval.es/media/blog-neuropsicologia.webp</image:loc>
-    </image:image>
-    <image:image>
-      <image:loc>https://neurogarval.es/media/blog-ansiedad-estres.webp</image:loc>
-    </image:image>
+<!-- @foreach:blog.posts -->
+<image:image><image:loc>__blog.posts.n.image__</image:loc></image:image>
+<!-- @endforeach:blog.posts -->
   </url>
   <url>
-    <loc>https://neurogarval.es/llms.txt</loc>
+    <loc>__clinic_info.site.url__llms.txt</loc>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://neurogarval.es/llms-full.txt</loc>
+    <loc>__clinic_info.site.url__llms-full.txt</loc>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
   </url>

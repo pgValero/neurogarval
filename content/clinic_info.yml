@@ -23,6 +23,8 @@ site:
   name: NeuroGarval
   # <html lang> e "inLanguage"/"availableLanguage" del JSON-LD.
   language: es
+  # Nombre del idioma en español, para los ficheros de texto de llms.txt.
+  language_name: español
   # og:locale.
   locale: es_ES
   currency: EUR
@@ -93,6 +95,15 @@ nav:
 # Textos de la interfaz que no dependen del contenido.
 ui:
   close_label: Cerrar
+
+# Datos que solo usan los ficheros de texto para asistentes de IA
+# (src/llms.txt y src/llms-full.txt). El resto de su contenido sale de las
+# secciones de la web (servicios, modalidades, proceso, FAQ, blog, ...).
+llms:
+  contact_heading: Datos de contacto
+  specialist_heading: Sobre la especialista
+  more_heading: Más información
+  session_length: entre 45 y 60 minutos
 
 # Textos de los datos estructurados (JSON-LD) que build.py no puede
 # deducir del resto del contenido.
