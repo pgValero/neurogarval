@@ -1,74 +1,72 @@
 # ============================================================================
-# Pages CMS — configuración del repositorio neurogarval
-# https://pagescms.org · Documentación: /docs/configuration
+# Pages CMS — configuration of the neurogarval repository
+# https://pagescms.org · Documentation: /docs/configuration
 #
-# Este archivo define TODO lo que se puede editar desde Pages CMS:
-#   media    -> dónde se guardan las imágenes y qué URL se escribe en el contenido
-#   content  -> las "colecciones" (archivos) editables y sus campos
-#   components -> definiciones de campo reutilizables
-#   actions  -> botones opcionales (despliegue manual)
+# This file defines EVERYTHING that can be edited from Pages CMS:
+#   media     -> where the images are stored and which URL is written in the content
+#   content   -> the editable "collections" (files) and their fields
+#   components-> reusable field definitions
+#   actions   -> optional buttons (manual deploy)
 #
-# CÓMO SE RELACIONA CON EL SITIO:
-#   Los ficheros de content/*.yml NO los lee el navegador directamente.
-#   build.py (ejecutado por .github/workflows/build_validation.yml de forma
-#   automática en cada PR contra main, y por .github/workflows/deploy_page.yml
-#   al hacer push a main; nunca con commits de contenido) sustituye los
-#   marcadores __archivo.ruta.campo__ de src/index.html y src/firma.html por
-#   estos datos, escribe el contacto en los huecos .neuro-* del HTML generado
-#   (sin JavaScript), escribe el contenido de los modales en el propio HTML y
-#   publica el resultado.
+# HOW IT RELATES TO THE SITE:
+#   The content/*.yml files are NOT read by the browser directly. build.py
+#   (run automatically by .github/workflows/build_validation.yml on every PR
+#   against main, and by .github/workflows/deploy_page.yml on push to main;
+#   never with content commits) substitutes the __file.path.field__ markers of
+#   src/index.html and src/signature.html with this data, writes the contact
+#   into the .neuro-* slots of the generated HTML (without JavaScript), writes
+#   the modal content into the HTML itself and publishes the result.
 #
-#   Este archivo es también el REGISTRO DE TIPOS del build: cada campo que
-#   aparece en un marcador debe estar declarado aquí con su tipo; build.py
-#   usa esa declaración para saber si es Markdown (rich-text), imagen, icono
-#   o texto simple, y falla si un campo referenciado no está declarado.
-#   Los campos de contenido largo de la página son rich-text con formato
-#   Markdown. Escribe párrafos, énfasis y listas en un único campo; build.py
-#   los convierte a HTML. No escribas HTML en esos campos. Títulos, botones,
-#   etiquetas y metadatos siguen siendo campos simples. Las listas
-#   estructurales (pasos, tarjetas, fotos, etc.) conservan sus campos.
-#   Las tarjetas e ítems de esas listas se repiten en la plantilla con
-#   bloques @foreach (ver expand_loops en build.py): añadir o quitar
-#   entradas aquí no exige tocar el HTML.
-#   El dominio del sitio se lee de src/CNAME durante el build. El resto de
-#   los datos fijos (identidad, logo, idioma, etiquetas SEO/Open Graph/Twitter,
-#   etiquetas del menú y textos de los datos estructurados) vive en
-#   content/clinic_info.yml, también de solo lectura: src/index.html y build.py
-#   lo leen de ahí, no lo llevan escrito.
-#   El bloque JSON-LD lo genera entero build.py desde ese mismo archivo y
-#   desde servicios, modalidades, faq, blog y especialista.
+#   This file is also the TYPE REGISTRY of the build: every field that appears
+#   in a marker must be declared here with its type; build.py uses that
+#   declaration to know whether it is Markdown (rich-text), an image, an icon
+#   or plain text, and it fails if a referenced field is not declared.
+#   The long content fields of the page are rich-text with markdown format.
+#   Write paragraphs, emphasis and lists in a single field; build.py converts
+#   them to HTML. Do not write HTML in those fields. Titles, buttons, labels
+#   and metadata stay plain fields. The structural lists (steps, cards, photos,
+#   etc.) keep their own fields.
+#   Cards and items of those lists are repeated in the template with
+#   @foreach blocks (see expand_loops in build.py): adding or removing entries
+#   here requires no HTML change.
+#   The site domain is read from src/CNAME during the build. Every other fixed
+#   value (identity, logo, language, SEO/Open Graph/Twitter tags, menu labels
+#   and structured-data texts) lives in content/clinic_info.yml, also read-only:
+#   src/index.html and build.py read it from there, they do not hardcode it.
+#   build.py generates the whole JSON-LD block from that same file and from
+#   services, modalities, faq, blog and specialist.
 #
-# NOTA SOBRE RAMAS: Pages CMS lee este archivo por rama y el CMS se usa sobre
-# develop: se abre en https://app.pagescms.org/pgValero/neurogarval/develop y
-# todos los commits de contenido caen en develop. main está protegida (solo PR)
-# y no recibe empujes directos. El botón "Publicar cambios" (acciones abajo)
-# lanza .github/workflows/create_pr.yml, que crea/reutiliza la PR develop -> main
-# y la deja marcada para auto-merge con rebase: GitHub la mergea sola cuando
-# pasan los checks obligatorios; al mergear, el push a
-# main dispara el despliegue (deploy_page.yml). desarrollos técnicos fuera del CMS
-# también van por develop y entran en main por la misma PR.
+# NOTE ON BRANCHES: Pages CMS reads this file per branch and the CMS is used on
+# develop: it is opened at https://app.pagescms.org/pgValero/neurogarval/develop
+# and every content commit lands on develop. main is protected (PR only) and
+# receives no direct pushes. The "Publicar cambios" button (actions below)
+# triggers .github/workflows/create_pr.yml, which creates/reuses the PR
+# develop -> main and marks it for auto-merge with rebase: GitHub merges it on
+# its own once the required checks pass; on merge, the push to main triggers
+# the deploy (deploy_page.yml). Technical developments outside the CMS also go
+# through develop and reach main with that same PR.
 # ============================================================================
 
 # ---------------------------------------------------------------------------
-# MEDIA: subida de recursos estáticos desde el CMS.
-# input  = carpeta física en el repo; output = URL pública que el CMS escribe
-# (p. ej. "/media/photo.webp"). build.py la convierte a ruta relativa
-# "media/..." para el HTML. Los PDFs y el favicon también están en media/ en
-# el repositorio, pero el build los publica en la raíz para conservar las
-# rutas públicas actuales; no son contenido editable del CMS.
+# MEDIA: static resource uploads from the CMS.
+# input  = physical folder in the repo; output = public URL the CMS writes
+# (e.g. "/media/photo.webp"). build.py turns it into the relative path
+# "media/..." for the HTML. The PDFs and the favicon also live in media/ in the
+# repository, but the build publishes them in the root to keep the current
+# public paths; they are not editable CMS content.
 # ---------------------------------------------------------------------------
 media:
   input: media
   output: /media
 
 # ---------------------------------------------------------------------------
-# COMPONENTS: campo de icono reutilizado en servicios, modalidades y proceso.
-# IMPORTANTE: los values deben coincidir con las claves del diccionario ICONS
-# en build.py; si añades un icono aquí, añádelo también allí (y al CSS/base
-# de Bootstrap Icons si es un "bi bi-*").
+# COMPONENTS: icon field reused in services, modalities and process.
+# IMPORTANT: the values must match the keys of the ICONS dictionary in
+# build.py; if you add an icon here, add it there too (and to the CSS/font base
+# of Bootstrap Icons if it is a "bi bi-*").
 # ---------------------------------------------------------------------------
 components:
-  icono:
+  icon:
     type: select
     label: Icono
     description: "Icono del listado. No hace falta escribir código: elige uno de la lista."
@@ -101,19 +99,19 @@ components:
           label: Libro (artículos)
 
 # ---------------------------------------------------------------------------
-# CONTENT: archivos editables (un fichero por sección + datos comunes).
-# type: file  => cada fichero es una entrada independiente en Pages CMS, con
-#                su propio esquema. Los "name" deben coincidir con las claves
-#                del diccionario CONTEXT de build.py y con los ficheros de
-#                content/.
-# operations.delete: false => evita que un editor borre el fichero y rompa el build.
-# common.yml (contacto que se repite en varios sitios) y footer.yml son de
-# solo lectura: se editan en el repositorio.
+# CONTENT: editable files (one file per section + shared data).
+# type: file  => each file is an independent entry in Pages CMS, with its own
+#                schema. The "name"s must match the keys of build.py's CONTEXT
+#                dictionary and the files of content/.
+# operations.delete: false => prevents an editor from deleting the file and
+#                            breaking the build.
+# common.yml (contact repeated in several places) and footer.yml are read-only:
+# they are edited in the repository.
 # ---------------------------------------------------------------------------
 content:
   # ---------------------------------------------------------------------
-  # 1) Datos comunes (solo lectura): contacto repetido en hero, sección
-  #    Contacto, footer y firma de email.
+  # 1) Shared data (read-only): contact repeated in the hero, the Contact
+  #    section, the footer and the email signature.
   # ---------------------------------------------------------------------
   - name: common
     label: Datos comunes (solo lectura)
@@ -155,7 +153,7 @@ content:
             description: "Enlace público de Google Maps. Se usa en el footer, en la firma y en los datos estructurados."
 
   # ---------------------------------------------------------------------
-  # 2) Secciones de la página (src/index.html), una por fichero.
+  # 2) Page sections (src/index.html), one per file.
   # ---------------------------------------------------------------------
   - name: hero
     label: "Sección: Hero (cabecera)"
@@ -202,10 +200,10 @@ content:
         type: string
         required: true
 
-  - name: servicios
+  - name: services
     label: "Sección: Servicios"
     type: file
-    path: content/servicios.yml
+    path: content/services.yml
     format: yaml
     operations:
       delete: false
@@ -241,7 +239,7 @@ content:
             pattern: "^[a-z0-9-]+$"
             description: "Identificador interno obligatorio y único; build.py valida ambas cosas. Abre el modal de la tarjeta (openServiceModal('id')) y se usa en data-service. Solo puede contener minúsculas, números y guiones; evita cambiarlo tras publicar si alguien enlaza a él."
           - name: icon
-            component: icono
+            component: icon
           - name: title
             label: Título de la tarjeta
             type: string
@@ -260,10 +258,10 @@ content:
               format: markdown
             description: "Contenido completo y único del modal de este servicio. Es lo que se ve al pulsar «Más información»; escribe párrafos y listas en Markdown."
 
-  - name: modalidades
+  - name: modalities
     label: "Sección: Modalidades"
     type: file
-    path: content/modalidades.yml
+    path: content/modalities.yml
     format: yaml
     operations:
       delete: false
@@ -293,7 +291,7 @@ content:
         description: "Cada elemento conserva los datos de su tarjeta, el contenido Markdown de su modal y sus fotos opcionales. El orden de la lista determina el orden de las tarjetas."
         fields:
           - name: icon
-            component: icono
+            component: icon
           - name: title
             label: Título
             type: string
@@ -327,10 +325,10 @@ content:
                 type: string
                 required: true
 
-  - name: proceso
+  - name: process
     label: "Sección: Proceso"
     type: file
-    path: content/proceso.yml
+    path: content/process.yml
     format: yaml
     operations:
       delete: false
@@ -355,7 +353,7 @@ content:
         description: "Cada elemento es un paso. El número (1, 2, 3...) se genera automáticamente según el orden de la lista y no se edita."
         fields:
           - name: icon
-            component: icono
+            component: icon
           - name: title
             label: Título del paso
             type: string
@@ -367,10 +365,10 @@ content:
             options:
               format: markdown
 
-  - name: especialista
+  - name: specialist
     label: "Sección: Especialista"
     type: file
-    path: content/especialista.yml
+    path: content/specialist.yml
     format: yaml
     operations:
       delete: false
@@ -495,10 +493,10 @@ content:
             options:
               format: markdown
 
-  - name: contacto
+  - name: contact
     label: "Sección: Contacto"
     type: file
-    path: content/contacto.yml
+    path: content/contact.yml
     format: yaml
     operations:
       delete: false
@@ -545,12 +543,12 @@ content:
     operations:
       delete: false
     fields:
-      - name: datos_estructurados
+      - name: structured_data
         label: Datos estructurados
         type: boolean
         required: true
         readonly: true
-        description: "Campo técnico de solo lectura que acompaña al marcador clinic_info.datos_estructurados de src/index.html. Al resolver ese marcador, build.py inserta el bloque JSON-LD completo generado con clinic_info.yml y el resto de content/*.yml; el valor booleano no controla la inserción."
+        description: "Campo técnico de solo lectura que acompaña al marcador clinic_info.structured_data de src/index.html. Al resolver ese marcador, build.py inserta el bloque JSON-LD completo generado con clinic_info.yml y el resto de content/*.yml; el valor booleano no controla la inserción."
       - name: site
         label: Identidad, idioma y ubicación
         type: object
@@ -712,27 +710,27 @@ content:
         readonly: true
         description: "Etiquetas fijas de los menús para móvil y escritorio. Los enlaces y los ids de sección están definidos en src/index.html; estos campos solo sustituyen el texto visible."
         fields:
-          - name: inicio
+          - name: home
             label: Inicio
             type: string
             required: true
             readonly: true
-          - name: servicios
+          - name: services
             label: Servicios
             type: string
             required: true
             readonly: true
-          - name: modalidades
+          - name: modalities
             label: Modalidades
             type: string
             required: true
             readonly: true
-          - name: proceso
+          - name: process
             label: Proceso
             type: string
             required: true
             readonly: true
-          - name: especialista
+          - name: specialist
             label: Especialista
             type: string
             required: true
@@ -747,7 +745,7 @@ content:
             type: string
             required: true
             readonly: true
-          - name: contacto
+          - name: contact
             label: Contacto
             type: string
             required: true
@@ -924,14 +922,14 @@ content:
         description: "Texto que aparece tras el símbolo ©. Recuerda actualizar el año cuando corresponda."
 
   # ---------------------------------------------------------------------
-  # 3) Firma de email (src/firma.html, archivo aparte del sitio).
-  # Los avisos legales son texto plano de solo lectura: el email no usa
-  # el renderer Markdown de la página.
+  # 3) Email signature (src/signature.html, file apart from the site).
+  # The legal notices are plain read-only text: the email does not use the
+  # page's Markdown renderer.
   # ---------------------------------------------------------------------
-  - name: firma
+  - name: signature
     label: Firma de email
     type: file
-    path: content/firma.yml
+    path: content/signature.yml
     format: yaml
     operations:
       delete: false
@@ -951,13 +949,13 @@ content:
         type: string
         required: true
         description: "Profesión o cargo que aparece bajo la identidad de la firma."
-      - name: legal_aviso
+      - name: legal_notice
         label: Aviso legal
         type: text
         required: true
         readonly: true
         description: "Texto legal de solo lectura para la firma de email. No modificar sin asesoría jurídica."
-      - name: legal_proteccion
+      - name: data_protection
         label: Protección de datos
         type: text
         required: true
@@ -965,34 +963,34 @@ content:
         description: "Texto legal de solo lectura para la firma de email. No modificar sin asesoría jurídica."
 
 # ---------------------------------------------------------------------------
-# ACTIONS (opcional): botón "Publicar cambios" en Pages CMS.
-# El botón lanza .github/workflows/create_pr.yml (workflow_dispatch sobre la
-# rama en la que se está editando, develop): crea/reutiliza la PR
-# develop -> main, la marca para auto-merge con rebase y, al mergear, se
-# dispara el despliegue automático (deploy_page.yml con push a main).
-# Requiere que las ramas main y develop tengan el workflow (lo tendrán tras la
-# primera PR de migración) y que main esté protegida con el status check
-# "Build Validation / build-validation" como obligatorio (ver AGENTS.md,
-# sección "Layout & deploy").
-# IMPORTANTE: Pages CMS envía siempre un input "payload" (JSON) al lanzar el
-# workflow; por eso on.workflow_dispatch de create_pr.yml declara el input
-# payload, o la API de GitHub rechaza el evento con
+# ACTIONS (optional): "Publicar cambios" button in Pages CMS.
+# The button triggers .github/workflows/create_pr.yml (workflow_dispatch on
+# the branch being edited, develop): it creates/reuses the PR develop -> main,
+# marks it for auto-merge with rebase and, on merge, the automatic deploy is
+# triggered (deploy_page.yml on push to main).
+# It requires the main and develop branches to have the workflow (they will
+# after the first migration PR) and main to be protected with the status check
+# "Build Validation / build-validation" as required (see AGENTS.md, section
+# "Layout & deploy").
+# IMPORTANT: Pages CMS always sends a "payload" input (JSON) when it fires the
+# workflow; that is why on.workflow_dispatch of create_pr.yml declares the
+# payload input, or the GitHub API rejects the event with
 # "Unexpected inputs provided: [\"payload\"]".
 # ---------------------------------------------------------------------------
 actions:
-  - name: publicar
+  - name: publish
     label: Publicar cambios
     workflow: create_pr.yml
 
 # ---------------------------------------------------------------------------
-# EXTENSIÓN FUTURA — colección de artículos del blog (Markdown):
-# cuando haya páginas de artículo reales, descomentar y crear content/posts/:
+# FUTURE EXTENSION — blog article collection (Markdown):
+# when there are real article pages, uncomment this and create content/posts/:
 #
 #   - name: posts
 #     label: Artículos
 #     type: collection
 #     path: content/posts
-#     filename: "{primary}.md"        # slug en el nombre del archivo
+#     filename: "{primary}.md"        # slug in the file name
 #     exclude: ["README.md"]
 #     view:
 #       primary: title
@@ -1016,6 +1014,6 @@ actions:
 #         options:
 #           format: markdown
 #
-# (Con la arquitectura actual haría falta además un paso de render en
-#  build.py para generar la página del artículo; ver "Advertencias".)
+# (With the current architecture a render step in build.py would also be needed
+#  to generate the article page; see "Current limitations / ideas".)
 # ---------------------------------------------------------------------------

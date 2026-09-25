@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- SEO Básico (los valores salen de content/clinic_info.yml) -->
+    <!-- Basic SEO (the values come from content/clinic_info.yml) -->
     <title>__clinic_info.seo.title__</title>
     <meta name="description" content="__clinic_info.seo.description__">
     <meta name="keywords" content="__clinic_info.seo.keywords__">
@@ -12,7 +12,7 @@
     <meta name="geo.placename" content="__clinic_info.site.locality__">
     <meta name="ICBM" content="__clinic_info.site.geo_position__">
 
-    <!-- Open Graph / Redes Sociales -->
+    <!-- Open Graph / social networks -->
     <meta property="og:type" content="__clinic_info.social.og_type__">
     <meta property="og:locale" content="__clinic_info.site.locale__">
     <meta property="og:site_name" content="__clinic_info.site.name__">
@@ -30,12 +30,12 @@
     <meta name="twitter:description" content="__clinic_info.social.twitter_description__">
     <meta name="twitter:image" content="__clinic_info.social.image__">
 
-    <!-- Datos Estructurados (Schema.org)
-         El bloque JSON-LD lo genera build.py (schema.org) a partir de
-         content/clinic_info.yml y del resto de content/*.yml: clínica y
-         profesional, catálogo de servicios, preguntas frecuentes y artículos.
-         No editarlo a mano: cambia el YAML. -->
-    <script type="application/ld+json">__clinic_info.datos_estructurados__</script>
+    <!-- Structured data (Schema.org)
+         build.py generates the whole JSON-LD block (schema.org) from
+         content/clinic_info.yml and the rest of content/*.yml: clinic and
+         professional, service catalog, FAQ and articles.
+         Do not edit it by hand: change the YAML. -->
+    <script type="application/ld+json">__clinic_info.structured_data__</script>
 
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -47,34 +47,34 @@
 </head>
 <body>
 
-    <!-- PLANTILLA DEL SITIO. El dominio se lee de src/CNAME; el logo, el
-         idioma, el SEO, las redes sociales, los menús y los datos
-         estructurados son configuración fija: sus valores salen de
-         content/clinic_info.yml (solo lectura). Los marcadores que rellena
-         build.py (formato: archivo.ruta.campo, sin los guiones bajos aquí
-         para no confundir al build) se leen de content/*.yml (Pages CMS,
-         un fichero por sección), usando los tipos declarados en .pages.yml. Las tarjetas
-         e ítems de las listas (servicios, modalidades, proceso, blog y
-         FAQ) se repiten con bloques @foreach:archivo.ruta ...
-         @endforeach:archivo.ruta: dentro del bloque, "n" en el marcador
-         es el elemento actual (p. ej. servicios.items.n.title) y
-         loop.index / loop.index0 son la posición. Añadir o quitar
-         entradas en el CMS no exige tocar esta plantilla. Los huecos
-         .neuro-* (teléfono, WhatsApp, email, dirección y Maps) se
-         rellenan con content/common.yml; no hay JS de por medio. No editar
-         los textos marcados a mano: editar en Pages CMS. -->
+    <!-- SITE TEMPLATE. The domain is read from src/CNAME; the logo, the
+         language, the SEO, the social networks, the menus and the structured
+         data are fixed configuration: their values come from
+         content/clinic_info.yml (read-only). The markers filled in by
+         build.py (format: file.path.field, without the underscores here so
+         the build does not confuse them) are read from content/*.yml
+         (Pages CMS, one file per section), using the types declared in
+         .pages.yml. Cards and list items (services, modalities, process,
+         blog and FAQ) are repeated with @foreach:file.path ...
+         @endforeach:file.path blocks: inside a block, "n" in a marker is the
+         current element (e.g. services.items.n.title) and
+         loop.index / loop.index0 is the position. Adding or removing entries
+         in the CMS requires no change in this template. The .neuro-* slots
+         (phone, WhatsApp, email, address and Maps) are filled from
+         content/common.yml; there is no JavaScript involved. Do not edit the
+         marked texts by hand: edit them in Pages CMS. -->
 
     <div class="mobile-overlay" id="mobileMenu">
         <button class="close-btn" onclick="toggleMenu()">&times;</button>
         <div class="mobile-links">
-            <a href="#inicio" onclick="toggleMenu()">__clinic_info.nav.inicio__</a>
-            <a href="#servicios" onclick="toggleMenu()">__clinic_info.nav.servicios__</a>
-            <a href="#modalidades" onclick="toggleMenu()">__clinic_info.nav.modalidades__</a>
-            <a href="#proceso" onclick="toggleMenu()">__clinic_info.nav.proceso__</a>
-            <a href="#especialista" onclick="toggleMenu()">__clinic_info.nav.especialista__</a>
+            <a href="#inicio" onclick="toggleMenu()">__clinic_info.nav.home__</a>
+            <a href="#servicios" onclick="toggleMenu()">__clinic_info.nav.services__</a>
+            <a href="#modalidades" onclick="toggleMenu()">__clinic_info.nav.modalities__</a>
+            <a href="#proceso" onclick="toggleMenu()">__clinic_info.nav.process__</a>
+            <a href="#especialista" onclick="toggleMenu()">__clinic_info.nav.specialist__</a>
             <a href="#blog" onclick="toggleMenu()">__clinic_info.nav.blog__</a>
             <a href="#faq" onclick="toggleMenu()">__clinic_info.nav.faq__</a>
-            <a href="#contacto" onclick="toggleMenu()">__clinic_info.nav.contacto__</a>
+            <a href="#contacto" onclick="toggleMenu()">__clinic_info.nav.contact__</a>
         </div>
     </div>
 
@@ -86,13 +86,13 @@
                 </a>
 
                 <ul class="nav-links">
-                    <li><a href="#inicio">__clinic_info.nav.inicio__</a></li>
-                    <li><a href="#servicios">__clinic_info.nav.servicios__</a></li>
-                    <li><a href="#modalidades">__clinic_info.nav.modalidades__</a></li>
-                    <li><a href="#especialista">__clinic_info.nav.especialista__</a></li>
+                    <li><a href="#inicio">__clinic_info.nav.home__</a></li>
+                    <li><a href="#servicios">__clinic_info.nav.services__</a></li>
+                    <li><a href="#modalidades">__clinic_info.nav.modalities__</a></li>
+                    <li><a href="#especialista">__clinic_info.nav.specialist__</a></li>
                     <li><a href="#blog">__clinic_info.nav.blog__</a></li>
                     <li><a href="#faq">__clinic_info.nav.faq__</a></li>
-                    <li><a href="#contacto">__clinic_info.nav.contacto__</a></li>
+                    <li><a href="#contacto">__clinic_info.nav.contact__</a></li>
                 </ul>
 
                 <button class="menu-btn" onclick="toggleMenu()">
@@ -135,93 +135,93 @@
             </div>
         </section>
 
-        <!-- SERVICIOS -->
+        <!-- SERVICES -->
         <section id="servicios" class="section-padding services">
             <div class="container">
                 <div class="section-header">
-                    <h2>__servicios.heading__</h2>
+                    <h2>__services.heading__</h2>
                     <div class="divider"></div>
-                    <div class="markdown-content">__servicios.lead__</div>
+                    <div class="markdown-content">__services.lead__</div>
                 </div>
 
                 <div class="services-grid">
-                    <!-- @foreach:servicios.items -->
-                    <div class="service-card" role="button" tabindex="0" aria-haspopup="dialog" data-service="__servicios.items.n.id__" onclick="openServiceModal('__servicios.items.n.id__')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openServiceModal('__servicios.items.n.id__')}">
-                        <div class="service-icon">__servicios.items.n.icon__</div>
-                        <h3>__servicios.items.n.title__</h3>
-                        <div class="markdown-content">__servicios.items.n.card_text__</div>
-                        <span class="service-more">__servicios.more_label__ <i class="bi bi-arrow-right"></i></span>
-                        <div class="card-full markdown-content" hidden>__servicios.items.n.modal_content__</div>
+                    <!-- @foreach:services.items -->
+                    <div class="service-card" role="button" tabindex="0" aria-haspopup="dialog" data-service="__services.items.n.id__" onclick="openServiceModal('__services.items.n.id__')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openServiceModal('__services.items.n.id__')}">
+                        <div class="service-icon">__services.items.n.icon__</div>
+                        <h3>__services.items.n.title__</h3>
+                        <div class="markdown-content">__services.items.n.card_text__</div>
+                        <span class="service-more">__services.more_label__ <i class="bi bi-arrow-right"></i></span>
+                        <div class="card-full markdown-content" hidden>__services.items.n.modal_content__</div>
                     </div>
-                    <!-- @endforeach:servicios.items -->
+                    <!-- @endforeach:services.items -->
                 </div>
             </div>
         </section>
 
-        <!-- MODALIDADES -->
+        <!-- CARE MODALITIES -->
         <section id="modalidades" class="section-padding modalities-section">
             <div class="container">
                 <div class="section-header">
-                    <h2>__modalidades.heading__</h2>
+                    <h2>__modalities.heading__</h2>
                     <div class="divider"></div>
-                    <div class="markdown-content">__modalidades.lead__</div>
+                    <div class="markdown-content">__modalities.lead__</div>
                 </div>
 
                 <div class="modalities-grid">
-                    <!-- @foreach:modalidades.items -->
+                    <!-- @foreach:modalities.items -->
                     <div class="modality-item" role="button" tabindex="0" aria-haspopup="dialog" data-modality="__loop.index0__" onclick="openModalityModal(__loop.index0__)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openModalityModal(__loop.index0__)}">
-                        <div class="modality-icon">__modalidades.items.n.icon__</div>
+                        <div class="modality-icon">__modalities.items.n.icon__</div>
                         <div class="modality-content">
-                            <h4>__modalidades.items.n.title__</h4>
-                            <div class="markdown-content">__modalidades.items.n.text__</div>
-                            <span class="service-more">__modalidades.more_label__ <i class="bi bi-arrow-right"></i></span>
-                            <div class="card-full markdown-content" hidden>__modalidades.items.n.modal_content__</div>
+                            <h4>__modalities.items.n.title__</h4>
+                            <div class="markdown-content">__modalities.items.n.text__</div>
+                            <span class="service-more">__modalities.more_label__ <i class="bi bi-arrow-right"></i></span>
+                            <div class="card-full markdown-content" hidden>__modalities.items.n.modal_content__</div>
                         </div>
                     </div>
-                    <!-- @endforeach:modalidades.items -->
+                    <!-- @endforeach:modalities.items -->
                 </div>
             </div>
         </section>
 
-        <!-- PROCESO -->
+        <!-- PROCESS -->
         <section id="proceso" class="section-padding">
             <div class="container">
                 <div class="section-header">
-                    <h2>__proceso.heading__</h2>
+                    <h2>__process.heading__</h2>
                     <div class="divider"></div>
-                    <div class="markdown-content">__proceso.lead__</div>
+                    <div class="markdown-content">__process.lead__</div>
                 </div>
 
                 <div class="process-grid">
-                    <!-- @foreach:proceso.steps -->
+                    <!-- @foreach:process.steps -->
                     <div class="process-step">
                         <div class="process-num">
-                            <span class="process-icon">__proceso.steps.n.icon__</span>
+                            <span class="process-icon">__process.steps.n.icon__</span>
                             <span class="process-index">__loop.index__</span>
                         </div>
-                        <h4>__proceso.steps.n.title__</h4>
-                        <div class="markdown-content">__proceso.steps.n.text__</div>
+                        <h4>__process.steps.n.title__</h4>
+                        <div class="markdown-content">__process.steps.n.text__</div>
                     </div>
-                    <!-- @endforeach:proceso.steps -->
+                    <!-- @endforeach:process.steps -->
                 </div>
             </div>
         </section>
 
-        <!-- ESPECIALISTA -->
+        <!-- SPECIALIST -->
         <section id="especialista" class="section-padding">
             <div class="container about-grid">
                 <div class="about-image">
-                    __especialista.image__
+                    __specialist.image__
                     <div class="col-card">
-                        <span class="name">__especialista.name__</span>
-                        <span class="label">__especialista.license__</span>
+                        <span class="name">__specialist.name__</span>
+                        <span class="label">__specialist.license__</span>
                     </div>
                 </div>
                 <div class="about-content">
-                    <h2>__especialista.heading__</h2>
+                    <h2>__specialist.heading__</h2>
                     <div class="divider"></div>
 
-                    <div class="markdown-content">__especialista.content__</div>
+                    <div class="markdown-content">__specialist.content__</div>
                 </div>
             </div>
         </section>
@@ -271,14 +271,14 @@
             </div>
         </section>
 
-        <!-- CONTACTO -->
+        <!-- CONTACT -->
         <section id="contacto" class="section-padding contact">
             <div class="container">
                 <div class="section-header">
-                    <h2>__contacto.heading__</h2>
+                    <h2>__contact.heading__</h2>
                     <div class="divider"></div>
-                    <strong>__contacto.highlight__</strong>
-                    <div class="markdown-content">__contacto.lead__</div>
+                    <strong>__contact.highlight__</strong>
+                    <div class="markdown-content">__contact.lead__</div>
                 </div>
 
                 <div class="contact-grid">
@@ -294,10 +294,10 @@
                         <!-- __common.contact.phone__ -->
                         <span class="neuro-phone"></span>
                     </a>
-                    <a href="__contacto.instagram.url__" target="_blank" class="contact-item">
+                    <a href="__contact.instagram.url__" target="_blank" class="contact-item">
                         <div class="contact-icon"><i class="bi bi-instagram"></i></div>
                         <h4>Instagram</h4>
-                        <span>__contacto.instagram.handle__</span>
+                        <span>__contact.instagram.handle__</span>
                     </a>
                 </div>
                 <div class="contact-grid">
@@ -318,7 +318,7 @@
                 <div class="map-wrapper">
                     <div class="map-container">
                         <iframe
-                            src="__contacto.map_embed__"
+                            src="__contact.map_embed__"
                             width="600"
                             height="450"
                             style="border:0;"

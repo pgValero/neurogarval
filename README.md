@@ -45,7 +45,7 @@ fully-owned website which a non-programmer can update safely on their own.
 A **single-page marketing website** for a psychology practice: hero, services,
 care modalities (in-clinic / online / home visits), process, about the specialist,
 blog, FAQ, contact section with an embedded map, and a footer with legal notice.
-It is also a self-contained email signature template (`firma.html`).
+It is also a self-contained email signature template (`src/signature.html` → `/signature.html`).
 
 Two things make it interesting as a reference project:
 
@@ -131,7 +131,7 @@ and renders it accordingly:
 | --- | --- |
 | `rich-text` (Markdown) | converted to HTML with the `extra` extension |
 | `image` | normalized `media/...` path plus a full `<img>` tag with dimensions and lazy loading |
-| `component: icono` | inline SVG or a Bootstrap Icons class (single icon dictionary in `build.py`) |
+| `component: icon` | inline SVG or a Bootstrap Icons class (single icon dictionary in `build.py`) |
 | list of strings | joined (`, ` in the page, `·` in the hero modality line, new lines in `.txt` templates) |
 | everything else | HTML-escaped plain text |
 
@@ -146,14 +146,14 @@ Cards and list items are never written one by one. They are wrapped in a loop
 block that the build repeats once per YAML element:
 
 ```html
-<!-- @foreach:servicios.items -->
-<div class="service-card" data-service="__servicios.items.n.id__"
-     onclick="openServiceModal('__servicios.items.n.id__')">
-    <h3>__servicios.items.n.title__</h3>
-    <div class="markdown-content">__servicios.items.n.card_text__</div>
-    <div class="card-full markdown-content" hidden>__servicios.items.n.modal_content__</div>
+<!-- @foreach:services.items -->
+<div class="service-card" data-service="__services.items.n.id__"
+     onclick="openServiceModal('__services.items.n.id__')">
+    <h3>__services.items.n.title__</h3>
+    <div class="markdown-content">__services.items.n.card_text__</div>
+    <div class="card-full markdown-content" hidden>__services.items.n.modal_content__</div>
 </div>
-<!-- @endforeach:servicios.items -->
+<!-- @endforeach:services.items -->
 ```
 
 Inside the block, `n` means "the current element" and `__loop.index__` /
@@ -182,7 +182,7 @@ Phone, WhatsApp, email, address and the Maps link are edited once in
 ### Derived fields
 
 A few values are computed instead of stored (`clinic_info.site.url`,
-`common.contact.phone_tel`, `firma.web_label`, `firma.web_url`). The site URL is
+`common.contact.phone_tel`, `signature.web_label`, `signature.web_url`). The site URL is
 derived from `src/CNAME`, so changing the domain is a one-line change.
 
 ### Fail-fast by design
@@ -229,7 +229,7 @@ afterthought:
 ├── media/              # Images, favicon, logo, QR and PDFs (uploaded via the CMS)
 ├── src/                # Templates and static assets — never the finished page
 │   ├── index.html      #   site template (markers + one JSON-LD marker)
-│   ├── firma.html      #   standalone email signature template
+│   ├── signature.html  #   standalone email signature template
 │   ├── robots.txt      #   SEO/LLM templates, generated from the same content
 │   ├── sitemap.xml
 │   ├── llms.txt
@@ -243,8 +243,8 @@ afterthought:
 ├── .pages.yml          # Pages CMS config + the build's type registry
 ├── .github/workflows/  # build validation, deploy, PR creation, live site check
 ├── .pre-commit/        # HTMLHint, Stylelint, ESLint and Lychee hooks
-├── CONTRIBUTING.md     # short contributor guide (Spanish)
-├── AGENTS.md           # detailed architecture/conventions for AI agents (Spanish)
+├── CONTRIBUTING.md     # short contributor guide
+├── AGENTS.md           # detailed architecture/conventions for AI agents
 └── _site/              # build output (gitignored, deleted and rebuilt every run)
 ```
 
@@ -256,17 +256,17 @@ commits are reviewable in isolation.
 | File | Section | CMS access |
 | --- | --- | --- |
 | `hero.yml` | Hero: badge, title, modality line, intro, promo, image | editable |
-| `servicios.yml` | Services: cards + full modal copy, each with a stable `id` | editable |
-| `modalidades.yml` | Care modalities: cards, modal copy, optional consultation photos | editable |
-| `proceso.yml` | Process steps (icon, title, text) | editable |
-| `especialista.yml` | About the specialist: photo, name, credential, bio | editable |
+| `services.yml` | Services: cards + full modal copy, each with a stable `id` | editable |
+| `modalities.yml` | Care modalities: cards, modal copy, optional consultation photos | editable |
+| `process.yml` | Process steps (icon, title, text) | editable |
+| `specialist.yml` | About the specialist: photo, name, credential, bio | editable |
 | `blog.yml` | Blog posts: cover, title, excerpt, full article | editable |
 | `faq.yml` | FAQ questions and answers | editable |
-| `contacto.yml` | Contact section: heading, highlight, Instagram, map embed | editable |
+| `contact.yml` | Contact section: heading, highlight, Instagram, map embed | editable |
 | `footer.yml` | Footer lines, legal notice link, copyright | read-only |
 | `common.yml` | Phone, WhatsApp, email, address, Maps link (reused site-wide) | read-only |
 | `clinic_info.yml` | Identity, language, locale, currency, logo, geo, SEO, social, menu labels, schema texts, service area, price range | read-only |
-| `firma.yml` | Email signature copy | editable |
+| `signature.yml` | Email signature copy | editable |
 
 **Read-only means "not editable by the content editor"** — those files hold the fixed
 identity of the business, so they are changed deliberately in a code review. The
@@ -401,11 +401,11 @@ The repository is deliberately generic. A fork typically needs:
    The `og:image` must stay a PNG (`image.png`).
 5. **Adjust the schema types if needed**: the generator builds
    `["MedicalBusiness", "Psychologist"]` for a clinic. For another sector, change the
-   type list and the fields it reads in `jsonld_graph()` in `build.py`; the vocabulary
+   type list and the fields it reads in `build_jsonld()` in `build.py`; the vocabulary
    stays in the YAML as much as possible.
 6. **Extend the icon dictionary** if you need icons that do not exist: add an inline SVG
    or Bootstrap Icons class to `ICONS` in `build.py` and the same value to the
-   `icono` component options in `.pages.yml`.
+   `icon` component options in `.pages.yml`.
 7. **Rebuild and review**: `python scripts/build.py`, open `_site/index.html`, run the linters.
 8. **Set up hosting once**: in the fork's *Settings → Pages*, set the source to
    "GitHub Actions"; enable auto-merge with rebase; protect `main` with a required PR
@@ -445,8 +445,8 @@ build, the linters or the workflows for most changes.
 
 ## Further documentation
 
-- `CONTRIBUTING.md` — how to build and install the hooks (Spanish).
-- `AGENTS.md` — the detailed map of every file, marker, field and convention (Spanish).
+- `CONTRIBUTING.md` — how to build and install the hooks.
+- `AGENTS.md` — the detailed map of every file, marker, field and convention.
 - `.pages.yml` — the CMS schema and type registry, heavily commented.
 
 ## License

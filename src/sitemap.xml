@@ -9,7 +9,7 @@
       <image:loc>__hero.image__</image:loc>
     </image:image>
     <image:image>
-      <image:loc>__especialista.image__</image:loc>
+      <image:loc>__specialist.image__</image:loc>
     </image:image>
 <!-- @foreach:blog.posts -->
 <image:image><image:loc>__blog.posts.n.image__</image:loc></image:image>

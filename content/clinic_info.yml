@@ -1,4 +1,4 @@
-datos_estructurados: true
+structured_data: true
 site:
   name: NeuroGarval
   language: es
@@ -46,14 +46,14 @@ social:
   twitter_title: "NeuroGarval | Neuropsicología y Psicología en Valdemoro"
   twitter_description: "Psicología y neuropsicología en Valdemoro y online. Primera consulta gratuita."
 nav:
-  inicio: Inicio
-  servicios: Servicios
-  modalidades: Modalidades
-  proceso: Proceso
-  especialista: Especialista
+  home: Inicio
+  services: Servicios
+  modalities: Modalidades
+  process: Proceso
+  specialist: Especialista
   blog: Blog
   faq: FAQ
-  contacto: Contacto
+  contact: Contacto
 ui:
   close_label: Cerrar
 llms:

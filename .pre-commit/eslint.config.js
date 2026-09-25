@@ -1,12 +1,12 @@
-// Configuración plana (flat config) de ESLint para los scripts del sitio.
-// Solo usa reglas del núcleo de ESLint: no necesita plugins ni node_modules.
+// ESLint flat config for the site scripts.
+// It only uses ESLint core rules: no plugins or node_modules needed.
 module.exports = [
   {
     languageOptions: {
       ecmaVersion: "latest",
       sourceType: "script",
       globals: {
-        // Entorno de navegador
+        // Browser environment
         window: "readonly",
         document: "readonly",
         navigator: "readonly",
@@ -31,7 +31,7 @@ module.exports = [
         confirm: "readonly",
         prompt: "readonly",
         event: "readonly",
-        // Node (para los propios archivos de configuración, eslint.config.js)
+        // Node (for the config files themselves, eslint.config.js)
         module: "readonly",
         require: "readonly",
         process: "readonly",
@@ -39,7 +39,7 @@ module.exports = [
       }
     },
     rules: {
-      // Errores que bloquean el commit
+      // Errors that block the commit
       "no-undef": "error",
       "no-dupe-keys": "error",
       "no-dupe-args": "error",
@@ -60,7 +60,7 @@ module.exports = [
       "no-prototype-builtins": "error",
       "use-isnan": "error",
       "valid-typeof": "error",
-      // Avisos (no bloquean el commit)
+      // Warnings (do not block the commit)
       "no-unused-vars": ["warn", { "args": "none" }],
       "no-empty": ["warn", { "allowEmptyCatch": true }]
     }

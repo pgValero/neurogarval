@@ -1,11 +1,11 @@
-# Configuración de hooks para usar con prek (compatible también con pre-commit).
-# Instalar los hooks:   prek install --config .pre-commit/.pre-commit-config.yaml
-# Ejecutar a mano:      prek run --config .pre-commit/.pre-commit-config.yaml --all-files
+# Hook configuration for prek (also compatible with pre-commit).
+# Install the hooks:   prek install --config .pre-commit/.pre-commit-config.yaml
+# Run manually:        prek run --config .pre-commit/.pre-commit-config.yaml --all-files
 repos:
-  # Hooks locales: HTML, CSS, JavaScript y enlaces
+  # Local hooks: HTML, CSS, JavaScript and links
   - repo: local
     hooks:
-      # 1) Linter de HTML
+      # 1) HTML linter
       - id: htmlhint
         name: HTMLHint (HTML)
         language: node
@@ -16,7 +16,7 @@ repos:
           - --rules
           - tag-pair,tagname-lowercase,attr-no-duplication,attr-value-double-quotes,id-unique
 
-      # 2) Linter de CSS (lee .pre-commit/.stylelintrc.json)
+      # 2) CSS linter (reads .pre-commit/.stylelintrc.json)
       - id: stylelint
         name: Stylelint (CSS)
         language: node
@@ -27,7 +27,7 @@ repos:
           - --config
           - .pre-commit/.stylelintrc.json
 
-      # 3) Linter de JavaScript (lee .pre-commit/eslint.config.js)
+      # 3) JavaScript linter (reads .pre-commit/eslint.config.js)
       - id: eslint
         name: ESLint (JavaScript)
         language: node
@@ -38,9 +38,9 @@ repos:
           - --config
           - .pre-commit/eslint.config.js
 
-      # 4) Validador multiplataforma de URLs rotas (HTML, enlaces locales y externos)
+      # 4) Cross-platform broken URL validator (HTML, local and external links)
       - id: lychee
-        name: Lychee (URLs rotas)
+        name: Lychee (broken URLs)
         language: python
         entry: lychee
         additional_dependencies: [lychee-bin==0.24.2]
@@ -49,5 +49,5 @@ repos:
           - --no-progress
           - "--exclude=^tel:"
           - "--exclude=file:///.*/src/favicon.svg"
-          # Marcadores __archivo.campo__ que build.py sustituye por contenido real:
+          # __file.field__ markers that build.py replaces with real content:
           - "--exclude=file:///.*/src/__[a-z0-9_.]+__"

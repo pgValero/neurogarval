@@ -1,31 +1,31 @@
-# Botón "Publicar cambios" de Pages CMS (.pages.yml -> actions -> publicar).
+# Pages CMS "Publish changes" button (.pages.yml -> actions -> publish).
 #
-# Flujo de publicación (ver AGENTS.md):
-#  1. Pages CMS se usa sobre la rama develop (los editores guardan ahí).
-#  2. Al pulsar el botón, este workflow se lanza con workflow_dispatch sobre
-#     develop y orquesta la publicación:
-#       - si develop está al día con main, no hace nada;
-#       - crea (o reutiliza) la PR develop -> main;
-#       - la marca para AUTO-MERGE con rebase: GitHub la mergea sola en cuanto
-#         pasen los checks obligatorios de la protección de rama de main.
-#  3. El merge en main dispara después .github/workflows/deploy_page.yml (push
-#     a main), que construye el sitio y lo publica en GitHub Pages.
+# Publishing flow (see AGENTS.md):
+#  1. Pages CMS is used on the develop branch (editors save there).
+#  2. When the button is pressed, this workflow is launched with
+#     workflow_dispatch on develop and orchestrates the publishing:
+#       - if develop is up to date with main, it does nothing;
+#       - it creates (or reuses) the develop -> main PR;
+#       - it marks it for AUTO-MERGE with rebase: GitHub merges it as soon as
+#         the required checks of the main branch protection pass.
+#  3. The merge into main then triggers .github/workflows/deploy_page.yml (push
+#     to main), which builds the site and publishes it on GitHub Pages.
 #
-# Solo tiene efecto si el botón se pulsa desde develop; desde cualquier otra
-# rama el trabajo se omite (el botón del CMS solo se usa sobre develop).
+# It only has an effect if the button is pressed from develop; from any other
+# branch the job is skipped (the CMS button is only used on develop).
 #
-# REQUISITOS (una sola vez, manual, ver pasos en AGENTS.md):
-#  - Settings -> General: "Allow auto-merge" activado y "Rebase and merging"
-#    permitido (GH mergea con rebase cuando pasen los checks).
-#  - Protección de rama en main: "Require a pull request before merging" y el
-#    status check "Build Validation / build-validation" como obligatorio.
+# REQUIREMENTS (one-off, manual, see steps in AGENTS.md):
+#  - Settings -> General: "Allow auto-merge" enabled and "Rebase and merging"
+#    allowed (GH merges with rebase once the checks pass).
+#  - Branch protection on main: "Require a pull request before merging" and the
+#    "Build Validation / build-validation" status check as required.
 name: Create PR
 
 on:
-  workflow_dispatch: # botón "Publicar cambios" de Pages CMS (.pages.yml -> actions)
+  workflow_dispatch: # "Publish changes" button of Pages CMS (.pages.yml -> actions)
     inputs:
       payload:
-        description: Pages CMS payload as JSON (lo envía siempre el CMS al lanzar el botón; este workflow no lo usa)
+        description: Pages CMS payload as JSON (the CMS always sends it when the button is pressed; this workflow does not use it)
         required: false
         type: string
 
@@ -34,44 +34,44 @@ permissions:
   pull-requests: write
 
 jobs:
-  publicar:
+  publish:
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    if: github.ref == 'refs/heads/develop' # el botón solo publica desde develop
+    if: github.ref == 'refs/heads/develop' # the button only publishes from develop
     env:
-      GH_TOKEN: ${{ github.token }} # gh necesita el token explícito en el entorno
+      GH_TOKEN: ${{ github.token }} # gh needs the token explicitly in the environment
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Crear PR develop -> main y marcar auto-merge con rebase
+      - name: Create develop -> main PR and mark it for rebase auto-merge
         run: |
           set -euo pipefail
 
           git fetch origin main --depth 1
           git fetch origin develop --depth 1
 
-          # 1) Nada que publicar si develop está al día con main.
+          # 1) Nothing to publish if develop is up to date with main.
           if git diff --quiet origin/main origin/develop; then
-            echo "::notice::develop está al día con main: no hay cambios que publicar."
+            echo "::notice::develop is up to date with main: there are no changes to publish."
             exit 0
           fi
 
-          # 2) Reutilizar la PR abierta si ya existe; si no, crearla.
+          # 2) Reuse the open PR if it already exists; otherwise create it.
           PR_NUMBER="$(gh pr list --base main --head develop --state open --json number --jq '.[0].number // empty')"
           if [ -z "$PR_NUMBER" ]; then
             gh pr create \
               --base main \
               --head develop \
-              --title "Publicar cambios en la web" \
-              --body "Cambios guardados desde Pages CMS (rama develop). Se mergea con rebase automáticamente en cuanto pasen los checks. Tras el merge, el despliegue se publica solo."
+              --title "Publish changes to the website" \
+              --body "Changes saved from Pages CMS (develop branch). It is merged with rebase automatically as soon as the checks pass. After the merge, the deployment publishes itself."
             PR_NUMBER="$(gh pr list --base main --head develop --state open --json number --jq '.[0].number')"
           fi
           PR_URL="https://github.com/$GITHUB_REPOSITORY/pull/$PR_NUMBER"
           echo "PR: $PR_URL"
 
-          # 3) Auto-merge con rebase: GitHub la mergea cuando pasen los checks.
+          # 3) Auto-merge with rebase: GitHub merges it when the checks pass.
           gh pr merge "$PR_URL" --auto --rebase
-          echo "::notice::PR $PR_URL marcada para auto-merge con rebase cuando pasen los checks."
+          echo "::notice::PR $PR_URL marked for rebase auto-merge when the checks pass."

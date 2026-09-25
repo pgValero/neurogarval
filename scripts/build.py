@@ -1,68 +1,67 @@
 #!/usr/bin/env python3
-"""build.py — generador del sitio estático.
+"""build.py — static site generator.
 
-Qué hace
---------
-1. Lee el contenido editable de Pages CMS: content/*.yml (un fichero por
-   sección más common.yml, footer.yml, clinic_info.yml y firma.yml) y el
-   registro de tipos .pages.yml.
-2. Recorre las plantillas src/index.html y src/firma.html sustituyendo los
-   marcadores __archivo.ruta.campo__ (p. ej. __hero.badge__,
-   __servicios.items.0.title__ o __common.contact.phone__) por el contenido
-   de cada fichero. La ruta se resuelve en el YAML del archivo indicado; el
-   tipo del campo se lee de .pages.yml y decide cómo se renderiza:
-     - rich-text (Markdown)  -> se convierte a HTML
-     - image                 -> ruta normalizada media/...
-     - component icono       -> HTML del icono (ICONS)
-     - lista de cadenas      -> se une con <br>
-     - el resto              -> texto plano escapado
-   Si un marcador no se encuentra en el contenido o su campo no está
-   registrado en .pages.yml, el build falla indicando exactamente qué campo
-   se buscó y en qué plantilla.
-3. Lee el dominio de src/CNAME y rellena la cabecera de src/index.html
-   desde content/clinic_info.yml (solo lectura): <title>, description,
-   keywords, canonical, etiquetas geo, Open Graph y Twitter, idioma, logo y
-   etiquetas de los menús.
-4. Genera el bloque JSON-LD (schema.org) que anuncia la clínica, la
-   profesional, el catálogo de servicios, las preguntas frecuentes y los
-   artículos, con los datos de clinic_info.yml y del resto de secciones.
-5. Escribe el contacto de content/common.yml (fuente única) directamente en
-   el index.html generado: los huecos .neuro-* (teléfono, WhatsApp, email,
-   dirección y Maps) quedan resueltos sin JavaScript.
-6. Escribe el contenido completo de servicios, modalidades y artículos en el
-   propio HTML (bloques .card-full ocultos); script.js lo copia a los modales.
-7. Convierte a WebP las imágenes de media/ que sigan en PNG o JPEG (fotos
-   subidas desde el CMS) y publica solo esa versión.
-8. Copia los estáticos (CSS, JS, CNAME, favicon, logo y PDFs) a _site/,
-   manteniendo la estructura pública actual.
+What it does
+------------
+1. Reads the Pages CMS editable content: content/*.yml (one file per page
+   section plus common.yml, footer.yml, clinic_info.yml and signature.yml)
+   and the type registry .pages.yml.
+2. Walks the templates src/index.html and src/signature.html substituting the
+   __file.path.field__ markers (e.g. __hero.badge__, __services.items.0.title__
+   or __common.contact.phone__) with the content of each file. The path is
+   resolved in the YAML of the referenced file; the field type is read from
+   .pages.yml and decides how it is rendered:
+     - rich-text (Markdown)  -> converted to HTML
+     - image                 -> normalized media/... path
+     - component icon        -> icon HTML (ICONS)
+     - list of strings       -> joined with <br>
+     - everything else       -> escaped plain text
+   If a marker is not found in the content or its field is not registered in
+   .pages.yml, the build fails stating exactly which field was looked up and
+   in which template.
+3. Reads the domain from src/CNAME and fills the header of src/index.html from
+   content/clinic_info.yml (read-only): <title>, description, keywords,
+   canonical, geo tags, Open Graph and Twitter, language, logo and menu labels.
+4. Generates the JSON-LD block (schema.org) announcing the clinic, the
+   professional, the service catalog, the FAQ and the articles, with the data
+   of clinic_info.yml and the other sections.
+5. Writes the contact data of content/common.yml (single source of truth)
+   straight into the generated index.html: the .neuro-* slots (phone,
+   WhatsApp, email, address and Maps) are resolved without JavaScript.
+6. Writes the full content of services, modalities and articles in the HTML
+   itself (hidden .card-full blocks); script.js copies it into the modals.
+7. Converts the media/ images that are still PNG or JPEG (photos uploaded from
+   the CMS) to WebP and publishes only that version.
+8. Copies the static files (CSS, JS, CNAME, favicon, logo and PDFs) into
+   _site/, keeping the current public structure.
 
-Uso
----
-    pip install pyyaml markdown pillow  # dependencias del generador
-    python scripts/build.py              # genera ./_site
-    # Sin pip (p. ej. entorno aislado):
+Usage
+-----
+    pip install pyyaml markdown pillow  # generator dependencies
+    python scripts/build.py              # writes ./_site
+    # Without pip (e.g. in an isolated environment):
     uv run --with pyyaml --with markdown --with pillow python scripts/build.py
 
-La GitHub Actions (.github/workflows/build_validation.yml en cada PR y
-.github/workflows/deploy_page.yml al hacer push a main) hace exactamente esto
-y publica _site/ en GitHub Pages. No hay framework ni generador de sitio: solo
-este script.
+GitHub Actions (.github/workflows/build_validation.yml on every PR and
+.github/workflows/deploy_page.yml on push to main) does exactly this and
+publishes _site/ to GitHub Pages. There is no framework and no site generator:
+just this script.
 
-Marcadores
-----------
-Formato: __archivo.ruta.campo__ (el primer segmento es el nombre del fichero
-de content/, p. ej. __servicios.items.0.title__). Los índices numéricos
-recorren listas. Si el archivo, la ruta o el campo no existen en
-content/*.yml o el campo no está declarado en .pages.yml, se lanza
-CampoAusenteError con el nombre del campo buscado.
+Markers
+-------
+Format: __file.path.field__ (the first segment is the name of the file in
+content/, e.g. __services.items.0.title__). Numeric segments walk lists. If
+the file, the path or the field do not exist in content/*.yml, or the field is
+not declared in .pages.yml, MissingFieldError is raised with the name of the
+field that was looked up.
 
-Listas repetidas
-----------------
-Las tarjetas e ítems de las listas (servicios, modalidades, pasos del proceso,
-artículos del blog y preguntas frecuentes) no se escriben en la plantilla
-índice a índice: se envuelven en un bloque de plantilla que build.py repite
-una vez por elemento del YAML, por lo que añadir o quitar entradas en el CMS
-no exige tocar el HTML. Ver expand_loops() para la sintaxis (@foreach).
+Repeated lists
+--------------
+Cards and list items (services, modalities, process steps, blog posts and FAQ
+questions) are not written one by one in the index template: they are wrapped
+in a template block that build.py repeats once per YAML element, so adding or
+removing entries in the CMS requires no HTML change. See expand_loops() for
+the syntax (@foreach).
 """
 
 from __future__ import annotations
@@ -81,19 +80,19 @@ try:
     import yaml
 except ImportError as exc:  # pragma: no cover
     missing = "Markdown" if exc.name == "markdown" else "PyYAML"
-    sys.exit(f"Falta {missing}. Instálalo con:  pip install pyyaml markdown")
+    sys.exit(f"Missing {missing}. Install it with:  pip install pyyaml markdown")
 
 ROOT = Path(__file__).resolve().parent.parent
 SRC = ROOT / "src"
 CONTENT = ROOT / "content"
 OUT = ROOT / "_site"
 
-# Plantillas que procesa build.py: (clave para mensajes, ruta al fichero).
-# Los .txt y el .xml son plantillas de SEO/LLM: también llevan marcadores
-# __archivo.ruta.campo__ y se generan con los datos de content/*.yml.
+# Templates processed by build.py: (key for messages, path to the file).
+# The .txt and .xml files are SEO/LLM templates: they also carry
+# __file.path.field__ markers and are generated from the content/*.yml data.
 TEMPLATES = {
     "src/index.html": SRC / "index.html",
-    "src/firma.html": SRC / "firma.html",
+    "src/signature.html": SRC / "signature.html",
     "src/robots.txt": SRC / "robots.txt",
     "src/sitemap.xml": SRC / "sitemap.xml",
     "src/llms.txt": SRC / "llms.txt",
@@ -101,8 +100,8 @@ TEMPLATES = {
 }
 
 # ---------------------------------------------------------------------------
-# ICONOS — única fuente de verdad (claves = values del campo "icono" en
-# .pages.yml). Cada valor es el HTML que se inserta en la tarjeta/modal.
+# ICONS — single source of truth (keys = values of the "icon" field in
+# .pages.yml). Each value is the HTML inserted in the card/modal.
 # ---------------------------------------------------------------------------
 SVG_ATTRS = (
     'xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" '
@@ -116,7 +115,7 @@ def svg(paths: str) -> str:
 
 
 ICONS: dict[str, str] = {
-    # Iconos "inline SVG" (heredan tamaño/color del contenedor)
+    # Inline SVG icons (they inherit size/color from the container)
     "brain": svg(
         '<path d="M12 18V5"/><path d="M15 13a4.17 4.17 0 0 1-3-4 4.17 4.17 0 0 1-3 4"/>'
         '<path d="M17.598 6.5A3 3 0 1 0 12 5a3 3 0 1 0-5.598 1.5"/>'
@@ -149,16 +148,16 @@ ICONS: dict[str, str] = {
         '<polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/>'
         '<polyline points="16 7 22 7 22 13"/>'
     ),
-    # Iconos de fuente Bootstrap Icons (incluida en src/index.html)
+    # Font icons from Bootstrap Icons (included in src/index.html)
     "building": '<i class="bi bi-building"></i>',
     "laptop": '<i class="bi bi-laptop"></i>',
     "house": '<i class="bi bi-house-door"></i>',
     "journal": '<i class="bi bi-journal-text"></i>',
 }
 
-# Ficheros estáticos que se copian a _site/. Los recursos que antes estaban
-# en la raíz se leen ahora desde media/, pero se publican en la raíz para
-# conservar las rutas públicas existentes (favicon, PDFs y logo).
+# Static files copied into _site/. The resources that used to live in the root
+# are now read from media/, but they are published in the root to keep the
+# existing public paths (favicon, PDFs and logo).
 STATIC_FILES = [
     (SRC / "styles.css", "styles.css"),
     (SRC / "script.js", "script.js"),
@@ -170,44 +169,44 @@ STATIC_FILES = [
 ]
 MEDIA_EXCLUDES = ("favicon.svg", "logo.svg", "aviso_legal.pdf", "tarjeta.pdf")
 
-# Formatos que el build convierte a WebP al publicar: los originales no se
-# publican, así que todas las imágenes del sitio quedan en WebP.
+# Formats the build converts to WebP when publishing: the originals are not
+# published, so every image of the site ends up in WebP.
 RASTER_FORMATS = (".png", ".jpg", ".jpeg")
 
-# Imágenes que se publican tal cual aunque sean PNG: image.png es la og:image
-# que leen WhatsApp, Facebook y otras redes al compartir el enlace, y algunas
-# de esas plataformas no admiten WebP.
+# Images published as they are even when they are PNG: image.png is the
+# og:image that WhatsApp, Facebook and other social networks read when the
+# link is shared, and some of them do not support WebP.
 KEEP_AS_IS = ("image.png",)
 
-# Imágenes ya convertidas en este build: ruta del original (tal y como la
-# escribe media_url) -> (ruta del WebP publicado, (ancho, alto)). Lo rellena
-# prepare_media() antes de renderizar las plantillas.
+# Images already converted in this build: path of the original (as written by
+# media_url) -> (path of the published WebP, (width, height)). Filled by
+# prepare_media() before the templates are rendered.
 WEBP_SUBSTITUTES: dict[str, tuple[str, tuple[int, int]]] = {}
 
-# Avisos no fatales (p. ej. fotos de modalidades aún no subidas).
+# Non-fatal warnings (e.g. modality photos not uploaded yet).
 WARNINGS: list[str] = []
 
-# content/*.yml cargado, para los renderizadores y para los datos estructurados.
+# Loaded content/*.yml, used by the renderers and by the structured data.
 CONTEXT: dict = {}
 
 
 # ---------------------------------------------------------------------------
-# Utilidades
+# Utilities
 # ---------------------------------------------------------------------------
 def esc(value) -> str:
-    """Escapa texto plano para insertarlo en HTML (no usar con Markdown)."""
+    """Escapes plain text to be inserted in HTML (not for Markdown)."""
     return html.escape(str("" if value is None else value), quote=True)
 
 
 def markdown_html(value) -> str:
-    """Convierte un valor de Pages CMS en Markdown a HTML.
+    """Converts a Pages CMS value from Markdown to HTML.
 
-    Los campos declarados como rich-text en .pages.yml pasan por aquí; el
-    resto de campos (títulos, botones, metadatos) siguen usando ``esc``.
+    Fields declared as rich-text in .pages.yml go through here; every other
+    field (titles, buttons, metadata) keeps using ``esc``.
     """
     if isinstance(value, (list, tuple)):
-        # Permite que una versión anterior del contenido (párrafos o áreas
-        # separados) siga construyendo durante la migración al nuevo formato.
+        # Lets a previous version of the content (separate paragraphs or
+        # areas) keep building while it is migrated to the new format.
         source = "\n\n".join(str(part) for part in value if part is not None)
     else:
         source = "" if value is None else str(value)
@@ -222,7 +221,7 @@ def markdown_html(value) -> str:
 
 
 def media_url(path: str | None) -> str:
-    """Normaliza una imagen del CMS (/media/x, media/x, x) a ruta relativa."""
+    """Normalizes a CMS image (/media/x, media/x, x) to a relative path."""
     if not path:
         return ""
     p = str(path).strip()
@@ -232,22 +231,22 @@ def media_url(path: str | None) -> str:
     if not p.startswith("media/"):
         p = "media/" + p
     if not (ROOT / p).exists():
-        WARNINGS.append(f"La imagen referenciada no existe: {p}")
+        WARNINGS.append(f"Referenced image does not exist: {p}")
     return p
 
 
 def site_url() -> str:
-    """URL pública del sitio, con barra final."""
+    """Public site URL, with trailing slash."""
     return str(CONTEXT["clinic_info"]["site"]["url"])
 
 
 def absolute_url(path: str) -> str:
-    """Ruta de media/ -> URL absoluta del sitio."""
+    """media/ path -> absolute site URL."""
     return site_url() + media_url(path)
 
 
 def image_size(rel_path: str) -> tuple[int, int] | None:
-    """(ancho, alto) de un PNG o JPEG leyendo solo su cabecera."""
+    """(width, height) of a PNG or JPEG reading only its header."""
     try:
         data = (ROOT / rel_path).read_bytes()
     except OSError:
@@ -264,24 +263,24 @@ def image_size(rel_path: str) -> tuple[int, int] | None:
         if data[i] != 0xFF:
             i += 1
             continue
-        marcador = data[i + 1]
-        if marcador == 0xD8 or 0xD0 <= marcador <= 0xD7:
+        marker = data[i + 1]
+        if marker == 0xD8 or 0xD0 <= marker <= 0xD7:
             i += 2
             continue
-        if marcador == 0xD9:
+        if marker == 0xD9:
             break
-        largo = int.from_bytes(data[i + 2:i + 4], "big")
-        if marcador in (0xC0, 0xC1, 0xC2, 0xC3, 0xC5, 0xC6, 0xC7,
-                        0xC9, 0xCA, 0xCB, 0xCD, 0xCE, 0xCF):
-            alto = int.from_bytes(data[i + 5:i + 7], "big")
-            ancho = int.from_bytes(data[i + 7:i + 9], "big")
-            return ancho, alto
-        i += 2 + largo
+        length = int.from_bytes(data[i + 2:i + 4], "big")
+        if marker in (0xC0, 0xC1, 0xC2, 0xC3, 0xC5, 0xC6, 0xC7,
+                      0xC9, 0xCA, 0xCB, 0xCD, 0xCE, 0xCF):
+            height = int.from_bytes(data[i + 5:i + 7], "big")
+            width = int.from_bytes(data[i + 7:i + 9], "big")
+            return width, height
+        i += 2 + length
     return None
 
 
 def webp_size(data: bytes) -> tuple[int, int] | None:
-    """(ancho, alto) de un WebP (VP8, VP8L o VP8X) leyendo su cabecera."""
+    """(width, height) of a WebP (VP8, VP8L or VP8X) reading its header."""
     if data[12:16] == b"VP8X" and len(data) >= 30:
         return (int.from_bytes(data[24:27], "little") + 1,
                 int.from_bytes(data[27:30], "little") + 1)
@@ -296,174 +295,172 @@ def webp_size(data: bytes) -> tuple[int, int] | None:
 
 def img_tag(src: str, alt: str, attrs: str = "",
             size: tuple[int, int] | None = None) -> str:
-    """<img> con width/height para que la página no salte al cargar."""
+    """<img> with width/height so the page does not jump while loading."""
     size = size or image_size(src)
     dim = f' width="{size[0]}" height="{size[1]}"' if size else ""
     return f'<img src="{esc(src)}"{dim} alt="{esc(alt)}"{attrs}>'
 
 
 def image_html(path: str, alt: str, attrs: str = "") -> str:
-    """<img> con la versión WebP de la imagen y sus dimensiones.
+    """<img> with the WebP version of the image and its dimensions.
 
-    Si prepare_media() convirtió esta imagen (un PNG o JPEG subido al CMS),
-    se sirve el WebP generado; si ya era WebP, se sirve tal cual. attrs
-    empieza por un espacio (p. ej. ' loading="lazy" decoding="async"').
+    If prepare_media() converted this image (a PNG or JPEG uploaded to the
+    CMS), the generated WebP is served; if it was already WebP, it is served
+    as is. attrs starts with a space (e.g. ' loading="lazy" decoding="async"').
     """
     src = media_url(path)
     if not src:
         return ""
-    convertido = WEBP_SUBSTITUTES.get(src)
-    if convertido:
-        webp, size = convertido
+    converted = WEBP_SUBSTITUTES.get(src)
+    if converted:
+        webp, size = converted
         return img_tag(webp, alt, attrs, size)
     return img_tag(src, alt, attrs)
 
 
 def icon_html(key: str | None) -> str:
     if key and key not in ICONS:
-        sys.exit(f"Icono desconocido en content/*.yml: {key!r} "
-                 f"(valores válidos: {', '.join(ICONS)})")
+        sys.exit(f"Unknown icon in content/*.yml: {key!r} "
+                 f"(valid values: {', '.join(ICONS)})")
     return ICONS.get(key or "", "")
 
 
 def load_yaml(name: str) -> dict:
     path = CONTENT / f"{name}.yml"
     if not path.exists():
-        sys.exit(f"Falta el fichero de contenido: {path}")
+        sys.exit(f"Missing content file: {path}")
     data = yaml.safe_load(path.read_text(encoding="utf-8"))
     if not isinstance(data, dict):
-        sys.exit(f"{path} debe contener un mapa (clave: valor).")
+        sys.exit(f"{path} must contain a mapping (key: value).")
     return data
 
 
 def read_cname() -> str:
     path = SRC / "CNAME"
     if not path.exists():
-        sys.exit(f"Falta el dominio del sitio: {path}")
+        sys.exit(f"Missing site domain: {path}")
     lines = path.read_text(encoding="utf-8").splitlines()
     if len(lines) != 1:
-        sys.exit(f"{path} debe contener un único dominio válido.")
+        sys.exit(f"{path} must contain a single valid domain.")
     domain = lines[0].strip()
     if len(domain) > 253 or not re.fullmatch(
             r"[A-Za-z0-9](?:[A-Za-z0-9.-]*[A-Za-z0-9])?", domain):
-        sys.exit(f"{path} debe contener un único dominio válido.")
+        sys.exit(f"{path} must contain a single valid domain.")
     return domain
 
 
 def raw_phone(phone: str) -> str:
-    """Teléfono sin espacios/paréntesis/giones para enlaces tel: y wa.me."""
+    """Phone without spaces/parentheses/dashes for tel: and wa.me links."""
     return re.sub(r"[\s()\-]", "", phone)
 
 
 # ---------------------------------------------------------------------------
-# Resolución de marcadores __archivo.ruta.campo__
+# Resolution of the __file.path.field__ markers
 # ---------------------------------------------------------------------------
-# Formato: primer segmento = fichero de content/ (sin .yml), el resto es la
-# ruta dentro del YAML (los números recorren listas).
+# Format: first segment = file in content/ (without .yml), the rest is the
+# path inside the YAML (numbers walk lists).
 PLACEHOLDER_RE = re.compile(r"__(?P<ref>[a-z0-9_]+(?:\.[a-z0-9_]+)+)__")
 
 
-class CampoAusenteError(Exception):
-    """Campo referenciado en una plantilla que no se encuentra ni en el
-    contenido (content/*.yml) ni en el registro de tipos (.pages.yml).
+class MissingFieldError(Exception):
+    """Field referenced in a template that is found neither in the content
+    (content/*.yml) nor in the type registry (.pages.yml).
 
-    El build aborta mostrando qué campo se buscó, en qué plantilla y por qué
-    no se encontró.
+    The build stops showing which field was looked up, in which template and
+    why it was not found.
     """
 
-    def __init__(self, plantilla: str, ruta: str, motivo: str):
-        self.plantilla = plantilla
-        self.ruta = ruta
-        self.motivo = motivo
+    def __init__(self, template: str, route: str, reason: str):
+        self.template = template
+        self.route = route
+        self.reason = reason
         super().__init__(
-            f"Campo no encontrado: {ruta} (plantilla {plantilla}) — {motivo}."
+            f"Field not found: {route} (template {template}) — {reason}."
         )
 
 
-# Campos derivados: no existen en content/*.yml ni en .pages.yml; los calcula
-# build.py a partir de otros campos o de src/CNAME (p. ej. el teléfono y la
-# URL de la firma). Estos marcadores no pasan por el registro de .pages.yml.
+# Derived fields: they exist neither in content/*.yml nor in .pages.yml; build.py
+# computes them from other fields or from src/CNAME (e.g. the phone and the
+# signature URL). These markers skip the .pages.yml registry.
 DERIVED_FIELDS = frozenset({
     "clinic_info.site.url",
     "common.contact.phone_tel",
-    "firma.web_label",
-    "firma.web_url",
+    "signature.web_label",
+    "signature.web_url",
 })
 
 
-def resolve_data(plantilla: str, ref: str, file: str, route: list[str],
+def resolve_data(template: str, ref: str, file: str, route: list[str],
                  context: dict) -> tuple:
-    """Busca el valor de un marcador en el YAML cargado.
+    """Looks up the value of a marker in the loaded YAML.
 
-    Devuelve (valor, contenedor): el valor del campo y el nodo que lo
-    contiene (para los renderizadores especiales que necesitan datos
-    hermanos, p. ej. el alt de una miniatura).
+    Returns (value, container): the field value and the node that holds it
+    (for the special renderers that need sibling data, e.g. the alt text of a
+    thumbnail).
     """
     data = context.get(file)
     if data is None:
-        raise CampoAusenteError(
-            plantilla, ref,
-            f"no existe content/{file}.yml (revisa el nombre del archivo)")
+        raise MissingFieldError(
+            template, ref,
+            f"content/{file}.yml does not exist (check the file name)")
     node = data
     parent = data
     for seg in route:
         parent = node
         if seg.isdigit():
             if not isinstance(node, (list, tuple)):
-                raise CampoAusenteError(
-                    plantilla, ref,
-                    f"'{seg}' no es un índice de lista en content/{file}.yml")
+                raise MissingFieldError(
+                    template, ref,
+                    f"'{seg}' is not a list index in content/{file}.yml")
             idx = int(seg)
             if idx >= len(node):
-                raise CampoAusenteError(
-                    plantilla, ref,
-                    f"el índice {idx} supera las {len(node)} entradas de "
-                    f"content/{file}.yml")
+                raise MissingFieldError(
+                    template, ref,
+                    f"index {idx} is out of range: content/{file}.yml has "
+                    f"{len(node)} entries")
             node = node[idx]
         else:
             if not isinstance(node, dict) or seg not in node:
-                raise CampoAusenteError(
-                    plantilla, ref,
-                    f"no existe '{'.'.join(route)}' en content/{file}.yml")
+                raise MissingFieldError(
+                    template, ref,
+                    f"'{'.'.join(route)}' does not exist in content/{file}.yml")
             node = node[seg]
     return node, parent
 
 
 # ---------------------------------------------------------------------------
-# Bucles de plantilla (@foreach) — listas que se repiten solas
+# Template loops (@foreach) — lists that repeat on their own
 # ---------------------------------------------------------------------------
-# Las tarjetas e ítems de las listas (servicios, modalidades, pasos del
-# proceso, artículos del blog y preguntas frecuentes) NO se escriben en la
-# plantilla índice a índice: se envuelven en un bloque @foreach que build.py
-# repite una vez por elemento del YAML, de modo que añadir o quitar entradas
-# en el CMS no exige tocar el HTML.
+# Cards and list items (services, modalities, process steps, blog posts and FAQ
+# questions) are NOT written one by one in the index template: they are wrapped
+# in an @foreach block that build.py repeats once per YAML element, so adding
+# or removing entries in the CMS requires no HTML change.
 #
-# Sintaxis en la plantilla:
+# Template syntax:
 #
-#   <!-- @foreach:servicios.items -->
-#   <div class="service-card" data-service="__servicios.items.n.id__"
-#        onclick="openServiceModal('__servicios.items.n.id__')">
-#       <h3>__servicios.items.n.title__</h3>
+#   <!-- @foreach:services.items -->
+#   <div class="service-card" data-service="__services.items.n.id__"
+#        onclick="openServiceModal('__services.items.n.id__')">
+#       <h3>__services.items.n.title__</h3>
 #       ...
 #   </div>
-#   <!-- @endforeach:servicios.items -->
+#   <!-- @endforeach:services.items -->
 #
-# Dentro del bloque, el segmento "n" del marcador se sustituye por el índice
-# del elemento actual (0, 1, 2...); el resto del marcador se resuelve igual
-# que siempre. Los marcadores __loop.index__ y __loop.index0__ valen la
-# posición (1-based y 0-based) y sirven para, p. ej., el número del paso o el
-# índice del modal (openModalityModal(index)). Los marcadores de la sección
-# que no dependen del elemento (p. ej. __servicios.more_label__) se dejan
-# intactos. Si la lista queda vacía, el bloque no genera nada. Los bucles no
-# se anidan.
+# Inside the block, the "n" segment of a marker is replaced by the index of the
+# current element (0, 1, 2...); the rest of the marker is resolved as usual.
+# The __loop.index__ and __loop.index0__ markers give the position (1-based and
+# 0-based) and are used for, e.g., the step number or the modal index
+# (openModalityModal(index)). Markers of the section that do not depend on the
+# element (e.g. __services.more_label__) are left untouched. If the list ends up
+# empty, the block generates nothing. Loops cannot be nested.
 LOOP_TOKENS = re.compile(
     r"<!--\s*@(?P<open>foreach:(?P<ref>[a-z0-9_]+(?:\.[a-z0-9_]+)+)|"
     r"endforeach(?::(?P<close_ref>[a-z0-9_]+(?:\.[a-z0-9_]+)+))?)\s*-->"
 )
 
 
-def expand_loop(plantilla: str, ref: str, body: str, items: list) -> str:
-    """Repite el cuerpo del bloque una vez por elemento de la lista."""
+def expand_loop(template: str, ref: str, body: str, items: list) -> str:
+    """Repeats the block body once per element of the list."""
     prefix = ref + ".n."
     fragments = []
     for idx in range(len(items)):
@@ -479,17 +476,16 @@ def expand_loop(plantilla: str, ref: str, body: str, items: list) -> str:
             return m.group(0)
 
         fragments.append(PLACEHOLDER_RE.sub(repl, body).strip())
-    # En los ficheros de texto los elementos de un bucle son secciones
-    # completas y se separan con una línea en blanco; las listas de una línea
-    # se mantienen juntas. En el HTML se conserva siempre una sola línea, tal
-    # como se ha generado siempre.
-    if plantilla.endswith(".txt") and any("\n" in f for f in fragments):
+    # In the text files the elements of a loop are complete sections separated
+    # by a blank line; single-line lists are kept together. In the HTML a
+    # single line is always kept, as it has always been generated.
+    if template.endswith(".txt") and any("\n" in f for f in fragments):
         return "\n\n".join(fragments)
     return "\n".join(fragments)
 
 
-def expand_loops(plantilla: str, source: str, context: dict) -> str:
-    """Localiza los bloques @foreach de la plantilla y los expande."""
+def expand_loops(template: str, source: str, context: dict) -> str:
+    """Finds the @foreach blocks of the template and expands them."""
     parts = []
     stack: list[str] = []
     pos = 0
@@ -498,74 +494,74 @@ def expand_loops(plantilla: str, source: str, context: dict) -> str:
         if token.startswith("foreach:"):
             ref = m.group("ref")
             if stack:
-                sys.exit(f"{plantilla}: @foreach anidado ('{ref}' dentro de "
-                         f"'{stack[-1]}') no soportado")
+                sys.exit(f"{template}: nested @foreach ('{ref}' inside "
+                         f"'{stack[-1]}') not supported")
             parts.append(source[pos:m.start()])
             pos = m.end()
             stack.append(ref)
         else:
             if not stack:
-                sys.exit(f"{plantilla}: cierre @endforeach sin @foreach previo")
+                sys.exit(f"{template}: @endforeach without a previous @foreach")
             ref = stack.pop()
             close_ref = m.group("close_ref")
             if close_ref and close_ref != ref:
-                sys.exit(f"{plantilla}: @endforeach cierra '{close_ref}' pero "
-                         f"el @foreach abrió '{ref}'")
+                sys.exit(f"{template}: @endforeach closes '{close_ref}' but "
+                         f"the @foreach opened '{ref}'")
             body = source[pos:m.start()]
             file, _, route_str = ref.partition(".")
-            node, _ = resolve_data(plantilla, ref, file, route_str.split("."),
+            node, _ = resolve_data(template, ref, file, route_str.split("."),
                                    context)
             if not isinstance(node, (list, tuple)):
-                raise CampoAusenteError(
-                    plantilla, ref,
-                    f"'{ref}' no es una lista en content/{file}.yml "
-                    "(un @foreach solo repite sobre listas)")
-            parts.append(expand_loop(plantilla, ref, body, node))
+                raise MissingFieldError(
+                    template, ref,
+                    f"'{ref}' is not a list in content/{file}.yml "
+                    "(an @foreach only repeats over lists)")
+            parts.append(expand_loop(template, ref, body, node))
             pos = m.end()
     if stack:
-        sys.exit(f"{plantilla}: @foreach '{stack[-1]}' sin @endforeach")
+        sys.exit(f"{template}: @foreach '{stack[-1]}' without @endforeach")
     parts.append(source[pos:])
     return "".join(parts)
 
 
-def resolve_type(plantilla: str, ref: str, file: str, route: list[str],
+def resolve_type(template: str, ref: str, file: str, route: list[str],
                  fields_by_file: dict) -> dict:
-    """Busca el campo en el registro de tipos (.pages.yml).
+    """Looks up the field in the type registry (.pages.yml).
 
-    Devuelve la definición del campo (type, component, list...). Si el campo
-    no está declarado, el build falla: es un error de configuración.
+    Returns the field definition (type, component, list...). If the field is
+    not declared, the build fails: it is a configuration error.
     """
     fields = fields_by_file.get(file)
     if fields is None:
-        raise CampoAusenteError(
-            plantilla, ref,
-            f"no existe la colección '{file}' en .pages.yml (¿la has añadido "
-            "al registro de tipos?)")
+        raise MissingFieldError(
+            template, ref,
+            f"the collection '{file}' does not exist in .pages.yml (did you "
+            "add it to the type registry?)")
     node = fields
     for i, seg in enumerate(route):
         if seg.isdigit():
-            continue  # índice de lista: el tipo está en los subcampos
+            continue  # list index: the type is in the subfields
         field = next((f for f in node if f.get("name") == seg), None)
         if field is None:
-            raise CampoAusenteError(
-                plantilla, ref,
-                f"el campo '{seg}' no está declarado en .pages.yml "
-                f"(colección '{file}': {', '.join(f.get('name') or '?' for f in node)})")
+            raise MissingFieldError(
+                template, ref,
+                f"the field '{seg}' is not declared in .pages.yml "
+                f"(collection '{file}': {', '.join(f.get('name') or '?' for f in node)})")
         if i == len(route) - 1:
             return field
         sub = field.get("fields")
         if not sub:
-            raise CampoAusenteError(
-                plantilla, ref,
-                f"el campo '{seg}' de .pages.yml no tiene subcampos para "
-                f"sostener la ruta '{ref}'")
+            raise MissingFieldError(
+                template, ref,
+                f"the '{seg}' field of .pages.yml has no subfields to hold "
+                f"the path '{ref}'")
         node = sub
-    raise CampoAusenteError(plantilla, ref, "ruta vacía en .pages.yml")
+    raise MissingFieldError(template, ref, "empty path in .pages.yml")
 
 
 def render_field(value, field: dict) -> str:
-    """Renderiza un valor según el tipo declarado en .pages.yml."""
-    if field.get("component") == "icono":
+    """Renders a value according to the type declared in .pages.yml."""
+    if field.get("component") == "icon":
         return icon_html(value)
     if field.get("type") == "rich-text":
         return markdown_html(value)
@@ -577,12 +573,12 @@ def render_field(value, field: dict) -> str:
 
 
 # ---------------------------------------------------------------------------
-# Renderizadores especiales (casos que un tipo de .pages.yml no puede
-# expresar solo). Clave de plantilla -> ruta exacta o patrón con "*" ->
-# función (valor, contenedor) -> HTML.
+# Special renderers (cases a .pages.yml type cannot express on its own).
+# Template key -> exact path or "*" glob pattern -> function (value,
+# container) -> HTML.
 # ---------------------------------------------------------------------------
 def render_modalities(value, parent: dict) -> str:
-    """Hero: une las modalidades con "·" y protege la última de partirse."""
+    """Hero: joins the modalities with "·" and keeps the last one unbroken."""
     parts = [p.strip() for p in str(value).split("·")]
     if len(parts) > 1:
         head = " · ".join(esc(p) for p in parts[:-1])
@@ -592,28 +588,28 @@ def render_modalities(value, parent: dict) -> str:
 
 
 def render_modality_content(value, parent: dict) -> str:
-    """Modalidad: Markdown del contenido + galería de fotos de la consulta."""
+    """Modality: Markdown of the content + gallery of the consultation photos."""
     content = markdown_html(value)
     gallery = modality_gallery(parent.get("images") or [])
     return f"{content}\n{gallery}" if gallery else content
 
 
 def render_blog_thumb(value, parent: dict) -> str:
-    """Miniatura del blog: <picture> con la foto o icono de reserva si no hay."""
-    imagen = image_html(value, parent.get("title", ""),
-                        ' loading="lazy" decoding="async"')
-    return imagen or icon_html("journal")
+    """Blog thumbnail: <picture> with the cover photo or a fallback icon."""
+    image = image_html(value, parent.get("title", ""),
+                       ' loading="lazy" decoding="async"')
+    return image or icon_html("journal")
 
 
 def render_keywords(value, parent: dict) -> str:
-    """Palabras clave del <head>: lista del YAML unida con comas."""
+    """Keywords of the <head>: YAML list joined with commas."""
     if isinstance(value, str):
         return esc(value)
-    return ", ".join(esc(palabra) for palabra in value or [])
+    return ", ".join(esc(keyword) for keyword in value or [])
 
 
 def render_social_image(value, parent: dict) -> str:
-    """Imagen de Open Graph/Twitter: URL absoluta del sitio."""
+    """Open Graph/Twitter image: absolute site URL."""
     return absolute_url(value)
 
 
@@ -622,35 +618,35 @@ def render_site_logo(value, parent: dict) -> str:
 
 
 # ---------------------------------------------------------------------------
-# Ficheros de texto (robots.txt, llms.txt, llms-full.txt) y sitemap.xml: los
-# marcadores se insertan tal cual, sin escapes de HTML ni etiquetas, y el
-# Markdown de las secciones se pasa a texto plano conservando sus párrafos.
+# Text files (robots.txt, llms.txt, llms-full.txt) and sitemap.xml: markers
+# are inserted as is, without HTML escaping or tags, and the Markdown of the
+# sections is turned into plain text keeping its paragraphs.
 # ---------------------------------------------------------------------------
 def render_plain(value, parent: dict) -> str:
-    """Valor tal cual para un fichero .txt (sin escapes de HTML)."""
+    """Value as is for a .txt file (no HTML escaping)."""
     if isinstance(value, (list, tuple)):
         return ", ".join(str(item).strip() for item in value if item is not None)
     return "" if value is None else str(value)
 
 
 def render_comma_list(value, parent: dict) -> str:
-    """Lista de cadenas o de objetos con "title" -> texto unido con comas."""
+    """List of strings or of objects with "title" -> text joined with commas."""
     if isinstance(value, (list, tuple)):
-        partes = []
+        parts = []
         for item in value:
             if isinstance(item, dict):
                 item = item.get("title", "")
             if item is not None and str(item).strip():
-                partes.append(str(item).strip())
-        return ", ".join(partes)
+                parts.append(str(item).strip())
+        return ", ".join(parts)
     return render_plain(value, parent)
 
 
 def markdown_text(value, parent: dict) -> str:
-    """Markdown -> texto plano conservando párrafos y listas (ficheros .txt).
+    """Markdown -> plain text keeping paragraphs and lists (.txt files).
 
-    Quita los énfasis y los enlaces, pero deja la estructura en líneas
-    separadas para que el texto siga siendo legible.
+    Removes emphasis and links but leaves the structure on separate lines so
+    the text stays readable.
     """
     source = "" if value is None else str(value)
     source = source.replace("\r\n", "\n").replace("\r", "\n").strip()
@@ -660,33 +656,33 @@ def markdown_text(value, parent: dict) -> str:
 
 
 def render_sitemap_image(value, parent: dict) -> str:
-    """<image:loc> del sitemap: URL absoluta de la imagen ya publicada.
+    """<image:loc> of the sitemap: absolute URL of the published image.
 
-    prepare_media() deja la versión WebP en WEBP_SUBSTITUTES, así que se
-    publica esa; si el artículo no tiene portada se usa la imagen del sitio.
+    prepare_media() leaves the WebP version in WEBP_SUBSTITUTES, so that is
+    what gets published; if the article has no cover, the site image is used.
     """
-    ruta = media_url(value)
-    sustituto = WEBP_SUBSTITUTES.get(ruta)
-    if sustituto:
-        ruta = sustituto[0]
-    return site_url() + (ruta or media_url(CONTEXT["clinic_info"]["social"]["image"]))
+    path = media_url(value)
+    substitute = WEBP_SUBSTITUTES.get(path)
+    if substitute:
+        path = substitute[0]
+    return site_url() + (path or media_url(CONTEXT["clinic_info"]["social"]["image"]))
 
 
 # ---------------------------------------------------------------------------
-# Datos estructurados (JSON-LD) — schema.org
-# El bloque completo se genera aquí (no se escribe a mano en la plantilla) a
-# partir de content/clinic_info.yml y del resto de content/*.yml, de modo que
-# los datos que announcing los buscadores y los asistentes de IA no se
-# desincronicen del contenido real de la web. El marcador que lo dispara es
-# __clinic_info.datos_estructurados__ (SPECIALS, más abajo). Los textos
-# propios de cada nodo (nombre schema.org, descripción, cargo, temas que
-# trata, anclas de los @id...) están en clinic_info.yml -> schema; aquí solo
-# hay el vocabulario de schema.org (los @type y el @context).
+# Structured data (JSON-LD) — schema.org
+# The whole block is generated here (it is not hand-written in the template)
+# from content/clinic_info.yml and the rest of content/*.yml, so the data that
+# search engines and AI assistants read never drifts from the real content of
+# the site. The marker that triggers it is
+# __clinic_info.structured_data__ (SPECIALS, below). The texts of each node
+# (schema.org name, description, job title, topics covered, @id anchors...)
+# live in clinic_info.yml -> schema; here only the schema.org vocabulary is
+# left (the @type values and the @context).
 # ---------------------------------------------------------------------------
 
 
 def plain_text(md: str) -> str:
-    """Markdown -> texto plano (schema.org no admite Markdown)."""
+    """Markdown -> plain text (schema.org does not allow Markdown)."""
     text = re.sub(r"\*\*(.+?)\*\*", r"\1", str(md or ""))
     text = re.sub(r"^\s*[-*]\s+", "", text, flags=re.M)
     text = re.sub(r"\[([^\]]*)\]\([^)]*\)", r"\1", text)
@@ -695,40 +691,40 @@ def plain_text(md: str) -> str:
 
 
 def maps_coordinates(embed_url: str) -> tuple[float, float] | None:
-    """Saca (latitud, longitud) del iframe de Google Maps (!2dlon!3dlat)."""
+    """Extracts (latitude, longitude) from the Google Maps iframe (!2dlon!3dlat)."""
     m = re.search(r"!2d(-?\d+\.\d+)!3d(-?\d+\.\d+)", str(embed_url or ""))
     return (float(m.group(2)), float(m.group(1))) if m else None
 
 
 def build_jsonld() -> str:
-    """Devuelve el JSON-LD (@graph) con la clínica, la profesional, el
-    catálogo de servicios, las preguntas frecuentes y los artículos."""
+    """Returns the JSON-LD (@graph) with the clinic, the professional, the
+    service catalog, the FAQ and the articles."""
     try:
         return jsonld_graph()
     except KeyError as exc:
-        sys.exit(f"content/clinic_info.yml: falta el campo '{exc.args[0]}' "
-                 "necesario para el bloque JSON-LD de src/index.html.")
+        sys.exit(f"content/clinic_info.yml: missing the field '{exc.args[0]}' "
+                 "required by the JSON-LD block of src/index.html.")
 
 
 def jsonld_graph() -> str:
-    """Construye el grafo JSON-LD con los datos de content/*.yml."""
+    """Builds the JSON-LD graph with the data of content/*.yml."""
     c = CONTEXT
     info = c["clinic_info"]
     site = info["site"]
     schema = info["schema"]
     base = site_url()
     anchors = schema["anchors"]
-    clinica_id = base + "#" + anchors["clinic"]
-    persona_id = base + "#" + anchors["person"]
+    clinic_id = base + "#" + anchors["clinic"]
+    person_id = base + "#" + anchors["person"]
     faq_id = base + "#" + anchors["faq"]
     blog_id = base + "#" + anchors["blog"]
     site_name = schema["site_name"]
     image = absolute_url(info["social"]["image"])
     logo = base + site["logo"]
-    idioma = site["language"]
+    language = site["language"]
     contact = c["common"]["contact"]
-    especialista = c["especialista"]
-    instagram = (c["contacto"].get("instagram") or {}).get("url", "")
+    specialist = c["specialist"]
+    instagram = (c["contact"].get("instagram") or {}).get("url", "")
     same_as = [u for u in (instagram, contact.get("maps_url", "")) if u]
 
     address_lines = list(contact.get("address_lines") or [])
@@ -744,35 +740,35 @@ def jsonld_graph() -> str:
         if m:
             address["postalCode"] = m.group(1)
 
-    # Municipios de atención presencial + país para la terapia online.
-    area_served = [{"@type": "City", "name": ciudad}
-                   for ciudad in info.get("area_served") or []]
+    # In-person municipalities + country for the online therapy.
+    area_served = [{"@type": "City", "name": city}
+                   for city in info.get("area_served") or []]
     online_area = info.get("online_area")
     if online_area:
         area_served.append({"@type": "Country", "name": online_area})
 
     person = {
         "@type": "Person",
-        "@id": persona_id,
-        "name": especialista.get("name", ""),
+        "@id": person_id,
+        "name": specialist.get("name", ""),
         "jobTitle": schema["job_title"],
-        "worksFor": {"@id": clinica_id},
-        "knowsLanguage": [idioma],
+        "worksFor": {"@id": clinic_id},
+        "knowsLanguage": [language],
         "sameAs": [u for u in (instagram,) if u],
     }
-    colegiada = re.search(r"([A-Z]-\d+)", str(especialista.get("license", "")))
-    if colegiada:
+    credential = re.search(r"([A-Z]-\d+)", str(specialist.get("license", "")))
+    if credential:
         person["hasCredential"] = {
             "@type": "EducationalOccupationalCredential",
             "credentialCategory": schema["credential_category"],
-            "identifier": colegiada.group(1),
+            "identifier": credential.group(1),
         }
 
-    clinica = {
+    clinic = {
         "@type": ["MedicalBusiness", "Psychologist"],
-        "@id": clinica_id,
+        "@id": clinic_id,
         "name": site_name,
-        "alternateName": f"{especialista.get('name', '')} {schema['role']}",
+        "alternateName": f"{specialist.get('name', '')} {schema['role']}",
         "description": schema["description"],
         "url": base,
         "image": image,
@@ -782,10 +778,10 @@ def jsonld_graph() -> str:
         "address": address,
         "priceRange": info.get("price_range", ""),
         "currenciesAccepted": site["currency"],
-        "availableLanguage": [idioma],
+        "availableLanguage": [language],
         "areaServed": area_served,
         "knowsAbout": schema["knows_about"],
-        "employee": {"@id": persona_id},
+        "employee": {"@id": person_id},
         "hasOfferCatalog": {
             "@type": "OfferCatalog",
             "name": schema["catalog_name"],
@@ -797,33 +793,33 @@ def jsonld_graph() -> str:
                         "name": item.get("title", ""),
                         "description": plain_text(item.get("card_text", "")),
                         "serviceType": item.get("title", ""),
-                        "provider": {"@id": clinica_id},
+                        "provider": {"@id": clinic_id},
                     },
                 }
-                for item in c["servicios"]["items"]
+                for item in c["services"]["items"]
             ],
         },
     }
     if same_as:
-        clinica["sameAs"] = same_as
-    coords = maps_coordinates(c["contacto"].get("map_embed", ""))
+        clinic["sameAs"] = same_as
+    coords = maps_coordinates(c["contact"].get("map_embed", ""))
     if coords:
-        clinica["geo"] = {
+        clinic["geo"] = {
             "@type": "GeoCoordinates",
             "latitude": coords[0],
             "longitude": coords[1],
         }
 
-    grafo: list[dict] = [
+    graph: list[dict] = [
         {
             "@type": "WebSite",
             "@id": base,
             "url": base,
             "name": site_name,
-            "inLanguage": idioma,
+            "inLanguage": language,
             "publisher": {"@id": base},
         },
-        clinica,
+        clinic,
         person,
     ]
 
@@ -837,30 +833,30 @@ def jsonld_graph() -> str:
         for item in c["faq"].get("items") or []
     ]
     if faq_items:
-        grafo.append({
+        graph.append({
             "@type": "FAQPage",
             "@id": faq_id,
             "mainEntity": faq_items,
         })
 
     for index, post in enumerate(c["blog"].get("posts") or []):
-        nodo = {
+        node = {
             "@type": "BlogPosting",
             "@id": f"{blog_id}-{index}",
             "headline": post.get("title", ""),
             "description": plain_text(post.get("excerpt", "")),
             "articleBody": plain_text(post.get("article", "")),
-            "inLanguage": idioma,
-            "author": {"@id": persona_id},
-            "publisher": {"@id": clinica_id},
+            "inLanguage": language,
+            "author": {"@id": person_id},
+            "publisher": {"@id": clinic_id},
             "mainEntityOfPage": {"@type": "WebPage", "url": blog_id},
         }
         cover = media_url(post.get("image", ""))
-        nodo["image"] = base + cover if cover else image
-        grafo.append(nodo)
+        node["image"] = base + cover if cover else image
+        graph.append(node)
 
     return json.dumps(
-        {"@context": "https://schema.org", "@graph": grafo},
+        {"@context": "https://schema.org", "@graph": graph},
         ensure_ascii=False, indent=2)
 
 
@@ -868,57 +864,57 @@ SPECIALS: dict[str, dict] = {
     "src/index.html": {
         "hero.modalities": render_modalities,
         "blog.posts.*.image": render_blog_thumb,
-        # El marcador activa el bloque JSON-LD completo de la página.
-        "clinic_info.datos_estructurados": lambda v, parent: build_jsonld(),
-        # SEO: la lista de palabras clave se une con comas y la imagen de
-        # redes se publica con su URL absoluta.
+        # The marker triggers the whole JSON-LD block of the page.
+        "clinic_info.structured_data": lambda v, parent: build_jsonld(),
+        # SEO: the keyword list is joined with commas and the social image is
+        # published with its absolute URL.
         "clinic_info.seo.keywords": render_keywords,
         "clinic_info.social.image": render_social_image,
-        # Imágenes: <picture> con WebP + reserva, con width/height y la carga
-        # adecuada (la hero inmediata; el resto, al hacer scroll).
+        # Images: <picture> with WebP + fallback, with width/height and the
+        # right loading (the hero is immediate; the rest, on scroll).
         "hero.image": lambda v, parent: image_html(
             v, parent.get("image_alt", ""),
             ' fetchpriority="high" decoding="async"'),
-        "especialista.image": lambda v, parent: image_html(
+        "specialist.image": lambda v, parent: image_html(
             v, parent.get("image_alt", ""), ' loading="lazy" decoding="async"'),
-        # Contenido completo de la modalidad: Markdown + fotos de la consulta
-        # (opcionales: solo las modalidades que las declaran las incluyen).
-        "modalidades.items.*.modal_content": render_modality_content,
+        # Full modality content: Markdown + consultation photos (optional:
+        # only the modalities that declare them include them).
+        "modalities.items.*.modal_content": render_modality_content,
     },
-    "src/firma.html": {
+    "src/signature.html": {
         "clinic_info.site.logo": render_site_logo,
-        # La firma muestra la dirección en una sola línea.
+        # The signature shows the address on a single line.
         "common.contact.address_lines": lambda v, parent: " - ".join(
             esc(line) for line in v),
     },
     "src/sitemap.xml": {
-        # Las portadas del sitemap se publican en la ruta real (WebP si se
-        # convirtió) y con la URL absoluta del sitio.
+        # The sitemap covers are published at the real path (WebP if they were
+        # converted) and with the absolute site URL.
         "hero.image": render_sitemap_image,
-        "especialista.image": render_sitemap_image,
+        "specialist.image": render_sitemap_image,
         "blog.posts.*.image": render_sitemap_image,
     },
     "src/llms.txt": {
-        # Listas del YAML (servicios que se cubren, municipios, temas...) en
-        # una línea de texto plano separada por comas.
+        # YAML lists (covered services, municipalities, topics...) in a single
+        # line of plain text separated by commas.
         "clinic_info.area_served": render_comma_list,
         "clinic_info.schema.knows_about": render_comma_list,
-        # El proceso resumido son los títulos de sus pasos.
-        "proceso.steps": render_comma_list,
-        # Descripción de cada servicio, sin las etiquetas de la tarjeta.
-        "servicios.items.*.card_text": markdown_text,
+        # The summarized process is the titles of its steps.
+        "process.steps": render_comma_list,
+        # Description of each service, without the card tags.
+        "services.items.*.card_text": markdown_text,
         "*": render_plain,
     },
     "src/llms-full.txt": {
         "clinic_info.area_served": render_comma_list,
         "clinic_info.schema.knows_about": render_comma_list,
-        "proceso.steps": render_comma_list,
-        # Markdown completo de cada sección, como texto plano.
-        "servicios.items.*.card_text": markdown_text,
-        "servicios.items.*.modal_content": markdown_text,
-        "modalidades.items.*.modal_content": markdown_text,
-        "proceso.steps.*.text": markdown_text,
-        "especialista.content": markdown_text,
+        "process.steps": render_comma_list,
+        # Full Markdown of each section, as plain text.
+        "services.items.*.card_text": markdown_text,
+        "services.items.*.modal_content": markdown_text,
+        "modalities.items.*.modal_content": markdown_text,
+        "process.steps.*.text": markdown_text,
+        "specialist.content": markdown_text,
         "faq.items.*.answer": markdown_text,
         "blog.posts.*.excerpt": markdown_text,
         "blog.posts.*.article": markdown_text,
@@ -929,7 +925,7 @@ SPECIALS: dict[str, dict] = {
 
 def apply_template(template_key: str, source: str, context: dict,
                    fields_by_file: dict) -> str:
-    """Sustituye los marcadores __archivo.ruta.campo__ de una plantilla."""
+    """Substitutes the __file.path.field__ markers of a template."""
     specials = SPECIALS.get(template_key, {})
     source = expand_loops(template_key, source, context)
 
@@ -952,31 +948,31 @@ def apply_template(template_key: str, source: str, context: dict,
 
 
 def load_pages_types() -> dict[str, list]:
-    """Índice .pages.yml -> {nombre de colección: lista de campos}."""
+    """.pages.yml index -> {collection name: list of fields}."""
     path = ROOT / ".pages.yml"
     if not path.exists():
-        sys.exit(f"Falta el registro de tipos: {path}")
+        sys.exit(f"Missing type registry: {path}")
     cfg = yaml.safe_load(path.read_text(encoding="utf-8"))
     content = (cfg or {}).get("content")
     if not isinstance(content, list):
-        sys.exit(f"{path}: no se encuentra la lista 'content'.")
+        sys.exit(f"{path}: the 'content' list was not found.")
     return {col["name"]: col.get("fields") or []
             for col in content if col.get("name")}
 
 
 # ---------------------------------------------------------------------------
-# Contacto — content/common.yml -> huecos .neuro-* del index.html generado.
-# Fuente única: el contacto se escribe aquí, en el HTML; script.js no lo
-# toca (su único trabajo con datos es rellenar los modales de servicios y
-# modalidades). Los enlaces tel:/wa.me de la firma usan la clave derivada
-# __common.contact.phone_tel__ (ver DERIVED_FIELDS).
+# Contact — content/common.yml -> the .neuro-* slots of the generated
+# index.html. Single source of truth: the contact is written here, in the HTML;
+# script.js does not touch it (its only job with data is filling the service
+# and modality modals). The tel:/wa.me links of the signature use the derived
+# key __common.contact.phone_tel__ (see DERIVED_FIELDS).
 # ---------------------------------------------------------------------------
 def fill_contact(doc: str, contact: dict) -> str:
-    """Resuelve en el HTML todos los huecos .neuro-* de la plantilla.
+    """Resolves every .neuro-* slot of the template in the HTML.
 
-    Atributos: href de teléfono/WhatsApp/email/Maps.
-    Texto:     teléfono, email y dirección. Hero, sección de contacto y
-               footer salen todos del mismo common.yml.
+    Attributes: href of phone/WhatsApp/email/Maps.
+    Text:       phone, email and address. The hero, the contact section and
+                the footer all come from the same common.yml.
     """
     c = contact
     attrs = {
@@ -1007,7 +1003,7 @@ def fill_contact(doc: str, contact: dict) -> str:
         return tag
 
     def repl_elem(m: "re.Match") -> str:
-        if m.group(1) != m.group(3):  # no cruzar <a ...></span>
+        if m.group(1) != m.group(3):  # do not cross <a ...></span>
             return m.group(0)
         cm = re.search(r'class="([^"]*)"', m.group(2))
         if not cm:
@@ -1023,38 +1019,39 @@ def fill_contact(doc: str, contact: dict) -> str:
 
 
 # ---------------------------------------------------------------------------
-# Modales: su contenido completo se escribe en el HTML (bloques .card-full
-# ocultos de cada tarjeta) para que buscadores y asistentes de IA lo lean sin
-# JavaScript; script.js solo lo copia al modal. Los servicios se abren por su
-# campo "id" (openServiceModal('neuro') busca data-service="neuro"), así que
-# debe existir y ser único.
+# Modals: their full content is written into the HTML (hidden .card-full
+# blocks of each card) so that search engines and AI assistants read it
+# without JavaScript; script.js only copies it into the modal. Services are
+# opened by their "id" field (openServiceModal('neuro') looks up
+# data-service="neuro"), so it must exist and be unique.
 # ---------------------------------------------------------------------------
 def validate_service_ids(c: dict) -> None:
     seen: set[str] = set()
-    for item in c["servicios"]["items"]:
+    for item in c["services"]["items"]:
         sid = item.get("id")
         if not sid:
-            sys.exit("Un servicio de content/servicios.yml no tiene 'id'. "
-                     "Es obligatorio: abre su modal (openServiceModal('id')).")
+            sys.exit("A service in content/services.yml has no 'id'. "
+                     "It is mandatory: it opens its modal "
+                     "(openServiceModal('id')).")
         if sid in seen:
-            sys.exit(f"Identificador duplicado en content/servicios.yml: "
-                     f"'{sid}'. Debe ser único por servicio.")
+            sys.exit(f"Duplicated identifier in content/services.yml: "
+                     f"'{sid}'. It must be unique per service.")
         seen.add(sid)
 
 
 def modality_gallery(images: list[dict]) -> str:
-    """Genera la cuadrícula opcional de fotos dentro de un modal."""
+    """Generates the optional grid of photos inside a modal."""
     figures = []
     for image in images:
         src = media_url(image.get("image"))
         if src:
-            foto = image_html(
+            photo = image_html(
                 image.get("image"), image.get("alt", ""),
                 ' loading="lazy" decoding="async" onerror="this.remove()"')
             figures.append(
                 '<figure class="modality-gallery-item">'
                 '<i class="bi bi-camera"></i>'
-                f'{foto}</figure>'
+                f'{photo}</figure>'
             )
         else:
             figures.append(
@@ -1072,70 +1069,70 @@ def modality_gallery(images: list[dict]) -> str:
 # Build
 # ---------------------------------------------------------------------------
 def build_context() -> dict:
-    """Carga content/*.yml y añade los campos derivados (DERIVED_FIELDS)."""
+    """Loads content/*.yml and adds the derived fields (DERIVED_FIELDS)."""
     domain = read_cname()
     context = {p.stem: load_yaml(p.stem) for p in sorted(CONTENT.glob("*.yml"))}
     base_url = f"https://{domain}/"
     context["clinic_info"]["site"]["url"] = base_url
-    context["firma"]["web_label"] = domain
-    context["firma"]["web_url"] = base_url.rstrip("/")
+    context["signature"]["web_label"] = domain
+    context["signature"]["web_url"] = base_url.rstrip("/")
     contact = context["common"]["contact"]
     contact["phone_tel"] = f"tel:{raw_phone(contact['phone'])}"
     return context
 
 
 # ---------------------------------------------------------------------------
-# Imágenes — media/ -> _site/media/
-# Las fotos que se suben desde Pages CMS pueden llegar en PNG o JPEG. Al
-# construir (localmente y en cada publicación) se convierten a WebP y se
-# publica solo esa versión, que pesa mucho menos; el original no se publica.
-# Así la web sirve siempre imágenes ligeras sin que haya que convertir nada a
-# mano. Requiere Pillow (pip install pillow).
+# Images — media/ -> _site/media/
+# Photos uploaded from Pages CMS can arrive as PNG or JPEG. When building
+# (locally and on every publish) they are converted to WebP and only that
+# version is published, which weighs much less; the original is not published.
+# This way the site always serves light images without anyone converting files
+# by hand. Requires Pillow (pip install pillow).
 # ---------------------------------------------------------------------------
 def pillow_image():
-    """Importa PIL.Image; si falta, detiene el build con un mensaje claro."""
+    """Imports PIL.Image; if missing, stops the build with a clear message."""
     try:
         from PIL import Image
     except ModuleNotFoundError:
-        sys.exit("Falta Pillow para convertir las imágenes a WebP.\n"
-                 "Instálalo con: pip install pillow\n"
-                 "(o ejecuta el build con: "
+        sys.exit("Missing Pillow to convert the images to WebP.\n"
+                 "Install it with: pip install pillow\n"
+                 "(or run the build with: "
                  "uv run --with pyyaml --with markdown --with pillow "
                  "python scripts/build.py)")
     return Image
 
 
 def convert_to_webp(src: Path, dst: Path) -> tuple[int, int]:
-    """Convierte un PNG/JPEG de media/ a WebP y lo deja en dst."""
+    """Converts a PNG/JPEG from media/ to WebP and writes it to dst."""
     image = pillow_image()
     with image.open(src) as original:
         if original.mode not in ("RGB", "RGBA"):
-            modo = "RGBA" if "transparency" in original.info else "RGB"
-            convertida = original.convert(modo)
+            mode = "RGBA" if "transparency" in original.info else "RGB"
+            converted = original.convert(mode)
         else:
-            convertida = original
-        size = convertida.size
-        convertida.save(dst, "WEBP", quality=82, method=6)
+            converted = original
+        size = converted.size
+        converted.save(dst, "WEBP", quality=82, method=6)
     return size
 
 
 def prepare_media() -> None:
-    """Copia media/ a _site/media/ convirtiendo los PNG/JPEG a WebP."""
-    origen = ROOT / "media"
-    if not origen.is_dir():
+    """Copies media/ to _site/media/ converting the PNG/JPEG to WebP."""
+    source_dir = ROOT / "media"
+    if not source_dir.is_dir():
         return
-    destino = OUT / "media"
-    destino.mkdir(parents=True, exist_ok=True)
-    for src in sorted(origen.iterdir()):
+    dest_dir = OUT / "media"
+    dest_dir.mkdir(parents=True, exist_ok=True)
+    for src in sorted(source_dir.iterdir()):
         if not src.is_file() or src.name in MEDIA_EXCLUDES:
             continue
         if src.suffix.lower() in RASTER_FORMATS and src.name not in KEEP_AS_IS:
-            webp = destino / (src.stem + ".webp")
+            webp = dest_dir / (src.stem + ".webp")
             size = convert_to_webp(src, webp)
             WEBP_SUBSTITUTES[f"media/{src.name}"] = (f"media/{webp.name}", size)
             print(f"  {src.name} -> {webp.name} ({size[0]}x{size[1]})")
         else:
-            shutil.copy2(src, destino / src.name)
+            shutil.copy2(src, dest_dir / src.name)
 
 
 def main() -> None:
@@ -1149,8 +1146,8 @@ def main() -> None:
         shutil.rmtree(OUT)
     OUT.mkdir()
 
-    # Antes de renderizar: convierte las imágenes a WebP para que las
-    # plantillas puedan enlazar ya con la versión definitiva.
+    # Before rendering: converts the images to WebP so the templates can
+    # already link to the final version.
     prepare_media()
 
     for key, path in TEMPLATES.items():
@@ -1160,19 +1157,18 @@ def main() -> None:
             doc = fill_contact(doc, context["common"]["contact"])
         (OUT / path.name).write_text(doc, encoding="utf-8")
 
-
     for src, name in STATIC_FILES:
         if not src.exists():
-            sys.exit(f"Falta el fichero estático: {src}")
+            sys.exit(f"Missing static file: {src}")
         shutil.copy2(src, OUT / name)
 
-    print(f"OK: sitio generado en {OUT}")
+    print(f"OK: site generated in {OUT}")
     for warning in WARNINGS:
-        print(f"AVISO: {warning}")
+        print(f"WARNING: {warning}")
 
 
 if __name__ == "__main__":
     try:
         main()
-    except CampoAusenteError as exc:
+    except MissingFieldError as exc:
         sys.exit(str(exc))

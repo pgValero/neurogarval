@@ -1,31 +1,33 @@
-# Build y despliegue del sitio estático en GitHub Pages.
+# Build and deployment of the static site on GitHub Pages.
 #
-# Se lanza de DOS formas:
-#  - push a main: automático. Es el camino normal de producción: al mergear
-#    la PR develop -> main (creada por el botón "Publicar cambios" de Pages
-#    CMS, ver .github/workflows/create_pr.yml), main recibe el push y este
-#    workflow hace "build + deploy" publicando _site/.
-#  - workflow_dispatch: botón "Run workflow" en GitHub (fallback manual para
-#    re-desplegar sin cambios de contenido; el botón del CMS ya usa
+# It runs in TWO ways:
+#  - push to main: automatic. This is the normal production path: when the
+#    develop -> main PR is merged (created by the Pages CMS "Publish changes"
+#    button, see .github/workflows/create_pr.yml), main receives the push and
+#    this workflow does "build + deploy", publishing _site/.
+#  - workflow_dispatch: the "Run workflow" button on GitHub (manual fallback to
+#    redeploy without content changes; the CMS button already uses
 #    create_pr.yml).
-# Se despliega siempre desde main: si se lanza a mano desde otra rama, el job
-# deploy se omite (if: github.ref == 'refs/heads/main') y solo se construye.
+# It always deploys from main: if it is launched by hand from another branch,
+# the deploy job is skipped (if: github.ref == 'refs/heads/main') and only the
+# build runs.
 #
-# REQUISITO (una sola vez, manual): en Settings -> Pages del repositorio,
-# cambiar la fuente a "GitHub Actions".
+# REQUIREMENT (one-off, manual): in the repository's Settings -> Pages, change
+# the source to "GitHub Actions".
 name: Deploy Page
 
 on:
   push:
-    branches: [main] # despliegue automático al mergear la PR develop -> main
-  workflow_dispatch: # fallback manual: "Run workflow" en GitHub
+    branches: [main] # automatic deployment when the develop -> main PR is merged
+  workflow_dispatch: # manual fallback: "Run workflow" on GitHub
 
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# Un solo despliegue a la vez; si se lanza otro manual, se cancela el anterior.
+# Only one deployment at a time; if another manual one starts, the previous one
+# is cancelled.
 concurrency:
   group: pages
   cancel-in-progress: true
@@ -34,14 +36,14 @@ jobs:
   build:
     uses: ./.github/workflows/build_validation.yml
     with:
-      # El build deja _site/ como artefacto de Pages para que lo recoja el
-      # job deploy de abajo.
+      # The build leaves _site/ as the Pages artifact for the deploy job below
+      # to pick up.
       upload_artifact: true
     secrets: inherit
 
   deploy:
-    # Solo se despliega desde main: un dispatch manual lanzado desde una
-    # rama distinta construye y valida, pero no publica.
+    # Only deploys from main: a manual dispatch from a different branch builds
+    # and validates, but does not publish.
     if: github.ref == 'refs/heads/main'
     needs: build
     runs-on: ubuntu-latest
@@ -49,10 +51,10 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Descargar artefacto (_site)
+      - name: Download artifact (_site)
         uses: actions/download-pages-artifact@v3
         with:
           path: _site
-      - name: Desplegar en GitHub Pages
+      - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4

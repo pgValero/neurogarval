@@ -365,7 +365,7 @@ nav {
     margin-bottom: 2.5rem;
 }
 
-/* Estilo del marcado antiguo que todavía puede verse en la plantilla sin build. */
+/* Style of the old markup that can still be seen in the template without building. */
 .check-icon {
     width: 32px;
     height: 32px;
@@ -434,7 +434,7 @@ nav {
     margin-bottom: 1.5rem;
 }
 
-/* Iconos SVG (cerebro, corazón, rayo): heredan tamaño y color de los iconos de fuente */
+/* SVG icons (brain, heart, zap): they inherit size and color from the font icons */
 .service-icon svg {
     width: 1em;
     height: 1em;
@@ -648,7 +648,7 @@ footer a:hover {
     margin: 0 auto 1.5rem;
 }
 
-/* Portada del artículo en el modal del blog (imagen a sangre) */
+/* Article cover in the blog modal (full-bleed image) */
 .blog-modal-cover {
     display: block;
     margin: -3rem -2.5rem 1.75rem;
@@ -740,7 +740,7 @@ footer a:hover {
     justify-content: center;
 }
 
-/* Icono del paso (estilo Lucide, hereda tamaño y color) */
+/* Step icon (Lucide style, inherits size and color) */
 .process-icon {
     font-size: 1.6rem;
     display: flex;
@@ -753,7 +753,7 @@ footer a:hover {
     display: block;
 }
 
-/* Número del paso: badge abajo a la izquierda del círculo del icono */
+/* Step number: badge at the bottom left of the icon circle */
 .process-index {
     position: absolute;
     bottom: -6px;
@@ -823,7 +823,7 @@ footer a:hover {
     font-size: 2rem;
 }
 
-/* Imagen de portada del artículo (campo "image" del blog en Pages CMS) */
+/* Article cover image ("image" field of the blog in Pages CMS) */
 .blog-thumb img {
     width: 100%;
     height: 100%;
@@ -919,7 +919,7 @@ footer a:hover {
         grid-auto-flow: unset;
     }
 
-    /* Las parrillas de tarjetas son flex: en móvil ocupan el ancho completo */
+    /* The card grids are flex: on mobile they take the full width */
     .services-grid > *, .modalities-grid > *, .blog-grid > * {
         flex: 1 1 100%;
     }
