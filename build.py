@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""build.py — generador del sitio estático neurogarval.es.
+"""build.py — generador del sitio estático.
 
 Qué hace
 --------
@@ -19,9 +19,10 @@ Qué hace
    Si un marcador no se encuentra en el contenido o su campo no está
    registrado en .pages.yml, el build falla indicando exactamente qué campo
    se buscó y en qué plantilla.
-3. Rellena la cabecera de src/index.html desde content/clinic_info.yml
-   (solo lectura): <title>, description, keywords, canonical, etiquetas
-   geo, Open Graph y Twitter, idioma, logo y etiquetas de los menús.
+3. Lee el dominio de src/CNAME y rellena la cabecera de src/index.html
+   desde content/clinic_info.yml (solo lectura): <title>, description,
+   keywords, canonical, etiquetas geo, Open Graph y Twitter, idioma, logo y
+   etiquetas de los menús.
 4. Genera el bloque JSON-LD (schema.org) que anuncia la clínica, la
    profesional, el catálogo de servicios, las preguntas frecuentes y los
    artículos, con los datos de clinic_info.yml y del resto de secciones.
@@ -235,12 +236,12 @@ def media_url(path: str | None) -> str:
 
 
 def site_url() -> str:
-    """URL pública del sitio (clinic_info.site.url), con barra final."""
+    """URL pública del sitio, con barra final."""
     return str(CONTEXT["clinic_info"]["site"]["url"])
 
 
 def absolute_url(path: str) -> str:
-    """Ruta de media/ o de la web -> URL absoluta (site.url + ruta)."""
+    """Ruta de media/ -> URL absoluta del sitio."""
     return site_url() + media_url(path)
 
 
@@ -334,6 +335,20 @@ def load_yaml(name: str) -> dict:
     return data
 
 
+def read_cname() -> str:
+    path = SRC / "CNAME"
+    if not path.exists():
+        sys.exit(f"Falta el dominio del sitio: {path}")
+    lines = path.read_text(encoding="utf-8").splitlines()
+    if len(lines) != 1:
+        sys.exit(f"{path} debe contener un único dominio válido.")
+    domain = lines[0].strip()
+    if len(domain) > 253 or not re.fullmatch(
+            r"[A-Za-z0-9](?:[A-Za-z0-9.-]*[A-Za-z0-9])?", domain):
+        sys.exit(f"{path} debe contener un único dominio válido.")
+    return domain
+
+
 def raw_phone(phone: str) -> str:
     """Teléfono sin espacios/paréntesis/giones para enlaces tel: y wa.me."""
     return re.sub(r"[\s()\-]", "", phone)
@@ -365,9 +380,14 @@ class CampoAusenteError(Exception):
 
 
 # Campos derivados: no existen en content/*.yml ni en .pages.yml; los calcula
-# build.py a partir de otros campos (p. ej. __common.contact.phone_tel__ en la
-# firma de email). Estos marcadores no pasan por el registro de .pages.yml.
-DERIVED_FIELDS = frozenset({"common.contact.phone_tel"})
+# build.py a partir de otros campos o de src/CNAME (p. ej. el teléfono y la
+# URL de la firma). Estos marcadores no pasan por el registro de .pages.yml.
+DERIVED_FIELDS = frozenset({
+    "clinic_info.site.url",
+    "common.contact.phone_tel",
+    "firma.web_label",
+    "firma.web_url",
+})
 
 
 def resolve_data(plantilla: str, ref: str, file: str, route: list[str],
@@ -592,8 +612,12 @@ def render_keywords(value, parent: dict) -> str:
 
 
 def render_social_image(value, parent: dict) -> str:
-    """Imagen de Open Graph/Twitter: URL absoluta (site.url + ruta)."""
+    """Imagen de Open Graph/Twitter: URL absoluta del sitio."""
     return absolute_url(value)
+
+
+def render_site_logo(value, parent: dict) -> str:
+    return esc(site_url() + str(value).lstrip("/"))
 
 
 # ---------------------------------------------------------------------------
@@ -861,6 +885,7 @@ SPECIALS: dict[str, dict] = {
         "modalidades.items.*.modal_content": render_modality_content,
     },
     "src/firma.html": {
+        "clinic_info.site.logo": render_site_logo,
         # La firma muestra la dirección en una sola línea.
         "common.contact.address_lines": lambda v, parent: " - ".join(
             esc(line) for line in v),
@@ -1047,7 +1072,12 @@ def modality_gallery(images: list[dict]) -> str:
 # ---------------------------------------------------------------------------
 def build_context() -> dict:
     """Carga content/*.yml y añade los campos derivados (DERIVED_FIELDS)."""
+    domain = read_cname()
     context = {p.stem: load_yaml(p.stem) for p in sorted(CONTENT.glob("*.yml"))}
+    base_url = f"https://{domain}/"
+    context["clinic_info"]["site"]["url"] = base_url
+    context["firma"]["web_label"] = domain
+    context["firma"]["web_url"] = base_url.rstrip("/")
     contact = context["common"]["contact"]
     contact["phone_tel"] = f"tel:{raw_phone(contact['phone'])}"
     return context

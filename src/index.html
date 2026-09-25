@@ -47,13 +47,13 @@
 </head>
 <body>
 
-    <!-- PLANTILLA DEL SITIO. El dominio, el logo, el idioma, el SEO, las
-         redes sociales, los menús y los datos estructurados son
-         configuración fija: sus valores salen de content/clinic_info.yml
-         (solo lectura). Los marcadores que rellena build.py (formato:
-         archivo.ruta.campo, sin los guiones bajos aquí para no confundir
-         al build) se leen de content/*.yml (Pages CMS, un fichero por
-         sección), usando los tipos declarados en .pages.yml. Las tarjetas
+    <!-- PLANTILLA DEL SITIO. El dominio se lee de src/CNAME; el logo, el
+         idioma, el SEO, las redes sociales, los menús y los datos
+         estructurados son configuración fija: sus valores salen de
+         content/clinic_info.yml (solo lectura). Los marcadores que rellena
+         build.py (formato: archivo.ruta.campo, sin los guiones bajos aquí
+         para no confundir al build) se leen de content/*.yml (Pages CMS,
+         un fichero por sección), usando los tipos declarados en .pages.yml. Las tarjetas
          e ítems de las listas (servicios, modalidades, proceso, blog y
          FAQ) se repiten con bloques @foreach:archivo.ruta ...
          @endforeach:archivo.ruta: dentro del bloque, "n" en el marcador
