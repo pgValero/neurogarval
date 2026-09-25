@@ -1,34 +1,34 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="__clinic_info.site.language__">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- SEO Básico -->
-    <title>NeuroGarval | Neuropsicología y Psicología santiaria en Valdemoro</title>
-    <meta name="description" content="Neuropsicología y Psicología santiaria en Valdemoro y online. Teresa García Valero, colegiado M-42858. Primera consulta gratuita. Pide cita: +34 711 233 888.">
-    <meta name="keywords" content="NeuroGarval, Teresa García Valero, neuropsicología Valdemoro, psicología sanitaria Madrid, psicóloga en Valdemoro, psicóloga en Madrid, neuropsicóloga en Valdemoro, Valdemoro, Madrid, rehabilitación cognitiva, evaluación neuropsicológica, dificultades de aprendizaje, TDAH, Trastorno por Déficit de Atención e Hiperactividad, TEA, Trastorno del Espectro Autista, deterioro cognitivo, daño cerebral adquirido, dificultades emocionales y conductuales">
-    <link rel="canonical" href="https://neurogarval.es/">
-    <meta name="geo.region" content="ES-MD">
-    <meta name="geo.placename" content="Valdemoro">
-    <meta name="ICBM" content="40.199937, -3.693149">
+    <!-- SEO Básico (los valores salen de content/clinic_info.yml) -->
+    <title>__clinic_info.seo.title__</title>
+    <meta name="description" content="__clinic_info.seo.description__">
+    <meta name="keywords" content="__clinic_info.seo.keywords__">
+    <link rel="canonical" href="__clinic_info.site.url__">
+    <meta name="geo.region" content="__clinic_info.site.region_code__">
+    <meta name="geo.placename" content="__clinic_info.site.locality__">
+    <meta name="ICBM" content="__clinic_info.site.geo_position__">
 
     <!-- Open Graph / Redes Sociales -->
-    <meta property="og:type" content="website">
-    <meta property="og:locale" content="es_ES">
-    <meta property="og:site_name" content="NeuroGarval">
-    <meta property="og:title" content="NeuroGarval | Neuropsicología y Psicología sanitaria en Valdemoro">
-    <meta property="og:description" content="Neuropsicología y Psicología sanitaria en Valdemoro y online. Teresa García Valero, colegiado M-42858. Primera consulta gratuita.">
-    <meta property="og:image" content="https://neurogarval.es/media/image.png">
-    <meta property="og:image:alt" content="NeuroGarval, neuropsicología y psicología sanitaria en Valdemoro">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:url" content="https://neurogarval.es/">
+    <meta property="og:type" content="__clinic_info.social.og_type__">
+    <meta property="og:locale" content="__clinic_info.site.locale__">
+    <meta property="og:site_name" content="__clinic_info.site.name__">
+    <meta property="og:title" content="__clinic_info.social.og_title__">
+    <meta property="og:description" content="__clinic_info.social.og_description__">
+    <meta property="og:image" content="__clinic_info.social.image__">
+    <meta property="og:image:alt" content="__clinic_info.social.image_alt__">
+    <meta property="og:image:width" content="__clinic_info.social.image_width__">
+    <meta property="og:image:height" content="__clinic_info.social.image_height__">
+    <meta property="og:url" content="__clinic_info.site.url__">
 
     <!-- Twitter / X -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="NeuroGarval | Neuropsicología y Psicología en Valdemoro">
-    <meta name="twitter:description" content="Psicología y neuropsicología en Valdemoro y online. Primera consulta gratuita.">
-    <meta name="twitter:image" content="https://neurogarval.es/media/image.png">
+    <meta name="twitter:card" content="__clinic_info.social.twitter_card__">
+    <meta name="twitter:title" content="__clinic_info.social.twitter_title__">
+    <meta name="twitter:description" content="__clinic_info.social.twitter_description__">
+    <meta name="twitter:image" content="__clinic_info.social.image__">
 
     <!-- Datos Estructurados (Schema.org)
          El bloque JSON-LD lo genera build.py (schema.org) a partir de
@@ -47,32 +47,34 @@
 </head>
 <body>
 
-    <!-- PLANTILLA DEL SITIO. El dominio, el logo, el SEO, los datos
-         estructurados y los menús son configuración fija de esta plantilla.
-         Los marcadores que rellena build.py (formato: archivo.ruta.campo,
-         sin los guiones bajos aquí para no confundir al build) se leen de
-         content/*.yml (Pages CMS, un fichero por sección), usando los tipos
-         declarados en .pages.yml. Las tarjetas e ítems de las listas
-         (servicios, modalidades, proceso, blog y FAQ) se repiten con bloques
-         @foreach:archivo.ruta ... @endforeach:archivo.ruta: dentro del
-         bloque, "n" en el marcador es el elemento actual (p. ej.
-         servicios.items.n.title) y loop.index / loop.index0 son la posición.
-         Añadir o quitar entradas en el CMS no exige tocar esta plantilla.
-         Los huecos .neuro-* (teléfono, WhatsApp, email, dirección y Maps) se
+    <!-- PLANTILLA DEL SITIO. El dominio, el logo, el idioma, el SEO, las
+         redes sociales, los menús y los datos estructurados son
+         configuración fija: sus valores salen de content/clinic_info.yml
+         (solo lectura). Los marcadores que rellena build.py (formato:
+         archivo.ruta.campo, sin los guiones bajos aquí para no confundir
+         al build) se leen de content/*.yml (Pages CMS, un fichero por
+         sección), usando los tipos declarados en .pages.yml. Las tarjetas
+         e ítems de las listas (servicios, modalidades, proceso, blog y
+         FAQ) se repiten con bloques @foreach:archivo.ruta ...
+         @endforeach:archivo.ruta: dentro del bloque, "n" en el marcador
+         es el elemento actual (p. ej. servicios.items.n.title) y
+         loop.index / loop.index0 son la posición. Añadir o quitar
+         entradas en el CMS no exige tocar esta plantilla. Los huecos
+         .neuro-* (teléfono, WhatsApp, email, dirección y Maps) se
          rellenan con content/common.yml; no hay JS de por medio. No editar
          los textos marcados a mano: editar en Pages CMS. -->
 
     <div class="mobile-overlay" id="mobileMenu">
         <button class="close-btn" onclick="toggleMenu()">&times;</button>
         <div class="mobile-links">
-            <a href="#inicio" onclick="toggleMenu()">Inicio</a>
-            <a href="#servicios" onclick="toggleMenu()">Servicios</a>
-            <a href="#modalidades" onclick="toggleMenu()">Modalidades</a>
-            <a href="#proceso" onclick="toggleMenu()">Proceso</a>
-            <a href="#especialista" onclick="toggleMenu()">Especialista</a>
-            <a href="#blog" onclick="toggleMenu()">Blog</a>
-            <a href="#faq" onclick="toggleMenu()">FAQ</a>
-            <a href="#contacto" onclick="toggleMenu()">Contacto</a>
+            <a href="#inicio" onclick="toggleMenu()">__clinic_info.nav.inicio__</a>
+            <a href="#servicios" onclick="toggleMenu()">__clinic_info.nav.servicios__</a>
+            <a href="#modalidades" onclick="toggleMenu()">__clinic_info.nav.modalidades__</a>
+            <a href="#proceso" onclick="toggleMenu()">__clinic_info.nav.proceso__</a>
+            <a href="#especialista" onclick="toggleMenu()">__clinic_info.nav.especialista__</a>
+            <a href="#blog" onclick="toggleMenu()">__clinic_info.nav.blog__</a>
+            <a href="#faq" onclick="toggleMenu()">__clinic_info.nav.faq__</a>
+            <a href="#contacto" onclick="toggleMenu()">__clinic_info.nav.contacto__</a>
         </div>
     </div>
 
@@ -80,17 +82,17 @@
         <div class="container">
             <nav>
                 <a href="#inicio">
-                    <img src="logo.svg" alt="NeuroGarval" class="header-logo">
+                    <img src="__clinic_info.site.logo__" alt="__clinic_info.site.name__" class="header-logo">
                 </a>
 
                 <ul class="nav-links">
-                    <li><a href="#inicio">Inicio</a></li>
-                    <li><a href="#servicios">Servicios</a></li>
-                    <li><a href="#modalidades">Modalidades</a></li>
-                    <li><a href="#especialista">Especialista</a></li>
-                    <li><a href="#blog">Blog</a></li>
-                    <li><a href="#faq">FAQ</a></li>
-                    <li><a href="#contacto">Contacto</a></li>
+                    <li><a href="#inicio">__clinic_info.nav.inicio__</a></li>
+                    <li><a href="#servicios">__clinic_info.nav.servicios__</a></li>
+                    <li><a href="#modalidades">__clinic_info.nav.modalidades__</a></li>
+                    <li><a href="#especialista">__clinic_info.nav.especialista__</a></li>
+                    <li><a href="#blog">__clinic_info.nav.blog__</a></li>
+                    <li><a href="#faq">__clinic_info.nav.faq__</a></li>
+                    <li><a href="#contacto">__clinic_info.nav.contacto__</a></li>
                 </ul>
 
                 <button class="menu-btn" onclick="toggleMenu()">
@@ -334,7 +336,7 @@
         <div class="container">
             <div class="footer-top">
                 <div class="footer-info">
-                    <img src="logo.svg" alt="NeuroGarval" class="footer-logo">
+                    <img src="__clinic_info.site.logo__" alt="__clinic_info.site.name__" class="footer-logo">
                     <p>__footer.lines__</p>
                     <br>
                     <a href="__footer.legal_file__">__footer.legal_label__</a>
@@ -355,21 +357,21 @@
     </footer>
 
     <dialog id="serviceModal" class="modal" aria-labelledby="modalTitle">
-        <button class="modal-close" onclick="closeServiceModal()" aria-label="Cerrar">&times;</button>
+        <button class="modal-close" onclick="closeServiceModal()" aria-label="__clinic_info.ui.close_label__">&times;</button>
         <div class="service-icon" id="modalIcon"></div>
         <h3 id="modalTitle"></h3>
         <div class="modal-body markdown-content" id="modalBody"></div>
     </dialog>
 
     <dialog id="modalityModal" class="modal" aria-labelledby="modalityModalTitle">
-        <button class="modal-close" onclick="closeModalityModal()" aria-label="Cerrar">&times;</button>
+        <button class="modal-close" onclick="closeModalityModal()" aria-label="__clinic_info.ui.close_label__">&times;</button>
         <div class="service-icon" id="modalityModalIcon"></div>
         <h3 id="modalityModalTitle"></h3>
         <div class="modal-body markdown-content" id="modalityModalBody"></div>
     </dialog>
 
     <dialog id="blogModal" class="modal" aria-labelledby="blogModalTitle">
-        <button class="modal-close" onclick="closeBlogModal()" aria-label="Cerrar">&times;</button>
+        <button class="modal-close" onclick="closeBlogModal()" aria-label="__clinic_info.ui.close_label__">&times;</button>
         <div class="blog-modal-cover" id="blogModalCover" hidden></div>
         <h3 id="blogModalTitle"></h3>
         <div class="modal-body markdown-content" id="blogModalBody"></div>

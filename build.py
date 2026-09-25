@@ -4,8 +4,8 @@
 Qué hace
 --------
 1. Lee el contenido editable de Pages CMS: content/*.yml (un fichero por
-   sección más common.yml, footer.yml y firma.yml) y el registro de tipos
-   .pages.yml.
+   sección más common.yml, footer.yml, clinic_info.yml y firma.yml) y el
+   registro de tipos .pages.yml.
 2. Recorre las plantillas src/index.html y src/firma.html sustituyendo los
    marcadores __archivo.ruta.campo__ (p. ej. __hero.badge__,
    __servicios.items.0.title__ o __common.contact.phone__) por el contenido
@@ -19,14 +19,20 @@ Qué hace
    Si un marcador no se encuentra en el contenido o su campo no está
    registrado en .pages.yml, el build falla indicando exactamente qué campo
    se buscó y en qué plantilla.
-3. Escribe el contacto de content/common.yml (fuente única) directamente en
+3. Rellena la cabecera de src/index.html desde content/clinic_info.yml
+   (solo lectura): <title>, description, keywords, canonical, etiquetas
+   geo, Open Graph y Twitter, idioma, logo y etiquetas de los menús.
+4. Genera el bloque JSON-LD (schema.org) que anuncia la clínica, la
+   profesional, el catálogo de servicios, las preguntas frecuentes y los
+   artículos, con los datos de clinic_info.yml y del resto de secciones.
+5. Escribe el contacto de content/common.yml (fuente única) directamente en
    el index.html generado: los huecos .neuro-* (teléfono, WhatsApp, email,
    dirección y Maps) quedan resueltos sin JavaScript.
-4. Escribe el contenido completo de servicios, modalidades y artículos en el
+6. Escribe el contenido completo de servicios, modalidades y artículos en el
    propio HTML (bloques .card-full ocultos); script.js lo copia a los modales.
-5. Convierte a WebP las imágenes de media/ que sigan en PNG o JPEG (fotos
+7. Convierte a WebP las imágenes de media/ que sigan en PNG o JPEG (fotos
    subidas desde el CMS) y publica solo esa versión.
-6. Copia los estáticos (CSS, JS, CNAME, favicon, logo y PDFs) a _site/,
+8. Copia los estáticos (CSS, JS, CNAME, favicon, logo y PDFs) a _site/,
    manteniendo la estructura pública actual.
 
 Uso
@@ -179,6 +185,9 @@ WEBP_SUBSTITUTES: dict[str, tuple[str, tuple[int, int]]] = {}
 # Avisos no fatales (p. ej. fotos de modalidades aún no subidas).
 WARNINGS: list[str] = []
 
+# content/*.yml cargado, para los renderizadores y para los datos estructurados.
+CONTEXT: dict = {}
+
 
 # ---------------------------------------------------------------------------
 # Utilidades
@@ -223,6 +232,16 @@ def media_url(path: str | None) -> str:
     if not (ROOT / p).exists():
         WARNINGS.append(f"La imagen referenciada no existe: {p}")
     return p
+
+
+def site_url() -> str:
+    """URL pública del sitio (clinic_info.site.url), con barra final."""
+    return str(CONTEXT["clinic_info"]["site"]["url"])
+
+
+def absolute_url(path: str) -> str:
+    """Ruta de media/ o de la web -> URL absoluta (site.url + ruta)."""
+    return site_url() + media_url(path)
 
 
 def image_size(rel_path: str) -> tuple[int, int] | None:
@@ -559,16 +578,29 @@ def render_blog_thumb(value, parent: dict) -> str:
     return imagen or icon_html("journal")
 
 
+def render_keywords(value, parent: dict) -> str:
+    """Palabras clave del <head>: lista del YAML unida con comas."""
+    if isinstance(value, str):
+        return esc(value)
+    return ", ".join(esc(palabra) for palabra in value or [])
+
+
+def render_social_image(value, parent: dict) -> str:
+    """Imagen de Open Graph/Twitter: URL absoluta (site.url + ruta)."""
+    return absolute_url(value)
+
+
 # ---------------------------------------------------------------------------
 # Datos estructurados (JSON-LD) — schema.org
 # El bloque completo se genera aquí (no se escribe a mano en la plantilla) a
 # partir de content/clinic_info.yml y del resto de content/*.yml, de modo que
-# los datos que announced los buscadores y los asistentes de IA no se
+# los datos que announcing los buscadores y los asistentes de IA no se
 # desincronicen del contenido real de la web. El marcador que lo dispara es
-# __clinic_info.datos_estructurados__ (SPECIALS, más abajo).
+# __clinic_info.datos_estructurados__ (SPECIALS, más abajo). Los textos
+# propios de cada nodo (nombre schema.org, descripción, cargo, temas que
+# trata, anclas de los @id...) están en clinic_info.yml -> schema; aquí solo
+# hay el vocabulario de schema.org (los @type y el @context).
 # ---------------------------------------------------------------------------
-SITE_URL = "https://neurogarval.es/"
-CONTEXT: dict = {}          # content/*.yml cargado, para los renderizadores
 
 
 def plain_text(md: str) -> str:
@@ -589,12 +621,31 @@ def maps_coordinates(embed_url: str) -> tuple[float, float] | None:
 def build_jsonld() -> str:
     """Devuelve el JSON-LD (@graph) con la clínica, la profesional, el
     catálogo de servicios, las preguntas frecuentes y los artículos."""
+    try:
+        return jsonld_graph()
+    except KeyError as exc:
+        sys.exit(f"content/clinic_info.yml: falta el campo '{exc.args[0]}' "
+                 "necesario para el bloque JSON-LD de src/index.html.")
+
+
+def jsonld_graph() -> str:
+    """Construye el grafo JSON-LD con los datos de content/*.yml."""
     c = CONTEXT
     info = c["clinic_info"]
+    site = info["site"]
+    schema = info["schema"]
+    base = site_url()
+    anchors = schema["anchors"]
+    clinica_id = base + "#" + anchors["clinic"]
+    persona_id = base + "#" + anchors["person"]
+    faq_id = base + "#" + anchors["faq"]
+    blog_id = base + "#" + anchors["blog"]
+    site_name = schema["site_name"]
+    image = absolute_url(info["social"]["image"])
+    logo = base + site["logo"]
+    idioma = site["language"]
     contact = c["common"]["contact"]
     especialista = c["especialista"]
-    site_name = "NeuroGarval | Psicología y Neuropsicología Clínica"
-    image = SITE_URL + "media/image.png"
     instagram = (c["contacto"].get("instagram") or {}).get("url", "")
     same_as = [u for u in (instagram, contact.get("maps_url", "")) if u]
 
@@ -602,9 +653,9 @@ def build_jsonld() -> str:
     address = {
         "@type": "PostalAddress",
         "streetAddress": address_lines[0] if address_lines else "",
-        "addressLocality": "Valdemoro",
-        "addressRegion": "Madrid",
-        "addressCountry": "ES",
+        "addressLocality": site["locality"],
+        "addressRegion": site["region"],
+        "addressCountry": site["country"],
     }
     if len(address_lines) > 1:
         m = re.match(r"(\d{5})", address_lines[1])
@@ -620,53 +671,42 @@ def build_jsonld() -> str:
 
     person = {
         "@type": "Person",
-        "@id": SITE_URL + "#teresa",
+        "@id": persona_id,
         "name": especialista.get("name", ""),
-        "jobTitle": "Neuropsicóloga y psicóloga general sanitaria",
-        "worksFor": {"@id": SITE_URL + "#clinica"},
-        "knowsLanguage": ["es"],
+        "jobTitle": schema["job_title"],
+        "worksFor": {"@id": clinica_id},
+        "knowsLanguage": [idioma],
         "sameAs": [u for u in (instagram,) if u],
     }
     colegiada = re.search(r"([A-Z]-\d+)", str(especialista.get("license", "")))
     if colegiada:
         person["hasCredential"] = {
             "@type": "EducationalOccupationalCredential",
-            "credentialCategory": "Colegiado/a",
+            "credentialCategory": schema["credential_category"],
             "identifier": colegiada.group(1),
         }
 
-    knows_about = [
-        "Neuropsicología", "Psicología sanitaria", "Evaluación neuropsicológica",
-        "Rehabilitación cognitiva", "Dificultades de aprendizaje",
-        "Trastorno por Déficit de Atención e Hiperactividad (TDAH)",
-        "Trastorno del Espectro Autista (TEA)", "Deterioro cognitivo",
-        "Daño Cerebral Adquirido (DCA)", "Ansiedad y estrés",
-        "Dificultades emocionales y conductuales",
-    ]
-
     clinica = {
         "@type": ["MedicalBusiness", "Psychologist"],
-        "@id": SITE_URL + "#clinica",
+        "@id": clinica_id,
         "name": site_name,
-        "alternateName": f"{especialista.get('name', '')} Neuropsicóloga",
-        "description": "Consulta de neuropsicología y psicología sanitaria en "
-                       "Valdemoro y online, dirigida a niños, adolescentes y "
-                       "adultos.",
-        "url": SITE_URL,
+        "alternateName": f"{especialista.get('name', '')} {schema['role']}",
+        "description": schema["description"],
+        "url": base,
         "image": image,
-        "logo": SITE_URL + "logo.svg",
+        "logo": logo,
         "telephone": contact.get("phone", ""),
         "email": contact.get("mail", ""),
         "address": address,
         "priceRange": info.get("price_range", ""),
-        "currenciesAccepted": "EUR",
-        "availableLanguage": ["es"],
+        "currenciesAccepted": site["currency"],
+        "availableLanguage": [idioma],
         "areaServed": area_served,
-        "knowsAbout": knows_about,
-        "employee": {"@id": SITE_URL + "#teresa"},
+        "knowsAbout": schema["knows_about"],
+        "employee": {"@id": persona_id},
         "hasOfferCatalog": {
             "@type": "OfferCatalog",
-            "name": "Servicios",
+            "name": schema["catalog_name"],
             "itemListElement": [
                 {
                     "@type": "Offer",
@@ -675,7 +715,7 @@ def build_jsonld() -> str:
                         "name": item.get("title", ""),
                         "description": plain_text(item.get("card_text", "")),
                         "serviceType": item.get("title", ""),
-                        "provider": {"@id": SITE_URL + "#clinica"},
+                        "provider": {"@id": clinica_id},
                     },
                 }
                 for item in c["servicios"]["items"]
@@ -695,11 +735,11 @@ def build_jsonld() -> str:
     grafo: list[dict] = [
         {
             "@type": "WebSite",
-            "@id": SITE_URL,
-            "url": SITE_URL,
+            "@id": base,
+            "url": base,
             "name": site_name,
-            "inLanguage": "es",
-            "publisher": {"@id": SITE_URL},
+            "inLanguage": idioma,
+            "publisher": {"@id": base},
         },
         clinica,
         person,
@@ -717,24 +757,24 @@ def build_jsonld() -> str:
     if faq_items:
         grafo.append({
             "@type": "FAQPage",
-            "@id": SITE_URL + "#faq",
+            "@id": faq_id,
             "mainEntity": faq_items,
         })
 
     for index, post in enumerate(c["blog"].get("posts") or []):
         nodo = {
             "@type": "BlogPosting",
-            "@id": f"{SITE_URL}#blog-{index}",
+            "@id": f"{blog_id}-{index}",
             "headline": post.get("title", ""),
             "description": plain_text(post.get("excerpt", "")),
             "articleBody": plain_text(post.get("article", "")),
-            "inLanguage": "es",
-            "author": {"@id": SITE_URL + "#teresa"},
-            "publisher": {"@id": SITE_URL + "#clinica"},
-            "mainEntityOfPage": {"@type": "WebPage", "url": SITE_URL + "#blog"},
+            "inLanguage": idioma,
+            "author": {"@id": persona_id},
+            "publisher": {"@id": clinica_id},
+            "mainEntityOfPage": {"@type": "WebPage", "url": blog_id},
         }
         cover = media_url(post.get("image", ""))
-        nodo["image"] = SITE_URL + cover if cover else image
+        nodo["image"] = base + cover if cover else image
         grafo.append(nodo)
 
     return json.dumps(
@@ -748,6 +788,10 @@ SPECIALS: dict[str, dict] = {
         "blog.posts.*.image": render_blog_thumb,
         # El marcador activa el bloque JSON-LD completo de la página.
         "clinic_info.datos_estructurados": lambda v, parent: build_jsonld(),
+        # SEO: la lista de palabras clave se une con comas y la imagen de
+        # redes se publica con su URL absoluta.
+        "clinic_info.seo.keywords": render_keywords,
+        "clinic_info.social.image": render_social_image,
         # Imágenes: <picture> con WebP + reserva, con width/height y la carga
         # adecuada (la hero inmediata; el resto, al hacer scroll).
         "hero.image": lambda v, parent: image_html(

@@ -30,10 +30,12 @@
 #   Las tarjetas e ítems de esas listas se repiten en la plantilla con
 #   bloques @foreach (ver expand_loops en build.py): añadir o quitar
 #   entradas aquí no exige tocar el HTML.
-#   Dominio, logo, SEO (title, description, canonical) y navegación son parte
-#   fija de src/index.html y no se editan desde el CMS. El bloque JSON-LD sí
-#   se genera: build.py lo construye desde content/clinic_info.yml (solo
-#   lectura) y desde servicios, modalidades, faq, blog y especialista.
+#   Todo lo que no es contenido editable de una sección (dominio, logo,
+#   idioma, etiquetas SEO/Open Graph/Twitter, etiquetas del menú y textos de
+#   los datos estructurados) vive en content/clinic_info.yml, también de solo
+#   lectura: src/index.html y build.py lo leen de ahí, no lo llevan escrito.
+#   El bloque JSON-LD lo genera entero build.py desde ese mismo archivo y
+#   desde servicios, modalidades, faq, blog y especialista.
 #
 # NOTA SOBRE RAMAS: Pages CMS lee este archivo por rama y el CMS se usa sobre
 # develop: se abre en https://app.pagescms.org/pgValero/neurogarval/develop y
@@ -528,7 +530,7 @@ content:
             pattern: "^@[A-Za-z0-9._]+$"
 
   - name: clinic_info
-    label: Datos de la clínica (solo lectura)
+    label: Datos fijos del sitio (solo lectura)
     type: file
     path: content/clinic_info.yml
     format: yaml
@@ -541,6 +543,289 @@ content:
         required: true
         readonly: true
         description: Campo técnico; activa el bloque JSON-LD de src/index.html. No se edita.
+      - name: site
+        label: Dominio, idioma y ubicación
+        type: object
+        required: true
+        readonly: true
+        description: Datos fijos; no se pueden modificar desde Pages CMS.
+        fields:
+          - name: url
+            label: URL del sitio
+            type: string
+            required: true
+            readonly: true
+            pattern: "^https://[^/]+/$"
+            description: 'Debe terminar en "/": el build le añade las rutas del sitio para las URLs absolutas.'
+          - name: name
+            label: Nombre
+            type: string
+            required: true
+            readonly: true
+          - name: language
+            label: Idioma
+            type: string
+            required: true
+            readonly: true
+            description: Atributo lang del <html> e "inLanguage" de los datos estructurados.
+          - name: locale
+            label: Idioma regional
+            type: string
+            required: true
+            readonly: true
+            description: Etiqueta og:locale.
+          - name: currency
+            label: Moneda
+            type: string
+            required: true
+            readonly: true
+          - name: logo
+            label: Ruta del logo
+            type: string
+            required: true
+            readonly: true
+            description: Ruta pública del logo (lo publica el build en la raíz del sitio).
+          - name: locality
+            label: Población
+            type: string
+            required: true
+            readonly: true
+            description: Etiqueta geo.placename y dirección de la clínica en los datos estructurados.
+          - name: region
+            label: Provincia
+            type: string
+            required: true
+            readonly: true
+          - name: region_code
+            label: Código de región
+            type: string
+            required: true
+            readonly: true
+            description: Etiqueta geo.region (código de país y comunidad).
+          - name: country
+            label: País
+            type: string
+            required: true
+            readonly: true
+          - name: geo_position
+            label: Coordenadas (ICBM)
+            type: string
+            required: true
+            readonly: true
+            description: Latitud y longitud separadas por comas, para la etiqueta ICBM del <head>.
+      - name: seo
+        label: SEO (title, description, keywords)
+        type: object
+        required: true
+        readonly: true
+        description: Etiquetas de la cabecera que leen los buscadores. No se editan desde Pages CMS.
+        fields:
+          - name: title
+            label: Título de la pestaña
+            type: string
+            required: true
+            readonly: true
+          - name: description
+            label: Descripción
+            type: string
+            required: true
+            readonly: true
+          - name: keywords
+            label: Palabras clave
+            type: string
+            required: true
+            readonly: true
+            list: true
+            description: El build las une con comas en la etiqueta meta keywords.
+      - name: social
+        label: Open Graph y Twitter
+        type: object
+        required: true
+        readonly: true
+        description: Lo que muestran WhatsApp, Facebook, X y el resto de redes al compartir el enlace.
+        fields:
+          - name: image
+            label: Imagen de portada
+            type: image
+            required: true
+            readonly: true
+            description: El build publica su URL absoluta en og:image y twitter:image.
+          - name: image_width
+            label: Anchura de la imagen
+            type: string
+            required: true
+            readonly: true
+          - name: image_height
+            label: Altura de la imagen
+            type: string
+            required: true
+            readonly: true
+          - name: image_alt
+            label: Texto alternativo de la imagen
+            type: string
+            required: true
+            readonly: true
+          - name: og_type
+            label: Tipo (og:type)
+            type: string
+            required: true
+            readonly: true
+          - name: og_title
+            label: Título para redes (og:title)
+            type: string
+            required: true
+            readonly: true
+          - name: og_description
+            label: Descripción para redes (og:description)
+            type: string
+            required: true
+            readonly: true
+          - name: twitter_card
+            label: Tarjeta de Twitter
+            type: string
+            required: true
+            readonly: true
+          - name: twitter_title
+            label: Título para Twitter
+            type: string
+            required: true
+            readonly: true
+          - name: twitter_description
+            label: Descripción para Twitter
+            type: string
+            required: true
+            readonly: true
+      - name: nav
+        label: Etiquetas del menú
+        type: object
+        required: true
+        readonly: true
+        description: Texto de los dos menús; el enlace de cada entrada es el id de su sección.
+        fields:
+          - name: inicio
+            label: Inicio
+            type: string
+            required: true
+            readonly: true
+          - name: servicios
+            label: Servicios
+            type: string
+            required: true
+            readonly: true
+          - name: modalidades
+            label: Modalidades
+            type: string
+            required: true
+            readonly: true
+          - name: proceso
+            label: Proceso
+            type: string
+            required: true
+            readonly: true
+          - name: especialista
+            label: Especialista
+            type: string
+            required: true
+            readonly: true
+          - name: blog
+            label: Blog
+            type: string
+            required: true
+            readonly: true
+          - name: faq
+            label: FAQ
+            type: string
+            required: true
+            readonly: true
+          - name: contacto
+            label: Contacto
+            type: string
+            required: true
+            readonly: true
+      - name: ui
+        label: Textos de la interfaz
+        type: object
+        required: true
+        readonly: true
+        description: Textos de la interfaz que no dependen del contenido.
+        fields:
+          - name: close_label
+            label: Texto accesible del botón de cerrar
+            type: string
+            required: true
+            readonly: true
+            description: aria-label de los botones "x" de los modales.
+      - name: schema
+        label: Datos estructurados (schema.org)
+        type: object
+        required: true
+        readonly: true
+        description: Textos del bloque JSON-LD que el build no puede deducir del contenido.
+        fields:
+          - name: site_name
+            label: Nombre schema.org
+            type: string
+            required: true
+            readonly: true
+          - name: description
+            label: Descripción de la clínica
+            type: string
+            required: true
+            readonly: true
+          - name: role
+            label: Cargo de la profesional
+            type: string
+            required: true
+            readonly: true
+            description: Se añade al nombre de la especialista en el "alternateName" de la clínica.
+          - name: job_title
+            label: Profesión
+            type: string
+            required: true
+            readonly: true
+          - name: credential_category
+            label: Categoría de la credencial
+            type: string
+            required: true
+            readonly: true
+          - name: catalog_name
+            label: Nombre del catálogo de servicios
+            type: string
+            required: true
+            readonly: true
+          - name: knows_about
+            label: Temas que trata
+            type: string
+            required: true
+            readonly: true
+            list: true
+          - name: anchors
+            label: Anclas de los @id
+            type: object
+            required: true
+            readonly: true
+            description: Se añaden al final de site.url en el bloque JSON-LD.
+            fields:
+              - name: clinic
+                label: Clínica
+                type: string
+                required: true
+                readonly: true
+              - name: person
+                label: Profesional
+                type: string
+                required: true
+                readonly: true
+              - name: faq
+                label: Preguntas frecuentes
+                type: string
+                required: true
+                readonly: true
+              - name: blog
+                label: Artículos
+                type: string
+                required: true
+                readonly: true
       - name: area_served
         label: Municipios de atención presencial
         type: string
