@@ -30,8 +30,10 @@
 #   Las tarjetas e ítems de esas listas se repiten en la plantilla con
 #   bloques @foreach (ver expand_loops en build.py): añadir o quitar
 #   entradas aquí no exige tocar el HTML.
-#   Dominio, logo, SEO/JSON-LD y navegación son parte fija de src/index.html y
-#   no se editan desde el CMS.
+#   Dominio, logo, SEO (title, description, canonical) y navegación son parte
+#   fija de src/index.html y no se editan desde el CMS. El bloque JSON-LD sí
+#   se genera: build.py lo construye desde content/clinic_info.yml (solo
+#   lectura) y desde servicios, modalidades, faq, blog y especialista.
 #
 # NOTA SOBRE RAMAS: Pages CMS lee este archivo por rama y el CMS se usa sobre
 # develop: se abre en https://app.pagescms.org/pgValero/neurogarval/develop y
@@ -524,6 +526,40 @@ content:
             type: string
             required: true
             pattern: "^@[A-Za-z0-9._]+$"
+
+  - name: clinic_info
+    label: Datos de la clínica (solo lectura)
+    type: file
+    path: content/clinic_info.yml
+    format: yaml
+    operations:
+      delete: false
+    fields:
+      - name: datos_estructurados
+        label: Datos estructurados
+        type: boolean
+        required: true
+        readonly: true
+        description: Campo técnico; activa el bloque JSON-LD de src/index.html. No se edita.
+      - name: area_served
+        label: Municipios de atención presencial
+        type: string
+        required: true
+        readonly: true
+        list: true
+        description: Municipios que se publican como "areaServed" en los datos estructurados (SEO local).
+      - name: online_area
+        label: Zona de la terapia online
+        type: string
+        required: true
+        readonly: true
+        description: "La terapia online no tiene zona; se indica el país desde el que se atiende."
+      - name: price_range
+        label: Rango de precio orientativo
+        type: string
+        required: true
+        readonly: true
+        description: Solo para los buscadores ($, $$ o $$$). No se muestra en la web.
 
   - name: footer
     label: Footer (solo lectura)
