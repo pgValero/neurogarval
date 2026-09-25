@@ -43,15 +43,17 @@ function closeModalityModal() {
 function openBlogModal(key) {
     const card = document.querySelector('.blog-card[data-blog="' + key + '"]');
     if (!card) return;
-    const img = card.querySelector('.blog-thumb img');
+    const thumb = card.querySelector('.blog-thumb picture, .blog-thumb img');
     const cover = document.getElementById('blogModalCover');
     cover.innerHTML = '';
-    if (img) {
-        const copy = img.cloneNode();
-        copy.removeAttribute('loading');
+    if (thumb) {
+        const copy = thumb.cloneNode(true);
+        copy.querySelectorAll('img').forEach(function (img) {
+            img.removeAttribute('loading');
+        });
         cover.appendChild(copy);
     }
-    cover.hidden = !img;
+    cover.hidden = !thumb;
     document.getElementById('blogModalTitle').textContent =
         card.querySelector('h4').textContent;
     document.getElementById('blogModalBody').innerHTML =
