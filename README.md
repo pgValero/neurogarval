@@ -33,7 +33,7 @@ A solo professional practice needs five things. Each one maps to a property of t
 ### 📝 Update without a developer, without breaking anything
 
 The owner edits copy, prices, photos, FAQ and blog posts in a browser form. Saving only
-commits YAML on `main` and triggers nothing; **"Deploy Page"** builds and validates
+commits YAML on `main` and triggers nothing; [**"Deploy Page"**](.github/workflows/deploy_page.yml) builds and validates
 first, so a bad edit never reaches production.
 
 ### ⚡ Fast and cheap
@@ -43,8 +43,8 @@ no database, no server, no maintenance windows.
 
 ### 🔍 Rank well and be easy to quote
 
-Title, description, keywords, canonical URL, geo and social tags, `sitemap.xml`, JSON-LD
-graph and `llms.txt` / `llms-full.txt` generated from the same content, always fresh for
+Title, description, keywords, canonical URL, geo and social tags, [`sitemap.xml`](src/sitemap.xml), JSON-LD
+graph and [`llms.txt`](src/llms.txt) / [`llms-full.txt`](src/llms-full.txt) generated from the same content, always fresh for
 search engines and AI assistants.
 
 ### 🔐 Fully owned
@@ -55,7 +55,7 @@ service disappears.
 
 ### 🔄 Consistent everywhere
 
-Phone, WhatsApp, email, address and Maps link are edited once in `content/common.yml`
+Phone, WhatsApp, email, address and Maps link are edited once in [`content/common.yml`](content/common.yml)
 and written into the HTML, the JSON-LD and the signature. Sections can never disagree,
 and crawlers need no JavaScript to see the contact data.
 
@@ -75,12 +75,12 @@ and screen-reader accessible modals, light WebP images, no trackers or cookie ba
 | Area | What it does |
 | --- | --- |
 | Editing | Friendly web CMS with one file per page section, Markdown support, image uploads and Spanish labels |
-| Generation | One Python script resolves markers, expands loops, converts Markdown, generates JSON-LD and writes `_site/` |
-| Front-end | Semantic HTML5, one hand-written CSS file, ~85 lines of vanilla JS for modals and the mobile menu |
-| SEO and AI | Canonical URL, geo tags, social cards, sitemap with images, JSON-LD graph, `llms.txt` and crawler-friendly `robots.txt` |
+| Generation | One Python script ([`scripts/build.py`](scripts/build.py)) resolves markers, expands loops, converts Markdown, generates JSON-LD and writes `_site/` |
+| Front-end | Semantic HTML5 ([`src/index.html`](src/index.html)), one hand-written CSS file ([`src/styles.css`](src/styles.css)), ~85 lines of vanilla JS ([`src/script.js`](src/script.js)) for modals and the mobile menu |
+| SEO and AI | Canonical URL, geo tags, social cards, sitemap with images, JSON-LD graph, [`llms.txt`](src/llms.txt) and crawler-friendly [`robots.txt`](src/robots.txt) |
 | Images | Automatic PNG/JPEG to WebP conversion at build time, with dimensions and lazy loading |
 | Safety | Fail-fast build, linters on the generated site, live-site smoke test |
-| Publishing | Save to `main` (triggers nothing), then **"Deploy Page"** builds, validates and deploys |
+| Publishing | Save to `main` (triggers nothing), then [**"Deploy Page"**](.github/workflows/deploy_page.yml) builds, validates and deploys |
 | Cost | $0 hosting on GitHub Pages; Domain is the only cost |
 
 ## Architecture
@@ -102,28 +102,28 @@ flowchart TD
 
 | Question | Answer given by the architecture |
 | --- | --- |
-| *What does the editor touch?* | Only `content/*.yml` and `media/` through a form. No HTML, no code, no local tools. |
+| *What does the editor touch?* | Only [`content/*.yml`](content/) and [`media/`](media/) through a form. No HTML, no code, no local tools. |
 | *Where is the truth?* | In Git. Every change is a commit with an author, a date and a reviewable diff. |
 | *What stops a typo from reaching production?* | The build fails on any missing field and the linters check the generated site; on failure the live site keeps the previous version. |
 | *What is actually deployed?* | Only the build output, uploaded as an artifact. Templates and YAML never ship. |
 
 Templates hold structure with `__file.path.field__` markers and `@foreach` loop blocks;
-`scripts/build.py` reads the field type from `.pages.yml`, renders each value accordingly
+[`scripts/build.py`](scripts/build.py) reads the field type from [`.pages.yml`](.pages.yml), renders each value accordingly
 and repeats each loop block once per YAML element, so adding a service, modality, process
-step, blog post or FAQ question needs zero HTML changes. The domain comes from `src/CNAME`;
+step, blog post or FAQ question needs zero HTML changes. The domain comes from [`src/CNAME`](src/CNAME);
 every other fixed value (identity, SEO, social, menu labels, schema texts) comes from
-`content/clinic_info.yml`. See `AGENTS.md` for the marker, loop, contact and media details.
+[`content/clinic_info.yml`](content/clinic_info.yml). See [`AGENTS.md`](AGENTS.md) for the marker, loop, contact and media details.
 
 ## Tech stack
 
 | Layer | Choice | Why |
 | --- | --- | --- |
 | Front-end | Hand-written HTML5, CSS and vanilla JS | Zero dependencies, nothing to patch, works forever |
-| Styling | One `styles.css` with CSS custom properties, [Montserrat](https://fonts.google.com/specimen/Montserrat) ([Google Fonts](https://fonts.google.com/)) and [Bootstrap Icons](https://icons.getbootstrap.com/) from CDN | No build step for CSS, design tokens in one place |
+| Styling | One [`styles.css`](src/styles.css) with CSS custom properties, [Montserrat](https://fonts.google.com/specimen/Montserrat) ([Google Fonts](https://fonts.google.com/)) and [Bootstrap Icons](https://icons.getbootstrap.com/) from CDN | No build step for CSS, design tokens in one place |
 | Modals | Native [`<dialog>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dialog) + [`<details>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/details) | Accessibility and behavior without a library |
 | Content | [YAML](https://yaml.org/), one file per section | Human-readable, diff-friendly, framework-free |
-| CMS | [Pages CMS](https://pagescms.org/) ([repo](https://github.com/pagescms/pagescms), [app](https://app.pagescms.org/)) (`.pages.yml`) | Git-based, no vendor lock-in, free tier, per-field descriptions for the editor |
-| Templating | Custom marker + `@foreach` engine in `build.py` | ~200 lines instead of a template engine dependency |
+| CMS | [Pages CMS](https://pagescms.org/) ([repo](https://github.com/pagescms/pagescms), [app](https://app.pagescms.org/)) ([`.pages.yml`](.pages.yml)) | Git-based, no vendor lock-in, free tier, per-field descriptions for the editor |
+| Templating | Custom marker + `@foreach` engine in [`build.py`](scripts/build.py) | ~200 lines instead of a template engine dependency |
 | Markdown | [Python-Markdown](https://python-markdown.github.io/) (`extra`) | Editors write prose, the build renders HTML |
 | Images | [Pillow](https://python-pillow.org/) | WebP conversion at build time |
 | Hosting | [GitHub Pages](https://pages.github.com/) | Free, HTTPS, versioned, globally cached |
@@ -135,16 +135,16 @@ every other fixed value (identity, SEO, social, menu labels, schema texts) comes
 
 | Gate | What it catches |
 | --- | --- |
-| `build.py` | Missing/misspelled content fields, undeclared types, duplicate service ids, missing static files |
+| [`build.py`](scripts/build.py) | Missing/misspelled content fields, undeclared types, duplicate service ids, missing static files |
 | **[HTMLHint](https://github.com/thedaviddias/HTMLHint)** | Malformed tags, duplicated attributes, non-lowercase tag names, duplicate ids |
 | **[Stylelint](https://stylelint.io/)** | CSS errors, unknown properties, bad syntax |
 | **[ESLint](https://eslint.org/)** | JavaScript problems |
 | **[Lychee](https://github.com/lycheeverse/lychee)** | Broken local and external links in the HTML (skips `tel:` links and template markers) |
 | **[zizmor](https://github.com/woodruffw/zizmor)** | GitHub Actions security: unpinned actions, excessive permissions, credential persistence, template injection |
-| **[ShellCheck](https://www.shellcheck.net/)** | Bugs and portability problems in `scripts/check_site.sh` |
-| **[ruff](https://github.com/astral-sh/ruff)** | Lint and format of `scripts/build.py` (pyflakes, bugbear, pyupgrade, import order...) |
+| **[ShellCheck](https://www.shellcheck.net/)** | Bugs and portability problems in [`scripts/check_site.sh`](scripts/check_site.sh) |
+| **[ruff](https://github.com/astral-sh/ruff)** | Lint and format of [`scripts/build.py`](scripts/build.py) (pyflakes, bugbear, pyupgrade, import order...) |
 | **[markdownlint-cli2](https://github.com/DavidAnson/markdownlint-cli2)** | Markdown structure: broken anchors, missing code-fence language, heading levels, list and spacing rules |
-| `check_site.sh` ([curl](https://curl.se/)) | Live site unreachable, empty, unresolved `__markers__`, missing `<title>`, missing canonical URL, no visible text, missing image, missing `robots.txt` / `sitemap.xml` / `llms*.txt` / logo / favicon |
+| [`check_site.sh`](scripts/check_site.sh) ([curl](https://curl.se/)) | Live site unreachable, empty, unresolved `__markers__`, missing `<title>`, missing canonical URL, no visible text, missing image, missing [`robots.txt`](src/robots.txt) / [`sitemap.xml`](src/sitemap.xml) / [`llms.txt`](src/llms.txt) / [`llms-full.txt`](src/llms-full.txt) / logo / favicon |
 
 `_site/` is gitignored, so CI stages it (`git add -f _site`) before running the linters —
 the checks run against the **generated** site, not just the sources.
@@ -154,8 +154,8 @@ the checks run against the **generated** site, not just the sources.
 - **Content and presentation are separated.** Templates hold structure; YAML holds
   values; the build joins them.
 - **Every site-specific literal is in content, not in code.** The domain comes from
-  `src/CNAME`; identity, SEO, social tags, menu labels and structured-data texts come
-  from `clinic_info.yml`. Code contains only markup, classes, icon names and
+  [`src/CNAME`](src/CNAME); identity, SEO, social tags, menu labels and structured-data texts come
+  from [`content/clinic_info.yml`](content/clinic_info.yml). Code contains only markup, classes, icon names and
   schema.org vocabulary.
 - **One source of truth per fact.** Contact details, keywords, service catalogue,
   FAQ, posts — each lives in exactly one place and is reused everywhere.
@@ -164,7 +164,7 @@ the checks run against the **generated** site, not just the sources.
 - **No hardcoded copies of lists.** Loops, not repeated markup.
 - **Content files stay machine-clean.** Exactly the format the CMS writes: no YAML
   comments, no blank lines between fields. Editor guidance lives in the `description`
-  of each field in `.pages.yml`.
+  of each field in [`.pages.yml`](.pages.yml).
 - **Do not introduce a framework or bundler.** That is the whole point of the project.
 
 ## License
