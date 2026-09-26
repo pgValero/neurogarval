@@ -921,11 +921,11 @@ content:
 
   # ---------------------------------------------------------------------
   # 3) Email signature (src/signature.html, file apart from the site).
-  # The legal notices are plain read-only text: the email does not use the
+  # All fields are plain read-only text: the email does not use the
   # page's Markdown renderer.
   # ---------------------------------------------------------------------
   - name: signature
-    label: Firma de email
+    label: Firma de email (solo lectura)
     type: file
     path: content/signature.yml
     format: yaml
@@ -936,16 +936,19 @@ content:
         label: Nombre
         type: string
         required: true
+        readonly: true
         description: "Nombre mostrado en la primera línea de la identidad de la firma. El teléfono, la dirección y el mapa se toman de Datos comunes (solo lectura)."
       - name: license
         label: Nº de colegiada
         type: string
         required: true
+        readonly: true
         description: "Se muestra tal cual en la segunda línea de la identidad de la firma."
       - name: role
         label: Cargo
         type: string
         required: true
+        readonly: true
         description: "Profesión o cargo que aparece bajo la identidad de la firma."
       - name: legal_notice
         label: Aviso legal
