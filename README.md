@@ -1,4 +1,4 @@
-# NeuroGarval
+### NeuroGarval
 
 **Landing page for NeuroGarval, a neuropsychology and health psychology practice in Valdemoro (Madrid, Spain).**
 
