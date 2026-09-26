@@ -536,19 +536,19 @@ content:
             pattern: "^@[A-Za-z0-9._]+$"
 
   - name: metadata
-    label: Datos fijos del sitio (solo lectura)
+    label: Metadatos (solo lectura)
     type: file
     path: content/metadata.yml
     format: yaml
     operations:
       delete: false
     fields:
-      - name: metadata
+      - name: structured_data
         label: Datos estructurados
         type: boolean
         required: true
         readonly: true
-        description: "Campo técnico de solo lectura que acompaña al marcador metadata.metadata de src/index.html. Al resolver ese marcador, build.py inserta el bloque JSON-LD completo generado con metadata.yml y el resto de content/*.yml; el valor booleano no controla la inserción."
+        description: "Campo técnico de solo lectura que acompaña al marcador metadata.structured_data de src/index.html. Al resolver ese marcador, build.py inserta el bloque JSON-LD completo generado con metadata.yml y el resto de content/*.yml; el valor booleano no controla la inserción."
       - name: site
         label: Identidad, idioma y ubicación
         type: object

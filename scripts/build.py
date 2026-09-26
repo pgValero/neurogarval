@@ -711,7 +711,7 @@ def render_sitemap_image(value, parent: dict) -> str:
 # from content/metadata.yml and the rest of content/*.yml, so the data that
 # search engines and AI assistants read never drifts from the real content of
 # the site. The marker that triggers it is
-# __metadata.metadata__ (SPECIALS, below). The texts of each node
+# __metadata.structured_data__ (SPECIALS, below). The texts of each node
 # (schema.org name, description, job title, topics covered, @id anchors...)
 # live in metadata.yml -> schema; here only the schema.org vocabulary is
 # left (the @type values and the @context).
@@ -911,7 +911,7 @@ SPECIALS: dict[str, dict] = {
         "hero.modalities": render_modalities,
         "blog.posts.*.image": render_blog_thumb,
         # The marker triggers the whole JSON-LD block of the page.
-        "metadata.metadata": lambda v, parent: build_jsonld(),
+        "metadata.structured_data": lambda v, parent: build_jsonld(),
         # SEO: the keyword list is joined with commas and the social image is
         # published with its absolute URL.
         "metadata.seo.keywords": render_keywords,
