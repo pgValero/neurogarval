@@ -165,5 +165,6 @@ the checks run against the **generated** site, not just the sources.
 
 ## License
 
-No `LICENSE` file is included in this repository. Treat the code, templates and content
-as proprietary: all rights reserved unless a license is added later.
+MIT — see [LICENSE](LICENSE). You may fork the code, templates and content,
+use them commercially and modify them, as long as the copyright notice and
+permission notice stay included.
