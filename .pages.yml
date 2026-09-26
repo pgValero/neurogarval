@@ -10,12 +10,12 @@
 #
 # HOW IT RELATES TO THE SITE:
 #   The content/*.yml files are NOT read by the browser directly. build.py
-#   (run automatically by .github/workflows/build_validation.yml on every PR
-#   against main, and by .github/workflows/deploy_page.yml on push to main;
-#   never with content commits) substitutes the __file.path.field__ markers of
-#   src/index.html and src/signature.html with this data, writes the contact
-#   into the .neuro-* slots of the generated HTML (without JavaScript), writes
-#   the modal content into the HTML itself and publishes the result.
+#   (run by .github/workflows/deploy_page.yml when the "Publicar cambios"
+#   button is pressed; never with content commits) substitutes the
+#   __file.path.field__ markers of src/index.html and src/signature.html with
+#   this data, writes the contact into the .neuro-* slots of the generated
+#   HTML (without JavaScript), writes the modal content into the HTML itself
+#   and publishes the result.
 #
 #   This file is also the TYPE REGISTRY of the build: every field that appears
 #   in a marker must be declared here with its type; build.py uses that
@@ -37,14 +37,12 @@
 #   services, modalities, faq, blog and specialist.
 #
 # NOTE ON BRANCHES: Pages CMS reads this file per branch and the CMS is used on
-# develop: it is opened at https://app.pagescms.org/pgValero/neurogarval/develop
-# and every content commit lands on develop. main is protected (PR only) and
-# receives no direct pushes. The "Publicar cambios" button (actions below)
-# triggers .github/workflows/create_pr.yml, which creates/reuses the PR
-# develop -> main and marks it for auto-merge with rebase: GitHub merges it on
-# its own once the required checks pass; on merge, the push to main triggers
-# the deploy (deploy_page.yml). Technical developments outside the CMS also go
-# through develop and reach main with that same PR.
+# main: it is opened at https://app.pagescms.org/pgValero/neurogarval/main
+# and every content commit lands directly on main without triggering any
+# workflow. The "Publicar cambios" button (actions below) triggers
+# .github/workflows/deploy_page.yml, which builds and validates the site
+# and then publishes it to GitHub Pages.
+# Technical work outside the CMS also lands on main.
 # ============================================================================
 
 # ---------------------------------------------------------------------------
@@ -964,23 +962,20 @@ content:
 
 # ---------------------------------------------------------------------------
 # ACTIONS (optional): "Publicar cambios" button in Pages CMS.
-# The button triggers .github/workflows/create_pr.yml (workflow_dispatch on
-# the branch being edited, develop): it creates/reuses the PR develop -> main,
-# marks it for auto-merge with rebase and, on merge, the automatic deploy is
-# triggered (deploy_page.yml on push to main).
-# It requires the main and develop branches to have the workflow (they will
-# after the first migration PR) and main to be protected with the status check
-# "Build Validation / build-validation" as required (see AGENTS.md, section
-# "Layout & deploy").
+# The button triggers .github/workflows/deploy_page.yml (workflow_dispatch on
+# the branch being edited, main): it builds and validates the site
+# and then publishes _site/ to GitHub Pages.
+# Content commits saved from the CMS land directly on main and trigger
+# nothing; only this button deploys.
 # IMPORTANT: Pages CMS always sends a "payload" input (JSON) when it fires the
-# workflow; that is why on.workflow_dispatch of create_pr.yml declares the
+# workflow; that is why on.workflow_dispatch of deploy_page.yml declares the
 # payload input, or the GitHub API rejects the event with
 # "Unexpected inputs provided: [\"payload\"]".
 # ---------------------------------------------------------------------------
 actions:
   - name: publish
     label: Publicar cambios
-    workflow: create_pr.yml
+    workflow: deploy_page.yml
 
 # ---------------------------------------------------------------------------
 # FUTURE EXTENSION — blog article collection (Markdown):
