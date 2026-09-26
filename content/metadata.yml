@@ -1,4 +1,4 @@
-structured_data: true
+metadata: true
 site:
   name: NeuroGarval
   language: es

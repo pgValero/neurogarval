@@ -1,41 +1,41 @@
 <!DOCTYPE html>
-<html lang="__clinic_info.site.language__">
+<html lang="__metadata.site.language__">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Basic SEO (the values come from content/clinic_info.yml) -->
-    <title>__clinic_info.seo.title__</title>
-    <meta name="description" content="__clinic_info.seo.description__">
-    <meta name="keywords" content="__clinic_info.seo.keywords__">
-    <link rel="canonical" href="__clinic_info.site.url__">
-    <meta name="geo.region" content="__clinic_info.site.region_code__">
-    <meta name="geo.placename" content="__clinic_info.site.locality__">
-    <meta name="ICBM" content="__clinic_info.site.geo_position__">
+    <title>__metadata.seo.title__</title>
+    <meta name="description" content="__metadata.seo.description__">
+    <meta name="keywords" content="__metadata.seo.keywords__">
+    <link rel="canonical" href="__metadata.site.url__">
+    <meta name="geo.region" content="__metadata.site.region_code__">
+    <meta name="geo.placename" content="__metadata.site.locality__">
+    <meta name="ICBM" content="__metadata.site.geo_position__">
 
     <!-- Open Graph / social networks -->
-    <meta property="og:type" content="__clinic_info.social.og_type__">
-    <meta property="og:locale" content="__clinic_info.site.locale__">
-    <meta property="og:site_name" content="__clinic_info.site.name__">
-    <meta property="og:title" content="__clinic_info.social.og_title__">
-    <meta property="og:description" content="__clinic_info.social.og_description__">
-    <meta property="og:image" content="__clinic_info.social.image__">
-    <meta property="og:image:alt" content="__clinic_info.social.image_alt__">
-    <meta property="og:image:width" content="__clinic_info.social.image_width__">
-    <meta property="og:image:height" content="__clinic_info.social.image_height__">
-    <meta property="og:url" content="__clinic_info.site.url__">
+    <meta property="og:type" content="__metadata.social.og_type__">
+    <meta property="og:locale" content="__metadata.site.locale__">
+    <meta property="og:site_name" content="__metadata.site.name__">
+    <meta property="og:title" content="__metadata.social.og_title__">
+    <meta property="og:description" content="__metadata.social.og_description__">
+    <meta property="og:image" content="__metadata.social.image__">
+    <meta property="og:image:alt" content="__metadata.social.image_alt__">
+    <meta property="og:image:width" content="__metadata.social.image_width__">
+    <meta property="og:image:height" content="__metadata.social.image_height__">
+    <meta property="og:url" content="__metadata.site.url__">
 
     <!-- Twitter / X -->
-    <meta name="twitter:card" content="__clinic_info.social.twitter_card__">
-    <meta name="twitter:title" content="__clinic_info.social.twitter_title__">
-    <meta name="twitter:description" content="__clinic_info.social.twitter_description__">
-    <meta name="twitter:image" content="__clinic_info.social.image__">
+    <meta name="twitter:card" content="__metadata.social.twitter_card__">
+    <meta name="twitter:title" content="__metadata.social.twitter_title__">
+    <meta name="twitter:description" content="__metadata.social.twitter_description__">
+    <meta name="twitter:image" content="__metadata.social.image__">
 
     <!-- Structured data (Schema.org)
          build.py generates the whole JSON-LD block (schema.org) from
          content/clinic_info.yml and the rest of content/*.yml: clinic and
          professional, service catalog, FAQ and articles.
          Do not edit it by hand: change the YAML. -->
-    <script type="application/ld+json">__clinic_info.structured_data__</script>
+    <script type="application/ld+json">__metadata.metadata__</script>
 
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -67,14 +67,14 @@
     <div class="mobile-overlay" id="mobileMenu">
         <button class="close-btn" onclick="toggleMenu()">&times;</button>
         <div class="mobile-links">
-            <a href="#inicio" onclick="toggleMenu()">__clinic_info.nav.home__</a>
-            <a href="#servicios" onclick="toggleMenu()">__clinic_info.nav.services__</a>
-            <a href="#modalidades" onclick="toggleMenu()">__clinic_info.nav.modalities__</a>
-            <a href="#proceso" onclick="toggleMenu()">__clinic_info.nav.process__</a>
-            <a href="#especialista" onclick="toggleMenu()">__clinic_info.nav.specialist__</a>
-            <a href="#blog" onclick="toggleMenu()">__clinic_info.nav.blog__</a>
-            <a href="#faq" onclick="toggleMenu()">__clinic_info.nav.faq__</a>
-            <a href="#contacto" onclick="toggleMenu()">__clinic_info.nav.contact__</a>
+            <a href="#inicio" onclick="toggleMenu()">__metadata.nav.home__</a>
+            <a href="#servicios" onclick="toggleMenu()">__metadata.nav.services__</a>
+            <a href="#modalidades" onclick="toggleMenu()">__metadata.nav.modalities__</a>
+            <a href="#proceso" onclick="toggleMenu()">__metadata.nav.process__</a>
+            <a href="#especialista" onclick="toggleMenu()">__metadata.nav.specialist__</a>
+            <a href="#blog" onclick="toggleMenu()">__metadata.nav.blog__</a>
+            <a href="#faq" onclick="toggleMenu()">__metadata.nav.faq__</a>
+            <a href="#contacto" onclick="toggleMenu()">__metadata.nav.contact__</a>
         </div>
     </div>
 
@@ -82,17 +82,17 @@
         <div class="container">
             <nav>
                 <a href="#inicio">
-                    <img src="__clinic_info.site.logo__" alt="__clinic_info.site.name__" class="header-logo">
+                    <img src="__metadata.site.logo__" alt="__metadata.site.name__" class="header-logo">
                 </a>
 
                 <ul class="nav-links">
-                    <li><a href="#inicio">__clinic_info.nav.home__</a></li>
-                    <li><a href="#servicios">__clinic_info.nav.services__</a></li>
-                    <li><a href="#modalidades">__clinic_info.nav.modalities__</a></li>
-                    <li><a href="#especialista">__clinic_info.nav.specialist__</a></li>
-                    <li><a href="#blog">__clinic_info.nav.blog__</a></li>
-                    <li><a href="#faq">__clinic_info.nav.faq__</a></li>
-                    <li><a href="#contacto">__clinic_info.nav.contact__</a></li>
+                    <li><a href="#inicio">__metadata.nav.home__</a></li>
+                    <li><a href="#servicios">__metadata.nav.services__</a></li>
+                    <li><a href="#modalidades">__metadata.nav.modalities__</a></li>
+                    <li><a href="#especialista">__metadata.nav.specialist__</a></li>
+                    <li><a href="#blog">__metadata.nav.blog__</a></li>
+                    <li><a href="#faq">__metadata.nav.faq__</a></li>
+                    <li><a href="#contacto">__metadata.nav.contact__</a></li>
                 </ul>
 
                 <button class="menu-btn" onclick="toggleMenu()">
@@ -336,7 +336,7 @@
         <div class="container">
             <div class="footer-top">
                 <div class="footer-info">
-                    <img src="__clinic_info.site.logo__" alt="__clinic_info.site.name__" class="footer-logo">
+                    <img src="__metadata.site.logo__" alt="__metadata.site.name__" class="footer-logo">
                     <p>__footer.lines__</p>
                     <br>
                     <a href="__footer.legal_file__">__footer.legal_label__</a>
@@ -357,21 +357,21 @@
     </footer>
 
     <dialog id="serviceModal" class="modal" aria-labelledby="modalTitle">
-        <button class="modal-close" onclick="closeServiceModal()" aria-label="__clinic_info.ui.close_label__">&times;</button>
+        <button class="modal-close" onclick="closeServiceModal()" aria-label="__metadata.ui.close_label__">&times;</button>
         <div class="service-icon" id="modalIcon"></div>
         <h3 id="modalTitle"></h3>
         <div class="modal-body markdown-content" id="modalBody"></div>
     </dialog>
 
     <dialog id="modalityModal" class="modal" aria-labelledby="modalityModalTitle">
-        <button class="modal-close" onclick="closeModalityModal()" aria-label="__clinic_info.ui.close_label__">&times;</button>
+        <button class="modal-close" onclick="closeModalityModal()" aria-label="__metadata.ui.close_label__">&times;</button>
         <div class="service-icon" id="modalityModalIcon"></div>
         <h3 id="modalityModalTitle"></h3>
         <div class="modal-body markdown-content" id="modalityModalBody"></div>
     </dialog>
 
     <dialog id="blogModal" class="modal" aria-labelledby="blogModalTitle">
-        <button class="modal-close" onclick="closeBlogModal()" aria-label="__clinic_info.ui.close_label__">&times;</button>
+        <button class="modal-close" onclick="closeBlogModal()" aria-label="__metadata.ui.close_label__">&times;</button>
         <div class="blog-modal-cover" id="blogModalCover" hidden></div>
         <h3 id="blogModalTitle"></h3>
         <div class="modal-body markdown-content" id="blogModalBody"></div>

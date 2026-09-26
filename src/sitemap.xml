@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
-    <loc>__clinic_info.site.url__</loc>
+    <loc>__metadata.site.url__</loc>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
     <image:image>
@@ -16,12 +16,12 @@
 <!-- @endforeach:blog.posts -->
   </url>
   <url>
-    <loc>__clinic_info.site.url__llms.txt</loc>
+    <loc>__metadata.site.url__llms.txt</loc>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>__clinic_info.site.url__llms-full.txt</loc>
+    <loc>__metadata.site.url__llms-full.txt</loc>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
   </url>

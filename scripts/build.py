@@ -4,7 +4,7 @@
 What it does
 ------------
 1. Reads the Pages CMS editable content: content/*.yml (one file per page
-   section plus common.yml, footer.yml, clinic_info.yml and signature.yml)
+   section plus common.yml, footer.yml, metadata.yml and signature.yml)
    and the type registry .pages.yml.
 2. Walks the templates src/index.html and src/signature.html substituting the
    __file.path.field__ markers (e.g. __hero.badge__, __services.items.0.title__
@@ -20,11 +20,11 @@ What it does
    .pages.yml, the build fails stating exactly which field was looked up and
    in which template.
 3. Reads the domain from src/CNAME and fills the header of src/index.html from
-   content/clinic_info.yml (read-only): <title>, description, keywords,
+   content/metadata.yml (read-only): <title>, description, keywords,
    canonical, geo tags, Open Graph and Twitter, language, logo and menu labels.
 4. Generates the JSON-LD block (schema.org) announcing the clinic, the
    professional, the service catalog, the FAQ and the articles, with the data
-   of clinic_info.yml and the other sections.
+   of metadata.yml and the other sections.
 5. Writes the contact data of content/common.yml (single source of truth)
    straight into the generated index.html: the .neuro-* slots (phone,
    WhatsApp, email, address and Maps) are resolved without JavaScript.
@@ -237,7 +237,7 @@ def media_url(path: str | None) -> str:
 
 def site_url() -> str:
     """Public site URL, with trailing slash."""
-    return str(CONTEXT["clinic_info"]["site"]["url"])
+    return str(CONTEXT["metadata"]["site"]["url"])
 
 
 def absolute_url(path: str) -> str:
@@ -402,7 +402,7 @@ class MissingFieldError(Exception):
 # signature URL). These markers skip the .pages.yml registry.
 DERIVED_FIELDS = frozenset(
     {
-        "clinic_info.site.url",
+        "metadata.site.url",
         "common.contact.phone_tel",
         "signature.web_label",
         "signature.web_url",
@@ -702,18 +702,18 @@ def render_sitemap_image(value, parent: dict) -> str:
     substitute = WEBP_SUBSTITUTES.get(path)
     if substitute:
         path = substitute[0]
-    return site_url() + (path or media_url(CONTEXT["clinic_info"]["social"]["image"]))
+    return site_url() + (path or media_url(CONTEXT["metadata"]["social"]["image"]))
 
 
 # ---------------------------------------------------------------------------
 # Structured data (JSON-LD) — schema.org
 # The whole block is generated here (it is not hand-written in the template)
-# from content/clinic_info.yml and the rest of content/*.yml, so the data that
+# from content/metadata.yml and the rest of content/*.yml, so the data that
 # search engines and AI assistants read never drifts from the real content of
 # the site. The marker that triggers it is
-# __clinic_info.structured_data__ (SPECIALS, below). The texts of each node
+# __metadata.metadata__ (SPECIALS, below). The texts of each node
 # (schema.org name, description, job title, topics covered, @id anchors...)
-# live in clinic_info.yml -> schema; here only the schema.org vocabulary is
+# live in metadata.yml -> schema; here only the schema.org vocabulary is
 # left (the @type values and the @context).
 # ---------------------------------------------------------------------------
 
@@ -740,7 +740,7 @@ def build_jsonld() -> str:
         return jsonld_graph()
     except KeyError as exc:
         sys.exit(
-            f"content/clinic_info.yml: missing the field '{exc.args[0]}' "
+            f"content/metadata.yml: missing the field '{exc.args[0]}' "
             "required by the JSON-LD block of src/index.html."
         )
 
@@ -748,7 +748,7 @@ def build_jsonld() -> str:
 def jsonld_graph() -> str:
     """Builds the JSON-LD graph with the data of content/*.yml."""
     c = CONTEXT
-    info = c["clinic_info"]
+    info = c["metadata"]
     site = info["site"]
     schema = info["schema"]
     base = site_url()
@@ -911,11 +911,11 @@ SPECIALS: dict[str, dict] = {
         "hero.modalities": render_modalities,
         "blog.posts.*.image": render_blog_thumb,
         # The marker triggers the whole JSON-LD block of the page.
-        "clinic_info.structured_data": lambda v, parent: build_jsonld(),
+        "metadata.metadata": lambda v, parent: build_jsonld(),
         # SEO: the keyword list is joined with commas and the social image is
         # published with its absolute URL.
-        "clinic_info.seo.keywords": render_keywords,
-        "clinic_info.social.image": render_social_image,
+        "metadata.seo.keywords": render_keywords,
+        "metadata.social.image": render_social_image,
         # Images: <picture> with WebP + fallback, with width/height and the
         # right loading (the hero is immediate; the rest, on scroll).
         "hero.image": lambda v, parent: image_html(
@@ -929,7 +929,7 @@ SPECIALS: dict[str, dict] = {
         "modalities.items.*.modal_content": render_modality_content,
     },
     "src/signature.html": {
-        "clinic_info.site.logo": render_site_logo,
+        "metadata.site.logo": render_site_logo,
         # The signature shows the address on a single line.
         "common.contact.address_lines": lambda v, parent: " - ".join(
             esc(line) for line in v
@@ -945,8 +945,8 @@ SPECIALS: dict[str, dict] = {
     "src/llms.txt": {
         # YAML lists (covered services, municipalities, topics...) in a single
         # line of plain text separated by commas.
-        "clinic_info.area_served": render_comma_list,
-        "clinic_info.schema.knows_about": render_comma_list,
+        "metadata.area_served": render_comma_list,
+        "metadata.schema.knows_about": render_comma_list,
         # The summarized process is the titles of its steps.
         "process.steps": render_comma_list,
         # Description of each service, without the card tags.
@@ -954,8 +954,8 @@ SPECIALS: dict[str, dict] = {
         "*": render_plain,
     },
     "src/llms-full.txt": {
-        "clinic_info.area_served": render_comma_list,
-        "clinic_info.schema.knows_about": render_comma_list,
+        "metadata.area_served": render_comma_list,
+        "metadata.schema.knows_about": render_comma_list,
         "process.steps": render_comma_list,
         # Full Markdown of each section, as plain text.
         "services.items.*.card_text": markdown_text,
@@ -1133,7 +1133,7 @@ def build_context() -> dict:
     domain = read_cname()
     context = {p.stem: load_yaml(p.stem) for p in sorted(CONTENT.glob("*.yml"))}
     base_url = f"https://{domain}/"
-    context["clinic_info"]["site"]["url"] = base_url
+    context["metadata"]["site"]["url"] = base_url
     context["signature"]["web_label"] = domain
     context["signature"]["web_url"] = base_url.rstrip("/")
     contact = context["common"]["contact"]

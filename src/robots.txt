@@ -1,4 +1,4 @@
-# robots.txt for __clinic_info.site.name__
+# robots.txt for __metadata.site.name__
 # Every crawler is allowed, including search engines and AI assistants
 # (real-time search and model training).
 
@@ -56,4 +56,4 @@ Allow: /
 User-agent: CCBot
 Allow: /
 
-Sitemap: __clinic_info.site.url__sitemap.xml
+Sitemap: __metadata.site.url__sitemap.xml
