@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Basic SEO (the values come from content/clinic_info.yml) -->
-    <title>__metadata.seo.title__</title>
+    <title>__header.title__</title>
     <meta name="description" content="__metadata.seo.description__">
     <meta name="keywords" content="__metadata.seo.keywords__">
     <link rel="canonical" href="__metadata.site.url__">
@@ -67,14 +67,14 @@
     <div class="mobile-overlay" id="mobileMenu">
         <button class="close-btn" onclick="toggleMenu()">&times;</button>
         <div class="mobile-links">
-            <a href="#inicio" onclick="toggleMenu()">__metadata.nav.home__</a>
-            <a href="#servicios" onclick="toggleMenu()">__metadata.nav.services__</a>
-            <a href="#modalidades" onclick="toggleMenu()">__metadata.nav.modalities__</a>
-            <a href="#proceso" onclick="toggleMenu()">__metadata.nav.process__</a>
-            <a href="#especialista" onclick="toggleMenu()">__metadata.nav.specialist__</a>
-            <a href="#blog" onclick="toggleMenu()">__metadata.nav.blog__</a>
-            <a href="#faq" onclick="toggleMenu()">__metadata.nav.faq__</a>
-            <a href="#contacto" onclick="toggleMenu()">__metadata.nav.contact__</a>
+            <a href="#inicio" onclick="toggleMenu()">__header.nav.home__</a>
+            <a href="#servicios" onclick="toggleMenu()">__header.nav.services__</a>
+            <a href="#modalidades" onclick="toggleMenu()">__header.nav.modalities__</a>
+            <a href="#proceso" onclick="toggleMenu()">__header.nav.process__</a>
+            <a href="#especialista" onclick="toggleMenu()">__header.nav.specialist__</a>
+            <a href="#blog" onclick="toggleMenu()">__header.nav.blog__</a>
+            <a href="#faq" onclick="toggleMenu()">__header.nav.faq__</a>
+            <a href="#contacto" onclick="toggleMenu()">__header.nav.contact__</a>
         </div>
     </div>
 
@@ -86,13 +86,13 @@
                 </a>
 
                 <ul class="nav-links">
-                    <li><a href="#inicio">__metadata.nav.home__</a></li>
-                    <li><a href="#servicios">__metadata.nav.services__</a></li>
-                    <li><a href="#modalidades">__metadata.nav.modalities__</a></li>
-                    <li><a href="#especialista">__metadata.nav.specialist__</a></li>
-                    <li><a href="#blog">__metadata.nav.blog__</a></li>
-                    <li><a href="#faq">__metadata.nav.faq__</a></li>
-                    <li><a href="#contacto">__metadata.nav.contact__</a></li>
+                    <li><a href="#inicio">__header.nav.home__</a></li>
+                    <li><a href="#servicios">__header.nav.services__</a></li>
+                    <li><a href="#modalidades">__header.nav.modalities__</a></li>
+                    <li><a href="#especialista">__header.nav.specialist__</a></li>
+                    <li><a href="#blog">__header.nav.blog__</a></li>
+                    <li><a href="#faq">__header.nav.faq__</a></li>
+                    <li><a href="#contacto">__header.nav.contact__</a></li>
                 </ul>
 
                 <button class="menu-btn" onclick="toggleMenu()">
@@ -357,21 +357,21 @@
     </footer>
 
     <dialog id="serviceModal" class="modal" aria-labelledby="modalTitle">
-        <button class="modal-close" onclick="closeServiceModal()" aria-label="__metadata.ui.close_label__">&times;</button>
+        <button class="modal-close" onclick="closeServiceModal()" aria-label="__header.ui.close_label__">&times;</button>
         <div class="service-icon" id="modalIcon"></div>
         <h3 id="modalTitle"></h3>
         <div class="modal-body markdown-content" id="modalBody"></div>
     </dialog>
 
     <dialog id="modalityModal" class="modal" aria-labelledby="modalityModalTitle">
-        <button class="modal-close" onclick="closeModalityModal()" aria-label="__metadata.ui.close_label__">&times;</button>
+        <button class="modal-close" onclick="closeModalityModal()" aria-label="__header.ui.close_label__">&times;</button>
         <div class="service-icon" id="modalityModalIcon"></div>
         <h3 id="modalityModalTitle"></h3>
         <div class="modal-body markdown-content" id="modalityModalBody"></div>
     </dialog>
 
     <dialog id="blogModal" class="modal" aria-labelledby="blogModalTitle">
-        <button class="modal-close" onclick="closeBlogModal()" aria-label="__metadata.ui.close_label__">&times;</button>
+        <button class="modal-close" onclick="closeBlogModal()" aria-label="__header.ui.close_label__">&times;</button>
         <div class="blog-modal-cover" id="blogModalCover" hidden></div>
         <h3 id="blogModalTitle"></h3>
         <div class="modal-body markdown-content" id="blogModalBody"></div>

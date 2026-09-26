@@ -12,7 +12,6 @@ site:
   country: ES
   geo_position: "40.199937, -3.693149"
 seo:
-  title: "NeuroGarval | Neuropsicología y Psicología sanitaria en Valdemoro"
   description: "Neuropsicología y Psicología sanitaria en Valdemoro y online. Teresa García Valero, colegiado M-42858. Primera consulta gratuita. Pide cita: +34 711 233 888."
   keywords:
     - NeuroGarval
@@ -45,17 +44,6 @@ social:
   twitter_card: summary_large_image
   twitter_title: "NeuroGarval | Neuropsicología y Psicología en Valdemoro"
   twitter_description: "Psicología y neuropsicología en Valdemoro y online. Primera consulta gratuita."
-nav:
-  home: Inicio
-  services: Servicios
-  modalities: Modalidades
-  process: Proceso
-  specialist: Especialista
-  blog: Blog
-  faq: FAQ
-  contact: Contacto
-ui:
-  close_label: Cerrar
 llms:
   contact_heading: Datos de contacto
   specialist_heading: Sobre la especialista

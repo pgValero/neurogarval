@@ -31,8 +31,10 @@
 #   here requires no HTML change.
 #   The site domain is read from src/CNAME during the build. Every other fixed
 #   value (identity, logo, language, SEO/Open Graph/Twitter tags, menu labels
-#   and structured-data texts) lives in content/metadata.yml, also read-only:
-#   src/index.html and build.py read it from there, they do not hardcode it.
+#   and structured-data texts) lives in content/metadata.yml and
+#   content/header.yml (tab title, menu labels, interface texts), also
+#   read-only: src/index.html and build.py read it from there, they do not
+#   hardcode it.
 #   build.py generates the whole JSON-LD block from that same file and from
 #   services, modalities, faq, blog and specialist.
 #
@@ -620,17 +622,12 @@ content:
             readonly: true
             description: "Latitud y longitud separadas por una coma (latitud,longitud) para la etiqueta ICBM del <head>."
       - name: seo
-        label: SEO (title, description, keywords)
+        label: SEO (description, keywords)
         type: object
         required: true
         readonly: true
         description: "Etiquetas SEO de la cabecera que leen los buscadores. Son datos fijos, editables únicamente en el repositorio; la lista de palabras clave se une con comas durante la compilación."
         fields:
-          - name: title
-            label: Título de la pestaña
-            type: string
-            required: true
-            readonly: true
           - name: description
             label: Descripción
             type: string
@@ -701,66 +698,6 @@ content:
             type: string
             required: true
             readonly: true
-      - name: nav
-        label: Etiquetas del menú
-        type: object
-        required: true
-        readonly: true
-        description: "Etiquetas fijas de los menús para móvil y escritorio. Los enlaces y los ids de sección están definidos en src/index.html; estos campos solo sustituyen el texto visible."
-        fields:
-          - name: home
-            label: Inicio
-            type: string
-            required: true
-            readonly: true
-          - name: services
-            label: Servicios
-            type: string
-            required: true
-            readonly: true
-          - name: modalities
-            label: Modalidades
-            type: string
-            required: true
-            readonly: true
-          - name: process
-            label: Proceso
-            type: string
-            required: true
-            readonly: true
-          - name: specialist
-            label: Especialista
-            type: string
-            required: true
-            readonly: true
-          - name: blog
-            label: Blog
-            type: string
-            required: true
-            readonly: true
-          - name: faq
-            label: FAQ
-            type: string
-            required: true
-            readonly: true
-          - name: contact
-            label: Contacto
-            type: string
-            required: true
-            readonly: true
-      - name: ui
-        label: Textos de la interfaz
-        type: object
-        required: true
-        readonly: true
-        description: "Textos fijos de la interfaz que no dependen del contenido editable de las secciones."
-        fields:
-          - name: close_label
-            label: Texto accesible del botón de cerrar
-            type: string
-            required: true
-            readonly: true
-            description: aria-label de los botones "x" de los modales.
       - name: llms
         label: Ficheros para asistentes de IA
         type: object
@@ -884,6 +821,80 @@ content:
         required: true
         readonly: true
         description: "Rango orientativo para los buscadores ($, $$ o $$$; «$$» significa precio medio). Solo se publica como priceRange en los datos estructurados, nunca en la web."
+
+  - name: header
+    label: Cabecera (solo lectura)
+    type: file
+    path: content/header.yml
+    format: yaml
+    operations:
+      delete: false
+    fields:
+      - name: title
+        label: Título de la pestaña
+        type: string
+        required: true
+        readonly: true
+      - name: nav
+        label: Etiquetas del menú
+        type: object
+        required: true
+        readonly: true
+        description: "Etiquetas fijas de los menús para móvil y escritorio. Los enlaces y los ids de sección están definidos en src/index.html; estos campos solo sustituyen el texto visible."
+        fields:
+          - name: home
+            label: Inicio
+            type: string
+            required: true
+            readonly: true
+          - name: services
+            label: Servicios
+            type: string
+            required: true
+            readonly: true
+          - name: modalities
+            label: Modalidades
+            type: string
+            required: true
+            readonly: true
+          - name: process
+            label: Proceso
+            type: string
+            required: true
+            readonly: true
+          - name: specialist
+            label: Especialista
+            type: string
+            required: true
+            readonly: true
+          - name: blog
+            label: Blog
+            type: string
+            required: true
+            readonly: true
+          - name: faq
+            label: FAQ
+            type: string
+            required: true
+            readonly: true
+          - name: contact
+            label: Contacto
+            type: string
+            required: true
+            readonly: true
+      - name: ui
+        label: Textos de la interfaz
+        type: object
+        required: true
+        readonly: true
+        description: "Textos fijos de la interfaz que no dependen del contenido editable de las secciones."
+        fields:
+          - name: close_label
+            label: Texto accesible del botón de cerrar
+            type: string
+            required: true
+            readonly: true
+            description: aria-label de los botones "x" de los modales.
 
   - name: footer
     label: Footer (solo lectura)

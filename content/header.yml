@@ -1,0 +1,12 @@
+title: "NeuroGarval | Neuropsicología y Psicología sanitaria en Valdemoro"
+nav:
+  home: Inicio
+  services: Servicios
+  modalities: Modalidades
+  process: Proceso
+  specialist: Especialista
+  blog: Blog
+  faq: FAQ
+  contact: Contacto
+ui:
+  close_label: Cerrar

@@ -112,7 +112,7 @@ Templates hold structure with `__file.path.field__` markers and `@foreach` loop 
 and repeats each loop block once per YAML element, so adding a service, modality, process
 step, blog post or FAQ question needs zero HTML changes. The domain comes from [`src/CNAME`](src/CNAME);
 every other fixed value (identity, SEO, social, menu labels, schema texts) comes from
-[`content/metadata.yml`](content/metadata.yml). See [`AGENTS.md`](AGENTS.md) for the marker, loop, contact and media details.
+[`content/metadata.yml`](content/metadata.yml) and [`content/header.yml`](content/header.yml). See [`AGENTS.md`](AGENTS.md) for the marker, loop, contact and media details.
 
 ## Tech stack
 
@@ -155,7 +155,7 @@ the checks run against the **generated** site, not just the sources.
   values; the build joins them.
 - **Every site-specific literal is in content, not in code.** The domain comes from
   [`src/CNAME`](src/CNAME); identity, SEO, social tags, menu labels and structured-data texts come
-  from [`content/metadata.yml`](content/metadata.yml). Code contains only markup, classes, icon names and
+  from [`content/metadata.yml`](content/metadata.yml) and [`content/header.yml`](content/header.yml). Code contains only markup, classes, icon names and
   schema.org vocabulary.
 - **One source of truth per fact.** Contact details, keywords, service catalogue,
   FAQ, posts — each lives in exactly one place and is reused everywhere.

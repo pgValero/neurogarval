@@ -32,8 +32,8 @@ What is covered: __metadata.schema.knows_about__.
 
 ## __contact.heading__
 
-- [__metadata.nav.contact__](__metadata.site.url__#contacto): by WhatsApp or phone (__common.contact.phone__) or by email (__common.contact.mail__). The first consultation is free.
-- [__metadata.nav.process__](__metadata.site.url__#proceso): __process.steps__.
+- [__header.nav.contact__](__metadata.site.url__#contacto): by WhatsApp or phone (__common.contact.phone__) or by email (__common.contact.mail__). The first consultation is free.
+- [__header.nav.process__](__metadata.site.url__#proceso): __process.steps__.
 
 ## __metadata.llms.more_heading__
 
