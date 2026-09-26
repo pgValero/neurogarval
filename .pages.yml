@@ -109,48 +109,83 @@ components:
 # they are edited in the repository.
 # ---------------------------------------------------------------------------
 content:
+
   # ---------------------------------------------------------------------
-  # 1) Shared data (read-only): contact repeated in the hero, the Contact
-  #    section, the footer and the email signature.
+  # 1) Header (read-only): tab title, menu labels and interface texts.
   # ---------------------------------------------------------------------
-  - name: common
-    label: Datos comunes (solo lectura)
+  - name: header
+    label: Cabecera (solo lectura)
     type: file
-    path: content/common.yml
+    path: content/header.yml
     format: yaml
     operations:
       delete: false
     fields:
-      - name: contact
-        label: Contacto
-        type: object
+      - name: title
+        label: Título de la pestaña
+        type: string
+        required: true
         readonly: true
-        description: "Datos de contacto comunes, de solo lectura y editables únicamente en el repositorio. Son la fuente única para el hero, la sección Contacto, el footer y la firma; build.py los inserta directamente en el HTML generado, sin JavaScript."
+      - name: nav
+        label: Etiquetas del menú
+        type: object
+        required: true
+        readonly: true
+        description: "Etiquetas fijas de los menús para móvil y escritorio. Los enlaces y los ids de sección están definidos en src/index.html; estos campos solo sustituyen el texto visible."
         fields:
-          - name: phone
-            label: Teléfono
+          - name: home
+            label: Inicio
             type: string
             required: true
-            pattern: "^\\+34[\\s-]?\\d{3}[\\s-]?\\d{3}[\\s-]?\\d{3}$"
-            description: "Formato +34 XXX XXX XXX. Se usa en la web, en los enlaces de teléfono y WhatsApp y en la firma de email."
-          - name: mail
-            label: Email
+            readonly: true
+          - name: services
+            label: Servicios
             type: string
             required: true
-            pattern: "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$"
-          - name: address_lines
-            label: Dirección
+            readonly: true
+          - name: modalities
+            label: Modalidades
             type: string
             required: true
-            list:
-              min: 2
-              max: 2
-            description: "Exactamente dos líneas fijas: 1) calle y número; 2) CP, ciudad y provincia. En la firma de email se unen con \" - \"; también se usan en el footer, en Contacto y en la dirección de los datos estructurados."
-          - name: maps_url
-            label: Enlace de Google Maps
+            readonly: true
+          - name: process
+            label: Proceso
             type: string
             required: true
-            description: "Enlace público de Google Maps. Se usa en el footer, en la firma y en los datos estructurados."
+            readonly: true
+          - name: specialist
+            label: Especialista
+            type: string
+            required: true
+            readonly: true
+          - name: blog
+            label: Blog
+            type: string
+            required: true
+            readonly: true
+          - name: faq
+            label: FAQ
+            type: string
+            required: true
+            readonly: true
+          - name: contact
+            label: Contacto
+            type: string
+            required: true
+            readonly: true
+      - name: ui
+        label: Textos de la interfaz
+        type: object
+        required: true
+        readonly: true
+        description: "Textos fijos de la interfaz que no dependen del contenido editable de las secciones."
+        fields:
+          - name: close_label
+            label: Texto accesible del botón de cerrar
+            type: string
+            required: true
+            readonly: true
+            description: aria-label de los botones "x" de los modales.
 
   # ---------------------------------------------------------------------
   # 2) Page sections (src/index.html), one per file.
@@ -402,7 +437,7 @@ content:
         description: "Contenido completo de la sección: todos los párrafos se editan en este único campo Markdown. Separa los párrafos con una línea en blanco; build.py lo convierte a HTML."
 
   - name: blog
-    label: "Sección: Blog (tarjetas)"
+    label: "Sección: Blog"
     type: file
     path: content/blog.yml
     format: yaml
@@ -456,7 +491,7 @@ content:
             description: "Se usa en la tarjeta y en el modal. Si se deja vacía, se muestra un icono de reserva."
 
   - name: faq
-    label: "Sección: Preguntas frecuentes"
+    label: "Sección: FAQ"
     type: file
     path: content/faq.yml
     format: yaml
@@ -534,6 +569,82 @@ content:
             type: string
             required: true
             pattern: "^@[A-Za-z0-9._]+$"
+
+  # ---------------------------------------------------------------------
+  # 3) Shared read-only data: footer texts and common contact.
+  # ---------------------------------------------------------------------
+  - name: footer
+    label: Footer (solo lectura)
+    type: file
+    path: content/footer.yml
+    format: yaml
+    operations:
+      delete: false
+    fields:
+      - name: lines
+        label: Texto bajo el logo
+        type: string
+        required: true
+        readonly: true
+        list:
+          min: 2
+          max: 2
+        description: "Exactamente dos líneas fijas de texto bajo el logo. En el HTML se unen con un salto de línea."
+      - name: legal_label
+        label: Texto del enlace legal
+        type: string
+        required: true
+        readonly: true
+      - name: legal_file
+        label: Archivo del enlace legal
+        type: string
+        readonly: true
+        description: "Archivo del enlace legal, de solo lectura. aviso_legal.pdf vive en media/ en el repositorio y build.py lo publica en la raíz de _site/ para conservar la ruta pública."
+      - name: copyright
+        label: Copyright
+        type: string
+        required: true
+        readonly: true
+        description: "Texto que aparece tras el símbolo ©. Recuerda actualizar el año cuando corresponda."
+
+  - name: common
+    label: Datos comunes (solo lectura)
+    type: file
+    path: content/common.yml
+    format: yaml
+    operations:
+      delete: false
+    fields:
+      - name: contact
+        label: Contacto
+        type: object
+        readonly: true
+        description: "Datos de contacto comunes, de solo lectura y editables únicamente en el repositorio. Son la fuente única para el hero, la sección Contacto, el footer y la firma; build.py los inserta directamente en el HTML generado, sin JavaScript."
+        fields:
+          - name: phone
+            label: Teléfono
+            type: string
+            required: true
+            pattern: "^\\+34[\\s-]?\\d{3}[\\s-]?\\d{3}[\\s-]?\\d{3}$"
+            description: "Formato +34 XXX XXX XXX. Se usa en la web, en los enlaces de teléfono y WhatsApp y en la firma de email."
+          - name: mail
+            label: Email
+            type: string
+            required: true
+            pattern: "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$"
+          - name: address_lines
+            label: Dirección
+            type: string
+            required: true
+            list:
+              min: 2
+              max: 2
+            description: "Exactamente dos líneas fijas: 1) calle y número; 2) CP, ciudad y provincia. En la firma de email se unen con \" - \"; también se usan en el footer, en Contacto y en la dirección de los datos estructurados."
+          - name: maps_url
+            label: Enlace de Google Maps
+            type: string
+            required: true
+            description: "Enlace público de Google Maps. Se usa en el footer, en la firma y en los datos estructurados."
 
   - name: metadata
     label: Metadatos (solo lectura)
@@ -822,116 +933,8 @@ content:
         readonly: true
         description: "Rango orientativo para los buscadores ($, $$ o $$$; «$$» significa precio medio). Solo se publica como priceRange en los datos estructurados, nunca en la web."
 
-  - name: header
-    label: Cabecera (solo lectura)
-    type: file
-    path: content/header.yml
-    format: yaml
-    operations:
-      delete: false
-    fields:
-      - name: title
-        label: Título de la pestaña
-        type: string
-        required: true
-        readonly: true
-      - name: nav
-        label: Etiquetas del menú
-        type: object
-        required: true
-        readonly: true
-        description: "Etiquetas fijas de los menús para móvil y escritorio. Los enlaces y los ids de sección están definidos en src/index.html; estos campos solo sustituyen el texto visible."
-        fields:
-          - name: home
-            label: Inicio
-            type: string
-            required: true
-            readonly: true
-          - name: services
-            label: Servicios
-            type: string
-            required: true
-            readonly: true
-          - name: modalities
-            label: Modalidades
-            type: string
-            required: true
-            readonly: true
-          - name: process
-            label: Proceso
-            type: string
-            required: true
-            readonly: true
-          - name: specialist
-            label: Especialista
-            type: string
-            required: true
-            readonly: true
-          - name: blog
-            label: Blog
-            type: string
-            required: true
-            readonly: true
-          - name: faq
-            label: FAQ
-            type: string
-            required: true
-            readonly: true
-          - name: contact
-            label: Contacto
-            type: string
-            required: true
-            readonly: true
-      - name: ui
-        label: Textos de la interfaz
-        type: object
-        required: true
-        readonly: true
-        description: "Textos fijos de la interfaz que no dependen del contenido editable de las secciones."
-        fields:
-          - name: close_label
-            label: Texto accesible del botón de cerrar
-            type: string
-            required: true
-            readonly: true
-            description: aria-label de los botones "x" de los modales.
-
-  - name: footer
-    label: Footer (solo lectura)
-    type: file
-    path: content/footer.yml
-    format: yaml
-    operations:
-      delete: false
-    fields:
-      - name: lines
-        label: Texto bajo el logo
-        type: string
-        required: true
-        readonly: true
-        list:
-          min: 2
-          max: 2
-        description: "Exactamente dos líneas fijas de texto bajo el logo. En el HTML se unen con un salto de línea."
-      - name: legal_label
-        label: Texto del enlace legal
-        type: string
-        required: true
-        readonly: true
-      - name: legal_file
-        label: Archivo del enlace legal
-        type: string
-        readonly: true
-        description: "Archivo del enlace legal, de solo lectura. aviso_legal.pdf vive en media/ en el repositorio y build.py lo publica en la raíz de _site/ para conservar la ruta pública."
-      - name: copyright
-        label: Copyright
-        type: string
-        required: true
-        readonly: true
-        description: "Texto que aparece tras el símbolo ©. Recuerda actualizar el año cuando corresponda."
-
   # ---------------------------------------------------------------------
-  # 3) Email signature (src/signature.html, file apart from the site).
+  # 4) Email signature (src/signature.html, file apart from the site).
   # All fields are plain read-only text: the email does not use the
   # page's Markdown renderer.
   # ---------------------------------------------------------------------
