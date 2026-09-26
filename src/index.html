@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="__clinic_info.site.language__">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Basic SEO (the values come from content/clinic_info.yml) -->
+    <title>__clinic_info.seo.title__</title>
+    <meta name="description" content="__clinic_info.seo.description__">
+    <meta name="keywords" content="__clinic_info.seo.keywords__">
+    <link rel="canonical" href="__clinic_info.site.url__">
+    <meta name="geo.region" content="__clinic_info.site.region_code__">
+    <meta name="geo.placename" content="__clinic_info.site.locality__">
+    <meta name="ICBM" content="__clinic_info.site.geo_position__">
+
+    <!-- Open Graph / social networks -->
+    <meta property="og:type" content="__clinic_info.social.og_type__">
+    <meta property="og:locale" content="__clinic_info.site.locale__">
+    <meta property="og:site_name" content="__clinic_info.site.name__">
+    <meta property="og:title" content="__clinic_info.social.og_title__">
+    <meta property="og:description" content="__clinic_info.social.og_description__">
+    <meta property="og:image" content="__clinic_info.social.image__">
+    <meta property="og:image:alt" content="__clinic_info.social.image_alt__">
+    <meta property="og:image:width" content="__clinic_info.social.image_width__">
+    <meta property="og:image:height" content="__clinic_info.social.image_height__">
+    <meta property="og:url" content="__clinic_info.site.url__">
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="__clinic_info.social.twitter_card__">
+    <meta name="twitter:title" content="__clinic_info.social.twitter_title__">
+    <meta name="twitter:description" content="__clinic_info.social.twitter_description__">
+    <meta name="twitter:image" content="__clinic_info.social.image__">
+
+    <!-- Structured data (Schema.org)
+         build.py generates the whole JSON-LD block (schema.org) from
+         content/clinic_info.yml and the rest of content/*.yml: clinic and
+         professional, service catalog, FAQ and articles.
+         Do not edit it by hand: change the YAML. -->
+    <script type="application/ld+json">__clinic_info.structured_data__</script>
+
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- SITE TEMPLATE. The domain is read from src/CNAME; the logo, the
+         language, the SEO, the social networks, the menus and the structured
+         data are fixed configuration: their values come from
+         content/clinic_info.yml (read-only). The markers filled in by
+         build.py (format: file.path.field, without the underscores here so
+         the build does not confuse them) are read from content/*.yml
+         (Pages CMS, one file per section), using the types declared in
+         .pages.yml. Cards and list items (services, modalities, process,
+         blog and FAQ) are repeated with @foreach:file.path ...
+         @endforeach:file.path blocks: inside a block, "n" in a marker is the
+         current element (e.g. services.items.n.title) and
+         loop.index / loop.index0 is the position. Adding or removing entries
+         in the CMS requires no change in this template. The .neuro-* slots
+         (phone, WhatsApp, email, address and Maps) are filled from
+         content/common.yml; there is no JavaScript involved. Do not edit the
+         marked texts by hand: edit them in Pages CMS. -->
+
+    <div class="mobile-overlay" id="mobileMenu">
+        <button class="close-btn" onclick="toggleMenu()">&times;</button>
+        <div class="mobile-links">
+            <a href="#inicio" onclick="toggleMenu()">__clinic_info.nav.home__</a>
+            <a href="#servicios" onclick="toggleMenu()">__clinic_info.nav.services__</a>
+            <a href="#modalidades" onclick="toggleMenu()">__clinic_info.nav.modalities__</a>
+            <a href="#proceso" onclick="toggleMenu()">__clinic_info.nav.process__</a>
+            <a href="#especialista" onclick="toggleMenu()">__clinic_info.nav.specialist__</a>
+            <a href="#blog" onclick="toggleMenu()">__clinic_info.nav.blog__</a>
+            <a href="#faq" onclick="toggleMenu()">__clinic_info.nav.faq__</a>
+            <a href="#contacto" onclick="toggleMenu()">__clinic_info.nav.contact__</a>
+        </div>
+    </div>
+
+    <header>
+        <div class="container">
+            <nav>
+                <a href="#inicio">
+                    <img src="__clinic_info.site.logo__" alt="__clinic_info.site.name__" class="header-logo">
+                </a>
+
+                <ul class="nav-links">
+                    <li><a href="#inicio">__clinic_info.nav.home__</a></li>
+                    <li><a href="#servicios">__clinic_info.nav.services__</a></li>
+                    <li><a href="#modalidades">__clinic_info.nav.modalities__</a></li>
+                    <li><a href="#especialista">__clinic_info.nav.specialist__</a></li>
+                    <li><a href="#blog">__clinic_info.nav.blog__</a></li>
+                    <li><a href="#faq">__clinic_info.nav.faq__</a></li>
+                    <li><a href="#contacto">__clinic_info.nav.contact__</a></li>
+                </ul>
+
+                <button class="menu-btn" onclick="toggleMenu()">
+                    <i class="bi bi-list"></i>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- HERO -->
+        <section id="inicio" class="hero">
+            <div class="container hero-grid">
+                <div class="hero-text">
+                    <span class="badge">__hero.badge__</span>
+                    <h1>__hero.title__ <i>__hero.title_accent__</i></h1>
+                    <span class="modalities-text">__hero.modalities__</span>
+                    <div class="markdown-content">__hero.paragraph__</div>
+
+                    <div id="hero-promo">
+                        <i class="bi bi-info-circle-fill"></i>
+                        <span>__hero.promo__</span>
+                    </div>
+
+                    <div class="btn-group">
+                        <a href="__common.contact.phone__" target="_blank" class="btn btn-whatsapp neuro-whatsapp-link">
+                            <i class="bi bi-whatsapp" style="margin-right: 10px;"></i>
+                            WhatsApp
+                        </a>
+                        <a href="__common.contact.phone__" class="btn neuro-phone-link">
+                            <i class="bi bi-telephone" style="margin-right: 10px;"></i>
+                            <!-- __common.contact.phone__ -->
+                            <span class="neuro-phone"></span>
+                        </a>
+                    </div>
+                </div>
+                <div id="hero-img-wrapper">
+                    __hero.image__
+                </div>
+            </div>
+        </section>
+
+        <!-- SERVICES -->
+        <section id="servicios" class="section-padding services">
+            <div class="container">
+                <div class="section-header">
+                    <h2>__services.heading__</h2>
+                    <div class="divider"></div>
+                    <div class="markdown-content">__services.lead__</div>
+                </div>
+
+                <div class="services-grid">
+                    <!-- @foreach:services.items -->
+                    <div class="service-card" role="button" tabindex="0" aria-haspopup="dialog" data-service="__services.items.n.id__" onclick="openServiceModal('__services.items.n.id__')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openServiceModal('__services.items.n.id__')}">
+                        <div class="service-icon">__services.items.n.icon__</div>
+                        <h3>__services.items.n.title__</h3>
+                        <div class="markdown-content">__services.items.n.card_text__</div>
+                        <span class="service-more">__services.more_label__ <i class="bi bi-arrow-right"></i></span>
+                        <div class="card-full markdown-content" hidden>__services.items.n.modal_content__</div>
+                    </div>
+                    <!-- @endforeach:services.items -->
+                </div>
+            </div>
+        </section>
+
+        <!-- CARE MODALITIES -->
+        <section id="modalidades" class="section-padding modalities-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>__modalities.heading__</h2>
+                    <div class="divider"></div>
+                    <div class="markdown-content">__modalities.lead__</div>
+                </div>
+
+                <div class="modalities-grid">
+                    <!-- @foreach:modalities.items -->
+                    <div class="modality-item" role="button" tabindex="0" aria-haspopup="dialog" data-modality="__loop.index0__" onclick="openModalityModal(__loop.index0__)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openModalityModal(__loop.index0__)}">
+                        <div class="modality-icon">__modalities.items.n.icon__</div>
+                        <div class="modality-content">
+                            <h4>__modalities.items.n.title__</h4>
+                            <div class="markdown-content">__modalities.items.n.text__</div>
+                            <span class="service-more">__modalities.more_label__ <i class="bi bi-arrow-right"></i></span>
+                            <div class="card-full markdown-content" hidden>__modalities.items.n.modal_content__</div>
+                        </div>
+                    </div>
+                    <!-- @endforeach:modalities.items -->
+                </div>
+            </div>
+        </section>
+
+        <!-- PROCESS -->
+        <section id="proceso" class="section-padding">
+            <div class="container">
+                <div class="section-header">
+                    <h2>__process.heading__</h2>
+                    <div class="divider"></div>
+                    <div class="markdown-content">__process.lead__</div>
+                </div>
+
+                <div class="process-grid">
+                    <!-- @foreach:process.steps -->
+                    <div class="process-step">
+                        <div class="process-num">
+                            <span class="process-icon">__process.steps.n.icon__</span>
+                            <span class="process-index">__loop.index__</span>
+                        </div>
+                        <h4>__process.steps.n.title__</h4>
+                        <div class="markdown-content">__process.steps.n.text__</div>
+                    </div>
+                    <!-- @endforeach:process.steps -->
+                </div>
+            </div>
+        </section>
+
+        <!-- SPECIALIST -->
+        <section id="especialista" class="section-padding">
+            <div class="container about-grid">
+                <div class="about-image">
+                    __specialist.image__
+                    <div class="col-card">
+                        <span class="name">__specialist.name__</span>
+                        <span class="label">__specialist.license__</span>
+                    </div>
+                </div>
+                <div class="about-content">
+                    <h2>__specialist.heading__</h2>
+                    <div class="divider"></div>
+
+                    <div class="markdown-content">__specialist.content__</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- BLOG -->
+        <section id="blog" class="section-padding">
+            <div class="container">
+                <div class="section-header">
+                    <h2>__blog.heading__</h2>
+                    <div class="divider"></div>
+                    <div class="markdown-content">__blog.lead__</div>
+                </div>
+
+                <div class="blog-grid">
+                    <!-- @foreach:blog.posts -->
+                    <article class="blog-card" role="button" tabindex="0" aria-haspopup="dialog" data-blog="__loop.index0__" onclick="openBlogModal(__loop.index0__)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openBlogModal(__loop.index0__)}">
+                        <div class="blog-thumb">__blog.posts.n.image__</div>
+                        <div class="blog-content">
+                            <h4>__blog.posts.n.title__</h4>
+                            <div class="markdown-content">__blog.posts.n.excerpt__</div>
+                            <span class="read-more">__blog.read_more__ <i class="bi bi-arrow-right"></i></span>
+                            <div class="card-full markdown-content" hidden>__blog.posts.n.article__</div>
+                        </div>
+                    </article>
+                    <!-- @endforeach:blog.posts -->
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ -->
+        <section id="faq" class="section-padding">
+            <div class="container">
+                <div class="section-header">
+                    <h2>__faq.heading__</h2>
+                    <div class="divider"></div>
+                    <div class="markdown-content">__faq.lead__</div>
+                </div>
+
+                <div class="faq-list">
+                    <!-- @foreach:faq.items -->
+                    <details class="faq-item">
+                        <summary>__faq.items.n.question__</summary>
+                        <div class="markdown-content">__faq.items.n.answer__</div>
+                    </details>
+                    <!-- @endforeach:faq.items -->
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTACT -->
+        <section id="contacto" class="section-padding contact">
+            <div class="container">
+                <div class="section-header">
+                    <h2>__contact.heading__</h2>
+                    <div class="divider"></div>
+                    <strong>__contact.highlight__</strong>
+                    <div class="markdown-content">__contact.lead__</div>
+                </div>
+
+                <div class="contact-grid">
+                    <a href="__common.contact.phone__" target="_blank" class="contact-item neuro-phone-link">
+                        <div class="contact-icon"><i class="bi bi-telephone"></i></div>
+                        <h4>Teléfono</h4>
+                        <!-- __common.contact.phone__ -->
+                        <span class="neuro-phone"></span>
+                    </a>
+                    <a href="__common.contact.phone__" target="_blank" class="contact-item neuro-whatsapp-link">
+                        <div class="contact-icon"><i class="bi bi-whatsapp"></i></div>
+                        <h4>WhatsApp</h4>
+                        <!-- __common.contact.phone__ -->
+                        <span class="neuro-phone"></span>
+                    </a>
+                    <a href="__contact.instagram.url__" target="_blank" class="contact-item">
+                        <div class="contact-icon"><i class="bi bi-instagram"></i></div>
+                        <h4>Instagram</h4>
+                        <span>__contact.instagram.handle__</span>
+                    </a>
+                </div>
+                <div class="contact-grid">
+                    <a href="__common.contact.mail__" target="_blank" class="contact-item neuro-mail-link">
+                        <div class="contact-icon"><i class="bi bi-envelope"></i></div>
+                        <h4>Email</h4>
+                        <!-- __common.contact.mail__ -->
+                        <span class="neuro-mail"></span>
+                    </a>
+                    <a href="__common.contact.maps_url__" target="_blank" class="contact-item neuro-address-link">
+                        <div class="contact-icon"><i class="bi bi-geo-alt"></i></div>
+                        <h4>Dirección</h4>
+                        <!-- __common.contact.address_lines__ -->
+                        <span class="neuro-address"></span>
+                    </a>
+                </div>
+
+                <div class="map-wrapper">
+                    <div class="map-container">
+                        <iframe
+                            src="__contact.map_embed__"
+                            width="600"
+                            height="450"
+                            style="border:0;"
+                            allowfullscreen=""
+                            loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-top">
+                <div class="footer-info">
+                    <img src="__clinic_info.site.logo__" alt="__clinic_info.site.name__" class="footer-logo">
+                    <p>__footer.lines__</p>
+                    <br>
+                    <a href="__footer.legal_file__">__footer.legal_label__</a>
+                </div>
+                <div class="footer-links">
+                    <!-- __common.contact.address_lines__ -->
+                    <a href="__common.contact.maps_url__" class="neuro-address-link neuro-address"></a>
+                    <!-- __common.contact.phone__ -->
+                    <a href="__common.contact.phone__" class="neuro-phone-link neuro-phone"></a>
+                    <!-- __common.contact.mail__ -->
+                    <a href="__common.contact.mail__" class="neuro-mail-link neuro-mail"></a>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; __footer.copyright__
+            </div>
+        </div>
+    </footer>
+
+    <dialog id="serviceModal" class="modal" aria-labelledby="modalTitle">
+        <button class="modal-close" onclick="closeServiceModal()" aria-label="__clinic_info.ui.close_label__">&times;</button>
+        <div class="service-icon" id="modalIcon"></div>
+        <h3 id="modalTitle"></h3>
+        <div class="modal-body markdown-content" id="modalBody"></div>
+    </dialog>
+
+    <dialog id="modalityModal" class="modal" aria-labelledby="modalityModalTitle">
+        <button class="modal-close" onclick="closeModalityModal()" aria-label="__clinic_info.ui.close_label__">&times;</button>
+        <div class="service-icon" id="modalityModalIcon"></div>
+        <h3 id="modalityModalTitle"></h3>
+        <div class="modal-body markdown-content" id="modalityModalBody"></div>
+    </dialog>
+
+    <dialog id="blogModal" class="modal" aria-labelledby="blogModalTitle">
+        <button class="modal-close" onclick="closeBlogModal()" aria-label="__clinic_info.ui.close_label__">&times;</button>
+        <div class="blog-modal-cover" id="blogModalCover" hidden></div>
+        <h3 id="blogModalTitle"></h3>
+        <div class="modal-body markdown-content" id="blogModalBody"></div>
+    </dialog>
+
+    <script src="script.js"></script>
+</body>
+</html>

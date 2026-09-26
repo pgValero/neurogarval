@@ -1,0 +1,1014 @@
+# ============================================================================
+# Pages CMS — configuration of the neurogarval repository
+# https://pagescms.org · Documentation: /docs/configuration
+#
+# This file defines EVERYTHING that can be edited from Pages CMS:
+#   media     -> where the images are stored and which URL is written in the content
+#   content   -> the editable "collections" (files) and their fields
+#   components-> reusable field definitions
+#   actions   -> optional buttons (manual deploy)
+#
+# HOW IT RELATES TO THE SITE:
+#   The content/*.yml files are NOT read by the browser directly. build.py
+#   (run by .github/workflows/deploy_page.yml when the "Publicar cambios"
+#   button is pressed; never with content commits) substitutes the
+#   __file.path.field__ markers of src/index.html and src/signature.html with
+#   this data, writes the contact into the .neuro-* slots of the generated
+#   HTML (without JavaScript), writes the modal content into the HTML itself
+#   and publishes the result.
+#
+#   This file is also the TYPE REGISTRY of the build: every field that appears
+#   in a marker must be declared here with its type; build.py uses that
+#   declaration to know whether it is Markdown (rich-text), an image, an icon
+#   or plain text, and it fails if a referenced field is not declared.
+#   The long content fields of the page are rich-text with markdown format.
+#   Write paragraphs, emphasis and lists in a single field; build.py converts
+#   them to HTML. Do not write HTML in those fields. Titles, buttons, labels
+#   and metadata stay plain fields. The structural lists (steps, cards, photos,
+#   etc.) keep their own fields.
+#   Cards and items of those lists are repeated in the template with
+#   @foreach blocks (see expand_loops in build.py): adding or removing entries
+#   here requires no HTML change.
+#   The site domain is read from src/CNAME during the build. Every other fixed
+#   value (identity, logo, language, SEO/Open Graph/Twitter tags, menu labels
+#   and structured-data texts) lives in content/clinic_info.yml, also read-only:
+#   src/index.html and build.py read it from there, they do not hardcode it.
+#   build.py generates the whole JSON-LD block from that same file and from
+#   services, modalities, faq, blog and specialist.
+#
+# NOTE ON BRANCHES: Pages CMS reads this file per branch and the CMS is used on
+# main: it is opened at https://app.pagescms.org/pgValero/neurogarval/main
+# and every content commit lands directly on main without triggering any
+# workflow. The "Publicar cambios" button (actions below) triggers
+# .github/workflows/deploy_page.yml, which builds and validates the site
+# and then publishes it to GitHub Pages.
+# Technical work outside the CMS also lands on main.
+# ============================================================================
+
+# ---------------------------------------------------------------------------
+# MEDIA: static resource uploads from the CMS.
+# input  = physical folder in the repo; output = public URL the CMS writes
+# (e.g. "/media/photo.webp"). build.py turns it into the relative path
+# "media/..." for the HTML. The PDFs and the favicon also live in media/ in the
+# repository, but the build publishes them in the root to keep the current
+# public paths; they are not editable CMS content.
+# ---------------------------------------------------------------------------
+media:
+  input: media
+  output: /media
+
+# ---------------------------------------------------------------------------
+# COMPONENTS: icon field reused in services, modalities and process.
+# IMPORTANT: the values must match the keys of the ICONS dictionary in
+# build.py; if you add an icon here, add it there too (and to the CSS/font base
+# of Bootstrap Icons if it is a "bi bi-*").
+# ---------------------------------------------------------------------------
+components:
+  icon:
+    type: select
+    label: Icono
+    description: "Icono del listado. No hace falta escribir código: elige uno de la lista."
+    options:
+      placeholder: Elige un icono
+      values:
+        - name: brain
+          label: Cerebro
+        - name: heart
+          label: Corazón con pulso
+        - name: zap
+          label: Rayo
+        - name: message
+          label: Burbuja de mensaje
+        - name: calendar
+          label: Calendario
+        - name: clipboard
+          label: Portapapeles
+        - name: target
+          label: Diana
+        - name: chart
+          label: Gráfico ascendente
+        - name: building
+          label: Edificio (clínica)
+        - name: laptop
+          label: Portátil (online)
+        - name: house
+          label: Casa (domicilio)
+        - name: journal
+          label: Libro (artículos)
+
+# ---------------------------------------------------------------------------
+# CONTENT: editable files (one file per section + shared data).
+# type: file  => each file is an independent entry in Pages CMS, with its own
+#                schema. The "name"s must match the keys of build.py's CONTEXT
+#                dictionary and the files of content/.
+# operations.delete: false => prevents an editor from deleting the file and
+#                            breaking the build.
+# common.yml (contact repeated in several places) and footer.yml are read-only:
+# they are edited in the repository.
+# ---------------------------------------------------------------------------
+content:
+  # ---------------------------------------------------------------------
+  # 1) Shared data (read-only): contact repeated in the hero, the Contact
+  #    section, the footer and the email signature.
+  # ---------------------------------------------------------------------
+  - name: common
+    label: Datos comunes (solo lectura)
+    type: file
+    path: content/common.yml
+    format: yaml
+    operations:
+      delete: false
+    fields:
+      - name: contact
+        label: Contacto
+        type: object
+        readonly: true
+        description: "Datos de contacto comunes, de solo lectura y editables únicamente en el repositorio. Son la fuente única para el hero, la sección Contacto, el footer y la firma; build.py los inserta directamente en el HTML generado, sin JavaScript."
+        fields:
+          - name: phone
+            label: Teléfono
+            type: string
+            required: true
+            pattern: "^\\+34[\\s-]?\\d{3}[\\s-]?\\d{3}[\\s-]?\\d{3}$"
+            description: "Formato +34 XXX XXX XXX. Se usa en la web, en los enlaces de teléfono y WhatsApp y en la firma de email."
+          - name: mail
+            label: Email
+            type: string
+            required: true
+            pattern: "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$"
+          - name: address_lines
+            label: Dirección
+            type: string
+            required: true
+            list:
+              min: 2
+              max: 2
+            description: "Exactamente dos líneas fijas: 1) calle y número; 2) CP, ciudad y provincia. En la firma de email se unen con \" - \"; también se usan en el footer, en Contacto y en la dirección de los datos estructurados."
+          - name: maps_url
+            label: Enlace de Google Maps
+            type: string
+            required: true
+            description: "Enlace público de Google Maps. Se usa en el footer, en la firma y en los datos estructurados."
+
+  # ---------------------------------------------------------------------
+  # 2) Page sections (src/index.html), one per file.
+  # ---------------------------------------------------------------------
+  - name: hero
+    label: "Sección: Hero (cabecera)"
+    type: file
+    path: content/hero.yml
+    format: yaml
+    operations:
+      delete: false
+    fields:
+      - name: badge
+        label: Distintivo superior
+        type: string
+        required: true
+      - name: title
+        label: Título
+        type: string
+        required: true
+        description: "Primera parte del título. La segunda se edita en «Título (parte de acento)» y se muestra envuelta en <i> y con color azul."
+      - name: title_accent
+        label: Título (parte de acento)
+        type: string
+        description: "Parte de acento del título. Se muestra envuelta en <i> y con color azul, pero sin cursiva; déjalo vacío si no quieres acento."
+      - name: modalities
+        label: Línea de modalidades
+        type: string
+        required: true
+        description: "Partes separadas por «·», p. ej. «Clínica en Valdemoro · Online · A domicilio». build.py las une con ese separador y evita que la última se parta en pantallas estrechas."
+      - name: paragraph
+        label: Párrafo (Markdown)
+        type: rich-text
+        required: true
+        options:
+          format: markdown
+      - name: promo
+        label: Aviso destacado
+        type: string
+        description: Caja azul con "i" (p. ej. primera consulta gratuita).
+      - name: image
+        label: Imagen lateral
+        type: image
+        required: true
+      - name: image_alt
+        label: Texto alternativo de la imagen
+        type: string
+        required: true
+
+  - name: services
+    label: "Sección: Servicios"
+    type: file
+    path: content/services.yml
+    format: yaml
+    operations:
+      delete: false
+    fields:
+      - name: heading
+        label: Título
+        type: string
+        required: true
+      - name: lead
+        label: Subtítulo (Markdown)
+        type: rich-text
+        required: true
+        options:
+          format: markdown
+      - name: more_label
+        label: Enlace de tarjeta
+        type: string
+        required: true
+        description: Texto de "Más información" en cada tarjeta.
+      - name: items
+        label: Servicios (tarjetas + modal)
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{title}"
+        description: "Cada elemento crea una tarjeta y su modal. El orden de la lista determina el orden de las tarjetas."
+        fields:
+          - name: id
+            label: Identificador
+            type: string
+            required: true
+            pattern: "^[a-z0-9-]+$"
+            description: "Identificador interno obligatorio y único; build.py valida ambas cosas. Abre el modal de la tarjeta (openServiceModal('id')) y se usa en data-service. Solo puede contener minúsculas, números y guiones; evita cambiarlo tras publicar si alguien enlaza a él."
+          - name: icon
+            component: icon
+          - name: title
+            label: Título de la tarjeta
+            type: string
+            required: true
+          - name: card_text
+            label: Texto de la tarjeta (Markdown)
+            type: rich-text
+            required: true
+            options:
+              format: markdown
+          - name: modal_content
+            label: Contenido del modal (Markdown)
+            type: rich-text
+            required: true
+            options:
+              format: markdown
+            description: "Contenido completo y único del modal de este servicio. Es lo que se ve al pulsar «Más información»; escribe párrafos y listas en Markdown."
+
+  - name: modalities
+    label: "Sección: Modalidades"
+    type: file
+    path: content/modalities.yml
+    format: yaml
+    operations:
+      delete: false
+    fields:
+      - name: heading
+        label: Título
+        type: string
+        required: true
+      - name: lead
+        label: Subtítulo (Markdown)
+        type: rich-text
+        required: true
+        options:
+          format: markdown
+      - name: more_label
+        label: Enlace de tarjeta
+        type: string
+        required: true
+        description: Texto de "Más información" en cada tarjeta.
+      - name: items
+        label: Modalidades (tarjetas + modal)
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{title}"
+        description: "Cada elemento conserva los datos de su tarjeta, el contenido Markdown de su modal y sus fotos opcionales. El orden de la lista determina el orden de las tarjetas."
+        fields:
+          - name: icon
+            component: icon
+          - name: title
+            label: Título
+            type: string
+            required: true
+          - name: text
+            label: Texto de la tarjeta (Markdown)
+            type: rich-text
+            required: true
+            options:
+              format: markdown
+          - name: modal_content
+            label: Contenido del modal (Markdown)
+            type: rich-text
+            required: true
+            options:
+              format: markdown
+            description: Escribe los párrafos y listas del modal en Markdown.
+          - name: images
+            label: Fotos del modal (opcional)
+            type: object
+            list: true
+            collapsible: true
+            description: "Fotos de esta modalidad que se muestran al final de su modal. Déjalas vacías si no necesita imágenes; cada una usa un icono de reserva mientras no tenga archivo."
+            fields:
+              - name: image
+                label: Imagen (opcional)
+                type: image
+                description: "Selecciona una imagen de media/. Si se deja vacía, se muestra el icono de cámara de reserva."
+              - name: alt
+                label: Texto alternativo
+                type: string
+                required: true
+
+  - name: process
+    label: "Sección: Proceso"
+    type: file
+    path: content/process.yml
+    format: yaml
+    operations:
+      delete: false
+    fields:
+      - name: heading
+        label: Título
+        type: string
+        required: true
+      - name: lead
+        label: Subtítulo (Markdown)
+        type: rich-text
+        required: true
+        options:
+          format: markdown
+      - name: steps
+        label: Pasos (el número se genera solo)
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{title}"
+        description: "Cada elemento es un paso. El número (1, 2, 3...) se genera automáticamente según el orden de la lista y no se edita."
+        fields:
+          - name: icon
+            component: icon
+          - name: title
+            label: Título del paso
+            type: string
+            required: true
+          - name: text
+            label: Texto del paso (Markdown)
+            type: rich-text
+            required: true
+            options:
+              format: markdown
+
+  - name: specialist
+    label: "Sección: Especialista"
+    type: file
+    path: content/specialist.yml
+    format: yaml
+    operations:
+      delete: false
+    fields:
+      - name: image
+        label: Foto de perfil
+        type: image
+        required: true
+      - name: image_alt
+        label: Texto alternativo de la foto
+        type: string
+        required: true
+      - name: name
+        label: Nombre (tarjeta de colegiada)
+        type: string
+        required: true
+      - name: license
+        label: Nº de colegiada
+        type: string
+        required: true
+      - name: heading
+        label: Título
+        type: string
+        required: true
+      - name: content
+        label: Contenido (Markdown)
+        type: rich-text
+        required: true
+        options:
+          format: markdown
+        description: "Contenido completo de la sección: todos los párrafos se editan en este único campo Markdown. Separa los párrafos con una línea en blanco; build.py lo convierte a HTML."
+
+  - name: blog
+    label: "Sección: Blog (tarjetas)"
+    type: file
+    path: content/blog.yml
+    format: yaml
+    operations:
+      delete: false
+    fields:
+      - name: heading
+        label: Título
+        type: string
+        required: true
+      - name: lead
+        label: Subtítulo (Markdown)
+        type: rich-text
+        required: true
+        options:
+          format: markdown
+      - name: read_more
+        label: Enlace "Leer más"
+        type: string
+        required: true
+      - name: posts
+        label: Publicaciones
+        type: object
+        list: true
+        collapsible:
+          collapsed: true
+          summary: "{title}"
+        description: "Cada elemento crea una tarjeta de blog y su artículo en modal. El orden de la lista determina el orden de las tarjetas."
+        fields:
+          - name: title
+            label: Título
+            type: string
+            required: true
+          - name: excerpt
+            label: Resumen de la tarjeta (Markdown)
+            type: rich-text
+            required: true
+            options:
+              format: markdown
+            description: "Resumen corto que se muestra en la tarjeta. Para el contenido completo, usa el campo de texto del artículo."
+          - name: article
+            label: Texto del artículo (Markdown)
+            type: rich-text
+            required: true
+            options:
+              format: markdown
+            description: "Texto completo del artículo en Markdown. Se muestra en el modal al abrir la tarjeta, junto con la portada si existe."
+          - name: image
+            label: Imagen de portada (opcional)
+            type: image
+            description: "Se usa en la tarjeta y en el modal. Si se deja vacía, se muestra un icono de reserva."
+
+  - name: faq
+    label: "Sección: Preguntas frecuentes"
+    type: file
+    path: content/faq.yml
+    format: yaml
+    operations:
+      delete: false
+    fields:
+      - name: heading
+        label: Título
+        type: string
+        required: true
+      - name: lead
+        label: Subtítulo (Markdown)
+        type: rich-text
+        required: true
+        options:
+          format: markdown
+      - name: items
+        label: Preguntas
+        type: object
+        list:
+          min: 1
+          collapsible:
+            collapsed: true
+            summary: "{question}"
+        fields:
+          - name: question
+            label: Pregunta
+            type: string
+            required: true
+          - name: answer
+            label: Respuesta (Markdown)
+            type: rich-text
+            required: true
+            options:
+              format: markdown
+
+  - name: contact
+    label: "Sección: Contacto"
+    type: file
+    path: content/contact.yml
+    format: yaml
+    operations:
+      delete: false
+    fields:
+      - name: heading
+        label: Título
+        type: string
+        required: true
+      - name: highlight
+        label: Frase destacada (negrita)
+        type: string
+        required: true
+      - name: lead
+        label: Subtítulo (Markdown)
+        type: rich-text
+        required: true
+        options:
+          format: markdown
+      - name: map_embed
+        label: Mapa de Google (src del iframe)
+        type: text
+        required: true
+        description: "Pega únicamente la URL del atributo src del iframe, no todo el código. En Google Maps: Compartir > Insertar un mapa > copiar la URL del iframe."
+      - name: instagram
+        label: Instagram (tarjeta de contacto)
+        type: object
+        description: "Datos de Instagram para la tarjeta de contacto. El teléfono, el email, la dirección y el enlace a Maps provienen de Datos comunes (solo lectura)."
+        fields:
+          - name: url
+            label: Perfil (URL)
+            type: string
+            required: true
+          - name: handle
+            label: Usuario (con @)
+            type: string
+            required: true
+            pattern: "^@[A-Za-z0-9._]+$"
+
+  - name: clinic_info
+    label: Datos fijos del sitio (solo lectura)
+    type: file
+    path: content/clinic_info.yml
+    format: yaml
+    operations:
+      delete: false
+    fields:
+      - name: structured_data
+        label: Datos estructurados
+        type: boolean
+        required: true
+        readonly: true
+        description: "Campo técnico de solo lectura que acompaña al marcador clinic_info.structured_data de src/index.html. Al resolver ese marcador, build.py inserta el bloque JSON-LD completo generado con clinic_info.yml y el resto de content/*.yml; el valor booleano no controla la inserción."
+      - name: site
+        label: Identidad, idioma y ubicación
+        type: object
+        required: true
+        readonly: true
+        description: "Datos fijos de identidad, idioma y ubicación, editables únicamente en el repositorio. El dominio y la URL base se obtienen de src/CNAME durante el build."
+        fields:
+          - name: name
+            label: Nombre
+            type: string
+            required: true
+            readonly: true
+          - name: language
+            label: Idioma
+            type: string
+            required: true
+            readonly: true
+            description: "Atributo lang del <html> y valores inLanguage/availableLanguage de los datos estructurados."
+          - name: language_name
+            label: Nombre del idioma
+            type: string
+            required: true
+            readonly: true
+            description: "Nombre del idioma en español. Solo se usa en el resumen src/llms.txt."
+          - name: locale
+            label: Idioma regional
+            type: string
+            required: true
+            readonly: true
+            description: "Valor de la etiqueta Open Graph og:locale."
+          - name: currency
+            label: Moneda
+            type: string
+            required: true
+            readonly: true
+            description: "Código ISO de la moneda aceptada; se publica como currenciesAccepted en los datos estructurados."
+          - name: logo
+            label: Ruta del logo
+            type: string
+            required: true
+            readonly: true
+            description: "Ruta pública del logo. build.py lo publica en la raíz de _site/ para conservar la ruta actual."
+          - name: locality
+            label: Población
+            type: string
+            required: true
+            readonly: true
+            description: "Población de la clínica. Alimenta la etiqueta geo.placename del <head> y addressLocality en los datos estructurados."
+          - name: region
+            label: Provincia
+            type: string
+            required: true
+            readonly: true
+            description: "Provincia o región de la clínica; se publica como addressRegion en los datos estructurados."
+          - name: region_code
+            label: Código de región
+            type: string
+            required: true
+            readonly: true
+            description: "Código de país y región, por ejemplo ES-MD. Alimenta la etiqueta geo.region del <head>."
+          - name: country
+            label: País
+            type: string
+            required: true
+            readonly: true
+            description: "Código de país de la clínica; se publica como addressCountry en los datos estructurados."
+          - name: geo_position
+            label: Coordenadas (ICBM)
+            type: string
+            required: true
+            readonly: true
+            description: "Latitud y longitud separadas por una coma (latitud,longitud) para la etiqueta ICBM del <head>."
+      - name: seo
+        label: SEO (title, description, keywords)
+        type: object
+        required: true
+        readonly: true
+        description: "Etiquetas SEO de la cabecera que leen los buscadores. Son datos fijos, editables únicamente en el repositorio; la lista de palabras clave se une con comas durante la compilación."
+        fields:
+          - name: title
+            label: Título de la pestaña
+            type: string
+            required: true
+            readonly: true
+          - name: description
+            label: Descripción
+            type: string
+            required: true
+            readonly: true
+          - name: keywords
+            label: Palabras clave
+            type: string
+            required: true
+            readonly: true
+            list: true
+            description: El build las une con comas en la etiqueta meta keywords.
+      - name: social
+        label: Open Graph y Twitter
+        type: object
+        required: true
+        readonly: true
+        description: "Metadatos de Open Graph y Twitter Card que muestran WhatsApp, Facebook, X y otras redes al compartir el enlace. Son datos fijos, editables únicamente en el repositorio."
+        fields:
+          - name: image
+            label: Imagen de portada
+            type: image
+            required: true
+            readonly: true
+            description: "Imagen usada al compartir el sitio. build.py publica su URL absoluta, basada en el dominio de src/CNAME, en og:image y twitter:image; el archivo debe residir en media/."
+          - name: image_width
+            label: Anchura de la imagen
+            type: string
+            required: true
+            readonly: true
+          - name: image_height
+            label: Altura de la imagen
+            type: string
+            required: true
+            readonly: true
+          - name: image_alt
+            label: Texto alternativo de la imagen
+            type: string
+            required: true
+            readonly: true
+          - name: og_type
+            label: Tipo (og:type)
+            type: string
+            required: true
+            readonly: true
+          - name: og_title
+            label: Título para redes (og:title)
+            type: string
+            required: true
+            readonly: true
+          - name: og_description
+            label: Descripción para redes (og:description)
+            type: string
+            required: true
+            readonly: true
+          - name: twitter_card
+            label: Tarjeta de Twitter
+            type: string
+            required: true
+            readonly: true
+          - name: twitter_title
+            label: Título para Twitter
+            type: string
+            required: true
+            readonly: true
+          - name: twitter_description
+            label: Descripción para Twitter
+            type: string
+            required: true
+            readonly: true
+      - name: nav
+        label: Etiquetas del menú
+        type: object
+        required: true
+        readonly: true
+        description: "Etiquetas fijas de los menús para móvil y escritorio. Los enlaces y los ids de sección están definidos en src/index.html; estos campos solo sustituyen el texto visible."
+        fields:
+          - name: home
+            label: Inicio
+            type: string
+            required: true
+            readonly: true
+          - name: services
+            label: Servicios
+            type: string
+            required: true
+            readonly: true
+          - name: modalities
+            label: Modalidades
+            type: string
+            required: true
+            readonly: true
+          - name: process
+            label: Proceso
+            type: string
+            required: true
+            readonly: true
+          - name: specialist
+            label: Especialista
+            type: string
+            required: true
+            readonly: true
+          - name: blog
+            label: Blog
+            type: string
+            required: true
+            readonly: true
+          - name: faq
+            label: FAQ
+            type: string
+            required: true
+            readonly: true
+          - name: contact
+            label: Contacto
+            type: string
+            required: true
+            readonly: true
+      - name: ui
+        label: Textos de la interfaz
+        type: object
+        required: true
+        readonly: true
+        description: "Textos fijos de la interfaz que no dependen del contenido editable de las secciones."
+        fields:
+          - name: close_label
+            label: Texto accesible del botón de cerrar
+            type: string
+            required: true
+            readonly: true
+            description: aria-label de los botones "x" de los modales.
+      - name: llms
+        label: Ficheros para asistentes de IA
+        type: object
+        required: true
+        readonly: true
+        description: "Datos que solo se usan para generar src/llms.txt y src/llms-full.txt. El resto del contenido de esos archivos sale de las secciones de la web."
+        fields:
+          - name: contact_heading
+            label: Título de la sección de contacto
+            type: string
+            required: true
+            readonly: true
+          - name: specialist_heading
+            label: Título de la sección de la especialista
+            type: string
+            required: true
+            readonly: true
+          - name: more_heading
+            label: Título de la sección final
+            type: string
+            required: true
+            readonly: true
+          - name: session_length
+            label: Duración habitual de la sesión
+            type: string
+            required: true
+            readonly: true
+      - name: schema
+        label: Datos estructurados (schema.org)
+        type: object
+        required: true
+        readonly: true
+        description: "Textos y valores del grafo JSON-LD que build.py no puede deducir del resto del contenido. Son datos fijos, editables únicamente en el repositorio."
+        fields:
+          - name: site_name
+            label: Nombre schema.org
+            type: string
+            required: true
+            readonly: true
+            description: "Nombre schema.org de la clínica y del sitio web."
+          - name: description
+            label: Descripción de la clínica
+            type: string
+            required: true
+            readonly: true
+            description: "Descripción de la clínica publicada en el nodo JSON-LD."
+          - name: role
+            label: Cargo de la profesional
+            type: string
+            required: true
+            readonly: true
+            description: "Se añade al nombre de la especialista para formar el alternateName de la clínica en los datos estructurados."
+          - name: job_title
+            label: Profesión
+            type: string
+            required: true
+            readonly: true
+            description: "Profesión de la especialista; se publica como jobTitle de su nodo JSON-LD."
+          - name: credential_category
+            label: Categoría de la credencial
+            type: string
+            required: true
+            readonly: true
+            description: "Categoría de la credencial profesional; se publica como credentialCategory en los datos estructurados."
+          - name: catalog_name
+            label: Nombre del catálogo de servicios
+            type: string
+            required: true
+            readonly: true
+            description: "Nombre del catálogo schema.org que agrupa los servicios; se publica como hasOfferCatalog.name."
+          - name: knows_about
+            label: Temas que trata
+            type: string
+            required: true
+            readonly: true
+            list: true
+            description: "Lista de temas tratados por la clínica; se publica como knowsAbout en los datos estructurados."
+          - name: anchors
+            label: Anclas de los @id
+            type: object
+            required: true
+            readonly: true
+            description: "Anclas de los identificadores @id del grafo JSON-LD. build.py las concatena a la URL base derivada de src/CNAME."
+            fields:
+              - name: clinic
+                label: Clínica
+                type: string
+                required: true
+                readonly: true
+              - name: person
+                label: Profesional
+                type: string
+                required: true
+                readonly: true
+              - name: faq
+                label: Preguntas frecuentes
+                type: string
+                required: true
+                readonly: true
+              - name: blog
+                label: Artículos
+                type: string
+                required: true
+                readonly: true
+      - name: area_served
+        label: Municipios de atención presencial
+        type: string
+        required: true
+        readonly: true
+        list: true
+        description: "Lista de municipios de atención presencial. Se publica como areaServed en los datos estructurados para el SEO local."
+      - name: online_area
+        label: Zona de la terapia online
+        type: string
+        required: true
+        readonly: true
+        description: "País en el que se ofrece la terapia online para cualquier lugar. Se usa en src/llms.txt y src/llms-full.txt y se añade como Country a areaServed en los datos estructurados."
+      - name: price_range
+        label: Rango de precio orientativo
+        type: string
+        required: true
+        readonly: true
+        description: "Rango orientativo para los buscadores ($, $$ o $$$; «$$» significa precio medio). Solo se publica como priceRange en los datos estructurados, nunca en la web."
+
+  - name: footer
+    label: Footer (solo lectura)
+    type: file
+    path: content/footer.yml
+    format: yaml
+    operations:
+      delete: false
+    fields:
+      - name: lines
+        label: Texto bajo el logo
+        type: string
+        required: true
+        readonly: true
+        list:
+          min: 2
+          max: 2
+        description: "Exactamente dos líneas fijas de texto bajo el logo. En el HTML se unen con un salto de línea."
+      - name: legal_label
+        label: Texto del enlace legal
+        type: string
+        required: true
+        readonly: true
+      - name: legal_file
+        label: Archivo del enlace legal
+        type: string
+        readonly: true
+        description: "Archivo del enlace legal, de solo lectura. aviso_legal.pdf vive en media/ en el repositorio y build.py lo publica en la raíz de _site/ para conservar la ruta pública."
+      - name: copyright
+        label: Copyright
+        type: string
+        required: true
+        readonly: true
+        description: "Texto que aparece tras el símbolo ©. Recuerda actualizar el año cuando corresponda."
+
+  # ---------------------------------------------------------------------
+  # 3) Email signature (src/signature.html, file apart from the site).
+  # The legal notices are plain read-only text: the email does not use the
+  # page's Markdown renderer.
+  # ---------------------------------------------------------------------
+  - name: signature
+    label: Firma de email
+    type: file
+    path: content/signature.yml
+    format: yaml
+    operations:
+      delete: false
+    fields:
+      - name: name
+        label: Nombre
+        type: string
+        required: true
+        description: "Nombre mostrado en la primera línea de la identidad de la firma. El teléfono, la dirección y el mapa se toman de Datos comunes (solo lectura)."
+      - name: license
+        label: Nº de colegiada
+        type: string
+        required: true
+        description: "Se muestra tal cual en la segunda línea de la identidad de la firma."
+      - name: role
+        label: Cargo
+        type: string
+        required: true
+        description: "Profesión o cargo que aparece bajo la identidad de la firma."
+      - name: legal_notice
+        label: Aviso legal
+        type: text
+        required: true
+        readonly: true
+        description: "Texto legal de solo lectura para la firma de email. No modificar sin asesoría jurídica."
+      - name: data_protection
+        label: Protección de datos
+        type: text
+        required: true
+        readonly: true
+        description: "Texto legal de solo lectura para la firma de email. No modificar sin asesoría jurídica."
+
+# ---------------------------------------------------------------------------
+# ACTIONS (optional): "Publicar cambios" button in Pages CMS.
+# The button triggers .github/workflows/deploy_page.yml (workflow_dispatch on
+# the branch being edited, main): it builds and validates the site
+# and then publishes _site/ to GitHub Pages.
+# Content commits saved from the CMS land directly on main and trigger
+# nothing; only this button deploys.
+# IMPORTANT: Pages CMS always sends a "payload" input (JSON) when it fires the
+# workflow; that is why on.workflow_dispatch of deploy_page.yml declares the
+# payload input, or the GitHub API rejects the event with
+# "Unexpected inputs provided: [\"payload\"]".
+# ---------------------------------------------------------------------------
+actions:
+  - name: publish
+    label: Publicar cambios
+    workflow: deploy_page.yml
+
+# ---------------------------------------------------------------------------
+# FUTURE EXTENSION — blog article collection (Markdown):
+# when there are real article pages, uncomment this and create content/posts/:
+#
+#   - name: posts
+#     label: Artículos
+#     type: collection
+#     path: content/posts
+#     filename: "{primary}.md"        # slug in the file name
+#     exclude: ["README.md"]
+#     view:
+#       primary: title
+#       sort: date
+#       order: desc
+#     fields:
+#       - name: title
+#         type: string
+#         required: true
+#       - name: date
+#         type: date
+#         required: true
+#       - name: excerpt
+#         type: rich-text
+#         options:
+#           format: markdown
+#       - name: cover
+#         type: image
+#       - name: body
+#         type: rich-text
+#         options:
+#           format: markdown
+#
+# (With the current architecture a render step in build.py would also be needed
+#  to generate the article page; see "Current limitations / ideas".)
+# ---------------------------------------------------------------------------

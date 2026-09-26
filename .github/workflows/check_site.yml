@@ -1,0 +1,29 @@
+name: Check Site
+
+on:
+  schedule:
+    - cron: "0 9,21 * * *"
+      timezone: "Europe/Madrid"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Check published page
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Get published domain
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          ref: main
+          sparse-checkout: |
+            src
+            scripts
+          persist-credentials: false
+
+      - name: Check page and assets
+        shell: bash
+        run: bash scripts/check_site.sh

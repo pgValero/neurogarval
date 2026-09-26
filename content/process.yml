@@ -1,0 +1,24 @@
+heading: Cómo empezar la terapia
+lead: |-
+  Un proceso claro y sin prisas, adaptado al ritmo y a las necesidades de cada persona.
+steps:
+  - icon: message
+    title: Contacto
+    text: |-
+      Escríbeme por WhatsApp, teléfono o email y cuéntame brevemente qué necesitas.
+  - icon: calendar
+    title: Primera consulta
+    text: |-
+      Una entrevista informativa y gratuita para conocernos y resolver tus dudas.
+  - icon: clipboard
+    title: Evaluación
+    text: |-
+      Valoración de la situación y, cuando procede, pruebas para conocer el punto de partida.
+  - icon: target
+    title: Plan de intervención
+    text: |-
+      Propuesta personalizada con objetivos concretos y revisables.
+  - icon: chart
+    title: Seguimiento
+    text: |-
+      Sesiones periódicas y revisiones para ajustar el trabajo a los avances.

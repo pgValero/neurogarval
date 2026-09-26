@@ -1,0 +1,111 @@
+# Hook configuration for prek (also compatible with pre-commit).
+# Install the hooks:   prek install --config .pre-commit/.pre-commit-config.yaml
+# Run manually:        prek run --config .pre-commit/.pre-commit-config.yaml --all-files
+repos:
+  # Local hooks: HTML, CSS, JavaScript, links, workflows, shell, Python and Markdown
+  - repo: local
+    hooks:
+      # 1) HTML linter
+      - id: htmlhint
+        name: HTMLHint (HTML)
+        language: node
+        entry: htmlhint
+        files: \.html?$
+        additional_dependencies: [htmlhint]
+        args:
+          - --rules
+          - tag-pair,tagname-lowercase,attr-no-duplication,attr-value-double-quotes,id-unique
+
+      # 2) CSS linter (reads .pre-commit/.stylelintrc.json)
+      - id: stylelint
+        name: Stylelint (CSS)
+        language: node
+        entry: stylelint
+        files: \.css$
+        additional_dependencies: [stylelint]
+        args:
+          - --config
+          - .pre-commit/.stylelintrc.json
+
+      # 3) JavaScript linter (reads .pre-commit/eslint.config.js)
+      - id: eslint
+        name: ESLint (JavaScript)
+        language: node
+        entry: eslint
+        files: \.m?js$
+        additional_dependencies: [eslint]
+        args:
+          - --config
+          - .pre-commit/eslint.config.js
+
+      # 4) Cross-platform broken URL validator (HTML, local and external links)
+      - id: lychee
+        name: Lychee (broken URLs)
+        language: python
+        entry: lychee
+        additional_dependencies: [lychee-bin==0.24.2]
+        files: \.html?$
+        args:
+          - --no-progress
+          - "--exclude=^tel:"
+          - "--exclude=file:///.*/src/favicon.svg"
+          # __file.field__ markers that build.py replaces with real content:
+          - "--exclude=file:///.*/src/__[a-z0-9_.]+__"
+          # Sites that block bot requests:
+          - "--exclude=https://instagram.com/neurogarval"
+
+      # 5) Security audit of the GitHub Actions workflows (unpinned actions,
+      #    excessive permissions, template injection, credential persistence...)
+      - id: zizmor
+        name: zizmor (GitHub Actions)
+        language: python
+        entry: zizmor
+        additional_dependencies: [zizmor==1.30.1]
+        files: ^\.github/workflows/[^/]+\.ya?ml$
+        require_serial: true
+        args:
+          - --no-progress
+
+      # 6) Bash scripts validator (scripts/check_site.sh)
+      - id: shellcheck
+        name: ShellCheck (Bash)
+        language: python
+        entry: shellcheck
+        additional_dependencies: [shellcheck-py==0.11.0.1]
+        files: \.sh$
+        require_serial: true
+
+      # 7) Python linter (reads .pre-commit/ruff.toml)
+      - id: ruff-check
+        name: ruff check (Python)
+        language: python
+        entry: ruff check --force-exclude
+        additional_dependencies: [ruff==0.16.9]
+        files: \.pyi?$
+        require_serial: true
+        args:
+          - --config
+          - .pre-commit/ruff.toml
+
+      # 8) Python formatter (reads .pre-commit/ruff.toml)
+      - id: ruff-format
+        name: ruff format (Python)
+        language: python
+        entry: ruff format --force-exclude
+        additional_dependencies: [ruff==0.16.9]
+        files: \.pyi?$
+        require_serial: true
+        args:
+          - --config
+          - .pre-commit/ruff.toml
+
+      # 9) Markdown linter (reads .pre-commit/.markdownlint-cli2.jsonc)
+      - id: markdownlint-cli2
+        name: markdownlint-cli2 (Markdown)
+        language: node
+        entry: markdownlint-cli2
+        additional_dependencies: ["markdownlint-cli2@0.20.0"]
+        files: \.md?$
+        args:
+          - --config
+          - .pre-commit/.markdownlint-cli2.jsonc
