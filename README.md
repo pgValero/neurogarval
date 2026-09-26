@@ -81,7 +81,7 @@ and screen-reader accessible modals, light WebP images, no trackers or cookie ba
 | Images | Automatic PNG/JPEG to WebP conversion at build time, with dimensions and lazy loading |
 | Safety | Fail-fast build, linters on the generated site, live-site smoke test |
 | Publishing | Save to `main` (triggers nothing), then **"Deploy Page"** builds, validates and deploys |
-| Cost | $0 hosting on GitHub Pages; CMS and domain are the only costs |
+| Cost | $0 hosting on GitHub Pages; Domain is the only cost |
 
 ## Architecture
 
@@ -114,40 +114,40 @@ step, blog post or FAQ question needs zero HTML changes. The domain comes from `
 every other fixed value (identity, SEO, social, menu labels, schema texts) comes from
 `content/clinic_info.yml`. See `AGENTS.md` for the marker, loop, contact and media details.
 
-## Quality gates
-
-| Gate | What it catches |
-| --- | --- |
-| `build.py` | Missing/misspelled content fields, undeclared types, duplicate service ids, missing static files |
-| **HTMLHint** | Malformed tags, duplicated attributes, non-lowercase tag names, duplicate ids |
-| **Stylelint** | CSS errors, unknown properties, bad syntax |
-| **ESLint** | JavaScript problems |
-| **Lychee** | Broken local and external links in the HTML (skips `tel:` links and template markers) |
-| **zizmor** | GitHub Actions security: unpinned actions, excessive permissions, credential persistence, template injection |
-| **ShellCheck** | Bugs and portability problems in `scripts/check_site.sh` |
-| **ruff** | Lint and format of `scripts/build.py` (pyflakes, bugbear, pyupgrade, import order...) |
-| **markdownlint-cli2** | Markdown structure: broken anchors, missing code-fence language, heading levels, list and spacing rules |
-| `check_site.sh` | Live site unreachable, empty, unresolved `__markers__`, missing `<title>`, missing canonical URL, no visible text, missing image, missing `robots.txt` / `sitemap.xml` / `llms*.txt` / logo / favicon |
-
-`_site/` is gitignored, so CI stages it (`git add -f _site`) before running the linters —
-the checks run against the **generated** site, not just the sources.
-
 ## Tech stack
 
 | Layer | Choice | Why |
 | --- | --- | --- |
 | Front-end | Hand-written HTML5, CSS and vanilla JS | Zero dependencies, nothing to patch, works forever |
-| Styling | One `styles.css` with CSS custom properties, Montserrat (Google Fonts) and Bootstrap Icons from CDN | No build step for CSS, design tokens in one place |
-| Modals | Native `<dialog>` + `<details>` | Accessibility and behavior without a library |
-| Content | YAML, one file per section | Human-readable, diff-friendly, framework-free |
-| CMS | Pages CMS (`.pages.yml`) | Git-based, no vendor lock-in, free tier, per-field descriptions for the editor |
+| Styling | One `styles.css` with CSS custom properties, [Montserrat](https://fonts.google.com/specimen/Montserrat) ([Google Fonts](https://fonts.google.com/)) and [Bootstrap Icons](https://icons.getbootstrap.com/) from CDN | No build step for CSS, design tokens in one place |
+| Modals | Native [`<dialog>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dialog) + [`<details>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/details) | Accessibility and behavior without a library |
+| Content | [YAML](https://yaml.org/), one file per section | Human-readable, diff-friendly, framework-free |
+| CMS | [Pages CMS](https://pagescms.org/) ([repo](https://github.com/pagescms/pagescms), [app](https://app.pagescms.org/)) (`.pages.yml`) | Git-based, no vendor lock-in, free tier, per-field descriptions for the editor |
 | Templating | Custom marker + `@foreach` engine in `build.py` | ~200 lines instead of a template engine dependency |
-| Markdown | Python-Markdown (`extra`) | Editors write prose, the build renders HTML |
-| Images | Pillow | WebP conversion at build time |
-| Hosting | GitHub Pages | Free, HTTPS, versioned, globally cached |
-| CI/CD | GitHub Actions (2 workflows) | Free, validation before deploy, manual + button deploy, scheduled checks |
-| Hooks | `prek` (pre-commit compatible) with HTMLHint, Stylelint, ESLint, Lychee, zizmor, ShellCheck, ruff and markdownlint | Runs the same checks locally and in CI |
-| Validation | Bash + `curl` | Live smoke test with no dependencies |
+| Markdown | [Python-Markdown](https://python-markdown.github.io/) (`extra`) | Editors write prose, the build renders HTML |
+| Images | [Pillow](https://python-pillow.org/) | WebP conversion at build time |
+| Hosting | [GitHub Pages](https://pages.github.com/) | Free, HTTPS, versioned, globally cached |
+| CI/CD | [GitHub Actions](https://github.com/features/actions) (2 workflows) | Free, validation before deploy, manual + button deploy, scheduled checks |
+| Hooks | [`prek`](https://github.com/j178/prek) ([docs](https://prek.j178.dev/), pre-commit compatible) with HTMLHint, Stylelint, ESLint, Lychee, zizmor, ShellCheck, ruff and markdownlint | Runs the same checks locally and in CI |
+| Validation | Bash + [`curl`](https://curl.se/) | Live smoke test with no dependencies |
+
+## Quality gates
+
+| Gate | What it catches |
+| --- | --- |
+| `build.py` | Missing/misspelled content fields, undeclared types, duplicate service ids, missing static files |
+| **[HTMLHint](https://github.com/thedaviddias/HTMLHint)** | Malformed tags, duplicated attributes, non-lowercase tag names, duplicate ids |
+| **[Stylelint](https://stylelint.io/)** | CSS errors, unknown properties, bad syntax |
+| **[ESLint](https://eslint.org/)** | JavaScript problems |
+| **[Lychee](https://github.com/lycheeverse/lychee)** | Broken local and external links in the HTML (skips `tel:` links and template markers) |
+| **[zizmor](https://github.com/woodruffw/zizmor)** | GitHub Actions security: unpinned actions, excessive permissions, credential persistence, template injection |
+| **[ShellCheck](https://www.shellcheck.net/)** | Bugs and portability problems in `scripts/check_site.sh` |
+| **[ruff](https://github.com/astral-sh/ruff)** | Lint and format of `scripts/build.py` (pyflakes, bugbear, pyupgrade, import order...) |
+| **[markdownlint-cli2](https://github.com/DavidAnson/markdownlint-cli2)** | Markdown structure: broken anchors, missing code-fence language, heading levels, list and spacing rules |
+| `check_site.sh` ([curl](https://curl.se/)) | Live site unreachable, empty, unresolved `__markers__`, missing `<title>`, missing canonical URL, no visible text, missing image, missing `robots.txt` / `sitemap.xml` / `llms*.txt` / logo / favicon |
+
+`_site/` is gitignored, so CI stages it (`git add -f _site`) before running the linters —
+the checks run against the **generated** site, not just the sources.
 
 ## Design principles and conventions
 
