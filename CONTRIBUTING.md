@@ -19,6 +19,19 @@ dependencies permanently:
 uv run --with pyyaml --with markdown --with pillow python scripts/build.py
 ```
 
+## Regression test
+
+To prove an infrastructure change (templates, styles, script, `build.py`, `.pages.yml`, workflows)
+does not alter the generated site, run:
+
+```bash
+bash scripts/compare_site_test.sh
+```
+
+It builds the site from `HEAD` in a clean worktree and from your working tree, then asserts both
+`_site/` outputs are byte-identical. Any difference fails with a unified diff. Only run it when the
+content (`content/*.yml`, `media/*`) is the same on both sides.
+
 ## prek hook
 
 The hook configuration lives in `.pre-commit/`. Install the hook from the repository root with:
