@@ -33,7 +33,7 @@ A solo professional practice needs five things. Each one maps to a property of t
 ### 📝 Update without a developer, without breaking anything
 
 The owner edits copy, prices, photos, FAQ and blog posts in a browser form. Saving only
-commits YAML on `main` and triggers nothing; **"Publicar cambios"** builds and validates
+commits YAML on `main` and triggers nothing; **"Deploy Page"** builds and validates
 first, so a bad edit never reaches production.
 
 ### ⚡ Fast and cheap
