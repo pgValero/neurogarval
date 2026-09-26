@@ -80,7 +80,7 @@ and screen-reader accessible modals, light WebP images, no trackers or cookie ba
 | SEO and AI | Canonical URL, geo tags, social cards, sitemap with images, JSON-LD graph, `llms.txt` and crawler-friendly `robots.txt` |
 | Images | Automatic PNG/JPEG to WebP conversion at build time, with dimensions and lazy loading |
 | Safety | Fail-fast build, linters on the generated site, live-site smoke test |
-| Publishing | Save to `main` (triggers nothing), then **"Publicar cambios"** builds, validates and deploys |
+| Publishing | Save to `main` (triggers nothing), then **"Deploy Page"** builds, validates and deploys |
 | Cost | $0 hosting on GitHub Pages; CMS and domain are the only costs |
 
 ## Architecture
