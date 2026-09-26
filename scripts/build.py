@@ -42,9 +42,9 @@ Usage
     # Without pip (e.g. in an isolated environment):
     uv run --with pyyaml --with markdown --with pillow python scripts/build.py
 
-GitHub Actions (.github/workflows/build_validation.yml on every PR and
-.github/workflows/deploy_page.yml on push to main) does exactly this and
-publishes _site/ to GitHub Pages. There is no framework and no site generator:
+GitHub Actions (.github/workflows/deploy_page.yml, triggered by the Pages CMS
+"Publicar cambios" button) does exactly this and publishes _site/ to GitHub
+Pages. There is no framework and no site generator:
 just this script.
 
 Markers
