@@ -1,4 +1,4 @@
-### NeuroGarval
+# NeuroGarval
 
 **Landing page for NeuroGarval, a neuropsychology and health psychology practice in Valdemoro (Madrid, Spain).**
 
@@ -28,36 +28,47 @@ section with an embedded map, footer, and a standalone email signature template.
 
 ## Why it exists
 
-A solo professional practice needs a website that can be updated without a developer,
-is fast and cheap to host, ranks well in local search, is fully owned, and keeps every
-piece of information consistent. Each need maps directly to a benefit of this setup:
+A solo professional practice needs five things. Each one maps to a property of this setup.
 
-- **Without a developer, without breaking anything.** The owner edits copy, prices,
-  photos, FAQ and blog posts in a browser form (Pages CMS). Saving only commits YAML
-  on `main` and triggers nothing; the **"Publicar cambios"** button builds and validates
-  first, so a bad edit can never reach production.
-- **Fast and cheap.** The published site is static HTML plus one CSS file and one small
-  JavaScript file. Hosting on GitHub Pages is $0 for public repositories, with no
-  database, no server and no maintenance windows.
-- **Ranks well and is easy to quote.** Title, description, keywords, canonical URL, geo
-  meta tags, Open Graph + Twitter cards, `sitemap.xml`, a generated JSON-LD graph
-  (`WebSite`, `MedicalBusiness` + `Psychologist`, `Person`, `hasOfferCatalog`, `FAQPage`,
-  `BlogPosting`) and generated `llms.txt` / `llms-full.txt` all come from the same content,
-  so search engines and AI assistants always read fresh text.
-- **Fully owned.** Content is YAML in Git, not rows in a proprietary builder. Every change
-  has an author, a date and a reviewable diff, and the site keeps working even if every
-  third-party service disappears tomorrow.
-- **Consistent everywhere.** Phone, WhatsApp, email, address and the Maps link are edited
-  once in `content/common.yml` and written directly into the generated HTML, the JSON-LD
-  and the email signature. Hero, contact section, footer and signature can never disagree,
-  and nothing depends on JavaScript for crawlers to see the contact data.
+### 📝 Update without a developer, without breaking anything
 
-For a maintainer this means no framework to upgrade, no lockfile drift and almost no
-supply-chain surface: content changes and structural changes are separated, most updates
-touch a single YAML file, and the build is deterministic — it either produces a complete
-site or fails loudly. For visitors it means fast first paint, no client-side rendering,
-readable pages with JavaScript disabled, keyboard and screen-reader accessible modals,
-light WebP images and no trackers or cookie banner.
+The owner edits copy, prices, photos, FAQ and blog posts in a browser form. Saving only
+commits YAML on `main` and triggers nothing; **"Publicar cambios"** builds and validates
+first, so a bad edit never reaches production.
+
+### ⚡ Fast and cheap
+
+Static HTML plus one CSS file and one small JavaScript file. $0 hosting on GitHub Pages,
+no database, no server, no maintenance windows.
+
+### 🔍 Rank well and be easy to quote
+
+Title, description, keywords, canonical URL, geo and social tags, `sitemap.xml`, JSON-LD
+graph and `llms.txt` / `llms-full.txt` generated from the same content, always fresh for
+search engines and AI assistants.
+
+### 🔐 Fully owned
+
+Content is YAML in Git, not rows in a proprietary builder. Every change has an author,
+a date and a reviewable diff, and the site keeps working even if every third-party
+service disappears.
+
+### 🔄 Consistent everywhere
+
+Phone, WhatsApp, email, address and Maps link are edited once in `content/common.yml`
+and written into the HTML, the JSON-LD and the signature. Sections can never disagree,
+and crawlers need no JavaScript to see the contact data.
+
+### 🛠️ For the maintainer
+
+No framework to upgrade, no lockfile drift, almost no supply-chain surface. Content and
+structural changes are separated, most updates touch a single YAML file, and the build is
+deterministic — a complete site or a loud failure.
+
+### 👥 For visitors
+
+Fast first paint, no client-side rendering, readable with JavaScript disabled, keyboard
+and screen-reader accessible modals, light WebP images, no trackers or cookie banner.
 
 ## Feature overview
 
