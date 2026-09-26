@@ -11,5 +11,10 @@
     // The documentation uses long prose lines on purpose (one sentence per
     // line, re-wrapped by hand), so the line length is not enforced.
     "MD013": false,
+
+    // README.md uses two H1 headings on purpose (business intro, then the
+    // reusable project behind the site), so the single-title rule is off.
+    "MD025": false,
+    "MD041": false,
   }
 }
