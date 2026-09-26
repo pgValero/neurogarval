@@ -90,10 +90,14 @@ Content is data in Git, GitHub turns a commit into a validated build, and the bu
 is the live page. Nobody edits HTML and nothing ships without passing the build.
 
 ```mermaid
-flowchart LR
-    Edit["Edit<br/>Pages CMS form in the browser"] --> Repo["Repository<br/>content YAML + templates on main"]
-    Repo --> Build["Build<br/>build.py + linters"]
-    Build --> Live["Live<br/>static _site/ on GitHub Pages"]
+flowchart TD
+    Owner(["Owner<br/>wants to update info"]) --> Login["Pages CMS<br/>log in with own account"]
+    Login --> Edit["Edit form<br/>fields + media in browser"]
+    Edit --> Save["Save<br/>auto-commit YAML + media to main<br/>triggers nothing"]
+    Save --> Publish["Publish changes<br/>button when done"]
+    Publish --> Deploy["Deploy Page workflow<br/>build.py + quality gates"]
+    Deploy --> Live["Live site<br/>_site/ on GitHub Pages"]
+    Live --> Check["check_site<br/>twice-daily live check"]
 ```
 
 | Question | Answer given by the architecture |
