@@ -9,12 +9,13 @@ items:
     card_text: Desarrollo cognitivo, aprendizaje y dificultades que pueden influir
       en el día a día.
     modal_content: >-
-      La neuropsicología infantil y juvenil permite conocer cómo se desarrollan
-      y funcionan diferentes capacidades cognitivas y cómo estas pueden influir
-      en el aprendizaje, la conducta y el día a día.
+      La neuropsicología infantil y juvenil permite evaluar el desarrollo de las
+      capacidades cognitivas y conocer cómo pueden influir en el aprendizaje, la
+      conducta y el funcionamiento cotidiano. La valoración tiene en cuenta
+      tanto las dificultades como las fortalezas de cada niño o adolescente.
 
 
-      La atención puede estar dirigida a niños y adolescentes con:
+      La atención puede dirigirse a:
 
 
       - Trastornos del neurodesarrollo, como el Trastorno por Déficit de
@@ -24,15 +25,18 @@ items:
       - Dificultades de aprendizaje, como problemas en lectura, escritura o
       matemáticas.
 
-      - Dificultades de atención, memoria y funciones ejecutivas.
+      - Dificultades de atención, memoria y funciones ejecutivas, como la
+      planificación, la organización o el control de la conducta.
 
       - Otras dificultades cognitivas que puedan estar interfiriendo en el
       rendimiento académico o en la vida cotidiana.
 
 
-      Se pueden realizar evaluaciones neuropsicológicas, intervención y
-      estimulación cognitiva, así como orientación a familias, en función de las
-      necesidades de cada caso.
+      En función de las necesidades de cada caso, se pueden realizar
+      evaluaciones neuropsicológicas, intervención y estimulación cognitiva.
+      También se ofrece orientación a las familias para favorecer la comprensión
+      de las dificultades y facilitar estrategias que puedan aplicarse en el
+      entorno familiar y escolar.
   - id: neuro-adultos
     icon: brain
     title: Neuropsicología en adultos
