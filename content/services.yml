@@ -1,51 +1,148 @@
 heading: ¿En qué puedo ayudarte?
-lead: |-
-  Trabajo en el ámbito de la neuropsicología y la psicología sanitaria, teniendo en cuenta las necesidades y el momento vital de cada persona.
+lead: Trabajo en el ámbito de la neuropsicología y la psicología sanitaria,
+  teniendo en cuenta las necesidades y el momento vital de cada persona.
 more_label: Más información
 items:
   - id: neuro
     icon: brain
-    title: Neuropsicología
-    card_text: |-
-      Evaluación e intervención en dificultades cognitivas, conductuales y emocionales relacionadas con el funcionamiento cerebral.
-    modal_content: |-
-      La neuropsicología estudia la relación entre el funcionamiento del cerebro y la conducta: atención, memoria, lenguaje, funciones ejecutivas, visopercepción y velocidad de procesamiento, entre otras.
+    title: Neuropsicología infantil y juvenil
+    card_text: Evaluación e intervención en dificultades cognitivas, conductuales y
+      emocionales relacionadas con el funcionamiento cerebral.
+    modal_content: >-
+      La neuropsicología infantil y juvenil permite conocer cómo se desarrollan
+      y funcionan diferentes capacidades cognitivas y cómo estas pueden influir
+      en el aprendizaje, la conducta y el día a día.
 
-      El objetivo es comprender cómo estas funciones influyen en el día a día y diseñar una intervención ajustada a cada persona.
 
-      - Entrevista inicial con la persona y/o la familia.
-      - Evaluación con pruebas estandarizadas.
-      - Devolución de resultados y orientaciones.
-      - Plan de intervención personalizado.
+      La atención puede estar dirigida a niños y adolescentes con:
 
-      Dirigido a niños, adolescentes y adultos con TDAH, TEA, dificultades de aprendizaje, daño cerebral adquirido o deterioro cognitivo, entre otros.
+
+      - Trastornos del neurodesarrollo, como el Trastorno por Déficit de
+      Atención e Hiperactividad (TDAH) y el Trastorno del Espectro Autista
+      (TEA).
+
+      - Dificultades de aprendizaje, como problemas en lectura, escritura o
+      matemáticas.
+
+      - Dificultades de atención, memoria y funciones ejecutivas.
+
+      - Otras dificultades cognitivas que puedan estar interfiriendo en el
+      rendimiento académico o en la vida cotidiana.
+
+
+      Se pueden realizar evaluaciones neuropsicológicas, intervención y
+      estimulación cognitiva, así como orientación a familias, en función de las
+      necesidades de cada caso.
+  - id: neuro
+    icon: brain
+    title: Neuropsicología en adultos
+    card_text: La neuropsicología en adultos permite evaluar y trabajar dificultades
+      cognitivas, emocionales o conductuales que pueden aparecer en diferentes
+      momentos de la vida.
+    modal_content: >-
+      La neuropsicología en adultos permite evaluar y trabajar dificultades
+      cognitivas, emocionales o conductuales que pueden aparecer en diferentes
+      momentos de la vida.
+
+
+      La atención puede estar dirigida, entre otras situaciones, a:
+
+
+      - Trastorno por Déficit de Atención e Hiperactividad (TDAH) en adultos.
+
+      - Dificultades de atención, memoria y funciones ejecutivas.
+
+      - Daño cerebral adquirido, incluyendo situaciones como ictus o
+      traumatismos craneoencefálicos.
+
+      - Enfermedades neurológicas.
+
+      - Cambios cognitivos asociados a diferentes condiciones médicas o
+      neurológicas.
+
+
+      En los casos de daño cerebral adquirido, la intervención se adapta a las
+      funciones que se hayan visto afectadas y a cómo estas dificultades
+      repercuten en la vida cotidiana. Puede incluir rehabilitación
+      neuropsicológica, estimulación cognitiva y estrategias dirigidas a mejorar
+      el funcionamiento y la autonomía.
+  - id: neuro
+    icon: brain
+    title: Neuropsicología en adultos mayores
+    card_text: La neuropsicología también permite valorar los cambios cognitivos que
+      pueden aparecer con el envejecimiento y diferenciar las dificultades
+      propias de la edad de aquellas que pueden estar relacionadas con un
+      deterioro cognitivo.
+    modal_content: >-
+      La neuropsicología también permite valorar los cambios cognitivos que
+      pueden aparecer con el envejecimiento y diferenciar las dificultades
+      propias de la edad de aquellas que pueden estar relacionadas con un
+      deterioro cognitivo.
+
+
+      La atención puede dirigirse a:
+
+
+      - Quejas de memoria.
+
+      - Dificultades de atención u otras funciones cognitivas.
+
+      - Deterioro cognitivo.
+
+      - Demencias.
+
+      - Enfermedades neurodegenerativas.
+
+      - Dificultades en otras funciones cognitivas que puedan afectar al
+      funcionamiento cotidiano.
+
+
+      Además de la evaluación, se pueden realizar programas de estimulación
+      cognitiva y ofrecer orientación a familiares y cuidadores cuando sea
+      necesario.
   - id: psico
     icon: heart
     title: Psicología Sanitaria
-    card_text: |-
-      Atención a dificultades emocionales y conductuales, proporcionando un espacio profesional y seguro donde poder abordarlas.
-    modal_content: |-
-      Un espacio profesional y seguro para atender dificultades emocionales y conductuales, entendiendo el momento vital de cada persona.
+    card_text: Atención a dificultades emocionales y conductuales, proporcionando un
+      espacio profesional y seguro donde poder abordarlas.
+    modal_content: >-
+      Un espacio profesional y seguro para atender dificultades emocionales y
+      conductuales, entendiendo el momento vital de cada persona.
 
-      Se trabaja desde un enfoque cercano y basado en la evidencia, con objetivos claros y revisables.
+
+      Se trabaja desde un enfoque cercano y basado en la evidencia, con
+      objetivos claros y revisables.
+
 
       - Ansiedad, estrés y estado de ánimo.
+
       - Autoestima y gestión emocional.
+
       - Habilidades sociales y pautas para la familia.
+
       - Duelo y procesos de adaptación.
 
-      Atención a niños, adolescentes y adultos, de forma individual o con la familia cuando es necesario.
+
+      Atención a niños, adolescentes y adultos, de forma individual o con la
+      familia cuando es necesario.
   - id: rehab
     icon: zap
     title: Rehabilitación
-    card_text: |-
-      Programas de intervención personalizados orientados a la rehabilitación, estimulación y mantenimiento de las funciones cognitivas.
-    modal_content: |-
-      Programas personalizados orientados a rehabilitar, estimular y mantener las funciones cognitivas, partiendo de los objetivos y la rutina de cada persona.
+    card_text: Programas de intervención personalizados orientados a la
+      rehabilitación, estimulación y mantenimiento de las funciones cognitivas.
+    modal_content: >-
+      Programas personalizados orientados a rehabilitar, estimular y mantener
+      las funciones cognitivas, partiendo de los objetivos y la rutina de cada
+      persona.
+
 
       - Estimulación cognitiva individual.
+
       - Entrenamiento en estrategias y compensación.
+
       - Asesoramiento a familiares y cuidadores.
+
       - Seguimiento periódico de avances.
+
 
       Disponible en clínica, online o a domicilio, según las necesidades.
