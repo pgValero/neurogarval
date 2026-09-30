@@ -36,9 +36,8 @@ items:
   - id: neuro-adultos
     icon: brain
     title: Neuropsicología en adultos
-    card_text: La neuropsicología en adultos permite evaluar y trabajar dificultades
-      cognitivas, emocionales o conductuales que pueden aparecer en diferentes
-      momentos de la vida.
+    card_text: Atención, memoria y otras funciones cognitivas, incluido el daño
+      cerebral adquirido.
     modal_content: >-
       La neuropsicología en adultos permite evaluar y trabajar dificultades
       cognitivas, emocionales o conductuales que pueden aparecer en diferentes
