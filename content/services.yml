@@ -130,24 +130,3 @@ items:
       La intervención se plantea teniendo en cuenta las circunstancias y
       necesidades de cada persona, buscando desarrollar recursos y estrategias
       que puedan resultar útiles en su día a día.
-  - id: rehab
-    icon: zap
-    title: Rehabilitación
-    card_text: Programas de intervención personalizados orientados a la
-      rehabilitación, estimulación y mantenimiento de las funciones cognitivas.
-    modal_content: >-
-      Programas personalizados orientados a rehabilitar, estimular y mantener
-      las funciones cognitivas, partiendo de los objetivos y la rutina de cada
-      persona.
-
-
-      - Estimulación cognitiva individual.
-
-      - Entrenamiento en estrategias y compensación.
-
-      - Asesoramiento a familiares y cuidadores.
-
-      - Seguimiento periódico de avances.
-
-
-      Disponible en clínica, online o a domicilio, según las necesidades.
