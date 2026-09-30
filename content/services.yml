@@ -68,10 +68,7 @@ items:
   - id: neuro-mayores
     icon: brain
     title: Neuropsicología en adultos mayores
-    card_text: La neuropsicología también permite valorar los cambios cognitivos que
-      pueden aparecer con el envejecimiento y diferenciar las dificultades
-      propias de la edad de aquellas que pueden estar relacionadas con un
-      deterioro cognitivo.
+    card_text: Memoria, cambios cognitivos y estimulación de las capacidades cognitivas.
     modal_content: >-
       La neuropsicología también permite valorar los cambios cognitivos que
       pueden aparecer con el envejecimiento y diferenciar las dificultades
