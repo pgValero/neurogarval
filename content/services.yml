@@ -84,7 +84,9 @@ items:
   - id: neuro-mayores
     icon: brain
     title: Neuropsicología en adultos mayores
-    card_text: Memoria, cambios cognitivos y estimulación de las capacidades cognitivas.
+    card_text: Evaluación de la memoria y otras funciones cognitivas en personas
+      mayores. Valoración del deterioro cognitivo y las demencias, y programas
+      de estimulación cognitiva.
     modal_content: >-
       La neuropsicología en personas mayores permite valorar los cambios
       cognitivos que pueden aparecer con el envejecimiento y estudiar si las
