@@ -42,8 +42,10 @@ items:
   - id: neuro-adultos
     icon: brain
     title: Neuropsicología en adultos
-    card_text: Atención, memoria y otras funciones cognitivas, incluido el daño
-      cerebral adquirido.
+    card_text: Evaluación neuropsicológica en adultos e intervención en dificultades
+      de memoria, lenguaje, atención y funciones ejecutivas. Rehabilitación
+      neuropsicológica y estimulación cognitiva en casos de daño cerebral
+      adquirido.
     modal_content: >-
       La neuropsicología en adultos permite evaluar las capacidades cognitivas y
       estudiar cómo los cambios en su funcionamiento pueden afectar a la
