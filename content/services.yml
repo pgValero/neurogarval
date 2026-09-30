@@ -3,7 +3,7 @@ lead: Trabajo en el ámbito de la neuropsicología y la psicología sanitaria,
   teniendo en cuenta las necesidades y el momento vital de cada persona.
 more_label: Más información
 items:
-  - id: neuro
+  - id: neuro-infantil
     icon: brain
     title: Neuropsicología infantil y juvenil
     card_text: Evaluación e intervención en dificultades cognitivas, conductuales y
@@ -33,7 +33,7 @@ items:
       Se pueden realizar evaluaciones neuropsicológicas, intervención y
       estimulación cognitiva, así como orientación a familias, en función de las
       necesidades de cada caso.
-  - id: neuro
+  - id: neuro-adultos
     icon: brain
     title: Neuropsicología en adultos
     card_text: La neuropsicología en adultos permite evaluar y trabajar dificultades
@@ -66,7 +66,7 @@ items:
       repercuten en la vida cotidiana. Puede incluir rehabilitación
       neuropsicológica, estimulación cognitiva y estrategias dirigidas a mejorar
       el funcionamiento y la autonomía.
-  - id: neuro
+  - id: neuro-mayores
     icon: brain
     title: Neuropsicología en adultos mayores
     card_text: La neuropsicología también permite valorar los cambios cognitivos que
