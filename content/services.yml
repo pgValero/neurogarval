@@ -99,8 +99,8 @@ items:
   - id: psico
     icon: heart
     title: Psicología Sanitaria
-    card_text: Atención a dificultades emocionales y conductuales, proporcionando un
-      espacio profesional y seguro donde poder abordarlas.
+    card_text: Atención a las dificultades emocionales y conductuales en distintas
+      etapas de la vida.
     modal_content: >-
       La Psicología Sanitaria se centra en la atención a dificultades
       emocionales y conductuales que pueden aparecer a lo largo de diferentes
