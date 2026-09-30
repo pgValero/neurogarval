@@ -125,8 +125,9 @@ items:
   - id: psico
     icon: heart
     title: Psicología Sanitaria
-    card_text: Atención a las dificultades emocionales y conductuales en distintas
-      etapas de la vida.
+    card_text: Atención psicológica para la ansiedad, el estrés y las dificultades
+      emocionales. Intervención en regulación emocional, autoestima y estado de
+      ánimo.
     modal_content: >-
       La Psicología General Sanitaria se centra en la evaluación y el
       tratamiento de dificultades psicológicas, emocionales y conductuales que
