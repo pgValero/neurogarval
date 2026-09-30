@@ -43,32 +43,40 @@ items:
     card_text: Atención, memoria y otras funciones cognitivas, incluido el daño
       cerebral adquirido.
     modal_content: >-
-      La neuropsicología en adultos permite evaluar y trabajar dificultades
-      cognitivas, emocionales o conductuales que pueden aparecer en diferentes
-      momentos de la vida.
+      La neuropsicología en adultos permite evaluar las capacidades cognitivas y
+      estudiar cómo los cambios en su funcionamiento pueden afectar a la
+      autonomía, el trabajo, las relaciones y otras actividades de la vida
+      cotidiana.
 
 
-      La atención puede estar dirigida, entre otras situaciones, a:
+      La atención puede dirigirse a:
 
 
       - Trastorno por Déficit de Atención e Hiperactividad (TDAH) en adultos.
 
       - Dificultades de atención, memoria y funciones ejecutivas.
 
-      - Daño cerebral adquirido, incluyendo situaciones como ictus o
-      traumatismos craneoencefálicos.
+      - Daño cerebral adquirido, como el que puede producirse tras un ictus o un
+      traumatismo craneoencefálico.
 
-      - Enfermedades neurológicas.
+      - Enfermedades neurológicas que puedan afectar al funcionamiento
+      cognitivo.
 
-      - Cambios cognitivos asociados a diferentes condiciones médicas o
+      - Cambios cognitivos asociados a distintas condiciones médicas o
       neurológicas.
 
 
-      En los casos de daño cerebral adquirido, la intervención se adapta a las
-      funciones que se hayan visto afectadas y a cómo estas dificultades
-      repercuten en la vida cotidiana. Puede incluir rehabilitación
-      neuropsicológica, estimulación cognitiva y estrategias dirigidas a mejorar
-      el funcionamiento y la autonomía.
+      La evaluación neuropsicológica permite identificar las capacidades
+      preservadas y aquellas que presentan dificultades, ayudando a orientar la
+      intervención.
+
+
+      En los casos de daño cerebral adquirido, la intervención puede incluir
+      rehabilitación neuropsicológica, estimulación cognitiva y estrategias de
+      compensación. Los objetivos se establecen teniendo en cuenta el perfil
+      cognitivo, las necesidades y las actividades cotidianas de cada persona,
+      con el propósito de favorecer su autonomía y participación en la vida
+      diaria.
   - id: neuro-mayores
     icon: brain
     title: Neuropsicología en adultos mayores
