@@ -6,8 +6,10 @@ items:
   - id: neuro-infantil
     icon: brain
     title: Neuropsicología infantil y juvenil
-    card_text: Desarrollo cognitivo, aprendizaje y dificultades que pueden influir
-      en el día a día.
+    card_text: Evaluación neuropsicológica infantil e intervención en dificultades
+      de aprendizaje, TDAH y otros trastornos del neurodesarrollo. Atención a
+      las dificultades cognitivas que pueden influir en el aprendizaje y el
+      desarrollo.
     modal_content: >-
       La neuropsicología infantil y juvenil permite evaluar el desarrollo de las
       capacidades cognitivas y conocer cómo pueden influir en el aprendizaje, la
