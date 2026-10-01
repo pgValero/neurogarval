@@ -4,7 +4,7 @@ lead: "Elegir el entorno adecuado para tus sesiones es importante: facilita el
 more_label: Más información
 items:
   - icon: building
-    title: Atención en Clínica
+    title: Atención presencial
     text: Las sesiones se realizan en consulta, en un entorno tranquilo y
       profesional. La atención presencial está disponible en Valdemoro y
       próximamente en Segovia.
@@ -38,9 +38,10 @@ items:
       - image: /media/Screenshot_20260927_020844.png
         alt: Consulta NeuroGarval
   - icon: laptop
-    title: Terapia Online
-    text: Sesiones por videollamada, facilitando el acceso a la intervención sin
-      necesidad de desplazamiento.
+    title: Atención online
+    text: Sesiones por videollamada, con la comodidad de recibir atención desde casa
+      o desde cualquier lugar. Una modalidad que evita desplazamientos y
+      facilita la continuidad de las sesiones.
     modal_content: >-
       La terapia online se realiza mediante videollamada, lo que permite
       mantener el proceso terapéutico sin tener que desplazarse a la consulta.
