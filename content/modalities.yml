@@ -65,8 +65,9 @@ items:
       esta modalidad, manteniendo un contacto directo y personalizado.
   - icon: house
     title: A Domicilio
-    text: Intervención en tu entorno cotidiano, ideal para pacientes con movilidad
-      reducida o dificultades específicas.
+    text: Atención en el entorno habitual de la persona, dirigida a quienes tienen
+      dificultades para desplazarse o para quienes el domicilio resulta el
+      contexto más adecuado para la intervención.
     modal_content: >-
       La atención a domicilio realiza la intervención en el lugar donde vives,
       siempre que esta modalidad sea adecuada para tu situación y exista un
