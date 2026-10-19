@@ -12,8 +12,8 @@ steps:
       resolver tus dudas.
   - icon: clipboard
     title: Evaluación
-    text: Valoración de la situación y, cuando procede, pruebas para conocer el
-      punto de partida.
+    text: Valoración de la situación actual y, cuando sea necesario, evaluación
+      específica para identificar necesidades y establecer un punto de partida.
   - icon: target
     title: Plan de intervención
     text: Propuesta personalizada con objetivos concretos y revisables.
