@@ -139,7 +139,7 @@ every other fixed value (identity, SEO, social, menu labels, schema texts) comes
 | **[HTMLHint](https://github.com/thedaviddias/HTMLHint)** | Malformed tags, duplicated attributes, non-lowercase tag names, duplicate ids |
 | **[Stylelint](https://stylelint.io/)** | CSS errors, unknown properties, bad syntax |
 | **[ESLint](https://eslint.org/)** | JavaScript problems |
-| **[Lychee](https://github.com/lycheeverse/lychee)** | Broken local and external links in the HTML (skips `tel:` links and template markers) |
+| **[Lychee](https://github.com/lycheeverse/lychee)** | Broken local and external links in the HTML (skips `tel:` links, template markers and bot-blocked sites: Instagram and `maps.app.goo.gl`) |
 | **[zizmor](https://github.com/woodruffw/zizmor)** | GitHub Actions security: unpinned actions, excessive permissions, credential persistence, template injection |
 | **[ShellCheck](https://www.shellcheck.net/)** | Bugs and portability problems in [`scripts/check_site.sh`](scripts/check_site.sh) |
 | **[ruff](https://github.com/astral-sh/ruff)** | Lint and format of [`scripts/build.py`](scripts/build.py) (pyflakes, bugbear, pyupgrade, import order...) |
