@@ -3,17 +3,14 @@ lead: Si tu duda no aparece aquí, puedo resolverla personalmente en la primera
   consulta.
 items:
   - question: ¿La primera consulta es gratuita?
-    answer: Sí. La primera consulta es informativa y gratuita, para resolver dudas y
-      valorar si puedo ayudarte.
+    answer: Sí. La primera consulta online es informativa y gratuita. Nos permite
+      conocer el motivo de consulta, resolver dudas y valorar cuál puede ser la
+      atención más adecuada.
   - question: ¿Cuánto dura una sesión?
     answer: Habitualmente entre 45 y 60 minutos, aunque la duración puede variar
       según el tipo de intervención y las necesidades de cada persona.
-  - question: ¿Cuántas sesiones voy a necesitar?
-    answer: Depende de cada caso y de los objetivos que nos marquemos. En la
-      propuesta de intervención se concreta una orientación y se revisa
-      periódicamente.
   - question: ¿Hace falta una evaluación previa?
-    answer: En muchos casos sí, para conocer el punto de partida y ajustar el plan.
+    answer: En algunos casos sí, para conocer el punto de partida y ajustar el plan.
       En la primera consulta se valora si es necesaria.
   - question: ¿Atiendes a niños, adolescentes y adultos?
     answer: Sí. Trabajo con niños, adolescentes y adultos, adaptando cada
@@ -21,3 +18,46 @@ items:
   - question: ¿Puedo elegir entre clínica, online o domicilio?
     answer: "Sí. Puedes elegir la modalidad que mejor te encaje: atención presencial
       en consulta, por videollamada o a domicilio."
+  - question: ¿Qué es una evaluación neuropsicológica?
+    answer: Es una valoración de diferentes capacidades cognitivas, como la
+      atención, la memoria, el lenguaje o las funciones ejecutivas, que permite
+      conocer el perfil de funcionamiento de una persona y detectar posibles
+      dificultades.
+  - question: ¿Cuándo es recomendable realizar una evaluación neuropsicológica?
+    answer: Puede ser útil ante dificultades de aprendizaje, atención o memoria,
+      cambios en el funcionamiento cognitivo o después de determinadas lesiones
+      o enfermedades neurológicas.
+  - question: ¿La neuropsicología es solo para niños?
+    answer: No. La neuropsicología se aplica en diferentes etapas de la vida. La
+      atención puede dirigirse a niños, adolescentes, adultos y personas
+      mayores.
+  - question: ¿Cuál es la diferencia entre Neuropsicología y Psicología General
+      Sanitaria?
+    answer: >-
+      Son dos ámbitos de la Psicología que pueden complementarse, pero tienen
+      objetivos y áreas de especialización diferentes.
+
+
+      La Neuropsicología se centra especialmente en la relación entre el
+      funcionamiento cerebral y procesos como la atención, la memoria, el
+      lenguaje, las funciones ejecutivas, el aprendizaje y la conducta. Por
+      ello, puede ser especialmente útil cuando existen dificultades cognitivas,
+      trastornos del neurodesarrollo, daño cerebral adquirido, enfermedades
+      neurológicas o cambios asociados al envejecimiento.
+
+
+      La Psicología General Sanitaria se orienta principalmente a la evaluación
+      y tratamiento de dificultades psicológicas, emocionales y conductuales que
+      pueden afectar al bienestar y al funcionamiento cotidiano.
+
+
+      En algunos casos, ambas perspectivas pueden ser necesarias o
+      complementarias.
+  - question: ¿Trabajas con daño cerebral adquirido?
+    answer: Sí. Se realizan evaluaciones e intervención neuropsicológica en casos de
+      daño cerebral adquirido, como ictus, traumatismos craneoencefálicos y
+      otras situaciones.
+  - question: ¿Qué ocurre después de una evaluación?
+    answer: Se explican los resultados y, cuando es necesario, se plantean
+      recomendaciones y una propuesta de intervención acorde con las necesidades
+      detectadas.
