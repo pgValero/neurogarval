@@ -449,8 +449,7 @@ nav {
 
 .contact-grid {
     display: grid;
-    grid-auto-columns: minmax(0, 1fr);
-    grid-auto-flow: column;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 2rem;
     margin-top: 2rem;
 }
@@ -492,9 +491,21 @@ nav {
 }
 
 .map-location h4 {
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
     font-size: 1.05rem;
     color: var(--color-dark);
+}
+
+.map-address {
+    display: block;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: var(--color-dark);
+}
+
+.map-address:hover {
+    color: var(--color-primary);
 }
 
 .map-container {
