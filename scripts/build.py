@@ -764,9 +764,10 @@ def jsonld_graph() -> str:
     contact = c["common"]["contact"]
     specialist = c["specialist"]
     instagram = (c["contact"].get("instagram") or {}).get("url", "")
-    same_as = [u for u in (instagram, contact.get("maps_url", "")) if u]
+    valdemoro = contact.get("valdemoro") or {}
+    same_as = [u for u in (instagram, valdemoro.get("maps_url", "")) if u]
 
-    address_lines = list(contact.get("address_lines") or [])
+    address_lines = list(valdemoro.get("address_lines") or [])
     address = {
         "@type": "PostalAddress",
         "streetAddress": address_lines[0] if address_lines else "",
@@ -842,7 +843,7 @@ def jsonld_graph() -> str:
     }
     if same_as:
         clinic["sameAs"] = same_as
-    coords = maps_coordinates(c["contact"].get("map_embed", ""))
+    coords = maps_coordinates(c["contact"].get("map_embed_valdemoro", ""))
     if coords:
         clinic["geo"] = {
             "@type": "GeoCoordinates",
@@ -931,7 +932,7 @@ SPECIALS: dict[str, dict] = {
     "src/signature.html": {
         "metadata.site.logo": render_site_logo,
         # The signature shows the address on a single line.
-        "common.contact.address_lines": lambda v, parent: " - ".join(
+        "common.contact.valdemoro.address_lines": lambda v, parent: " - ".join(
             esc(line) for line in v
         ),
     },
@@ -1030,12 +1031,14 @@ def fill_contact(doc: str, contact: dict) -> str:
             f"https://wa.me/{raw_phone(c['phone']).lstrip('+')}",
         ),
         "neuro-mail-link": ("href", f"mailto:{c['mail']}"),
-        "neuro-address-link": ("href", c["maps_url"]),
+        "neuro-address-link": ("href", c["valdemoro"]["maps_url"]),
     }
     texts = {
         "neuro-phone": esc(c["phone"]),
         "neuro-mail": esc(c["mail"]),
-        "neuro-address": "<br>".join(esc(line) for line in c["address_lines"]),
+        "neuro-address": "<br>".join(
+            esc(line) for line in c["valdemoro"]["address_lines"]
+        ),
     }
 
     def repl_tag(m: re.Match) -> str:

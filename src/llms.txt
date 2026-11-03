@@ -5,7 +5,7 @@
 Key facts:
 
 - Professional: __specialist.name__, __metadata.schema.job_title__. __specialist.license__.
-- Clinic address: __common.contact.address_lines__.
+- Clinic address: __common.contact.valdemoro.address_lines__.
 - In-person service area (municipalities in southern __metadata.site.region__): __metadata.area_served__.
 - Online therapy: by video call, available anywhere in __metadata.online_area__.
 - Phone and WhatsApp: __common.contact.phone__

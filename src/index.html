@@ -307,25 +307,49 @@
                         <!-- __common.contact.mail__ -->
                         <span class="neuro-mail"></span>
                     </a>
-                    <a href="__common.contact.maps_url__" target="_blank" class="contact-item neuro-address-link">
+                    <a href="__common.contact.valdemoro.maps_url__" target="_blank" class="contact-item neuro-address-link">
                         <div class="contact-icon"><i class="bi bi-geo-alt"></i></div>
-                        <h4>Dirección</h4>
-                        <!-- __common.contact.address_lines__ -->
+                        <h4>Consulta en Valdemoro</h4>
+                        <!-- __common.contact.valdemoro.address_lines__ -->
                         <span class="neuro-address"></span>
+                    </a>
+                    <a href="__common.contact.segovia.maps_url__" target="_blank" class="contact-item">
+                        <div class="contact-icon"><i class="bi bi-geo-alt"></i></div>
+                        <h4>Consulta en Segovia</h4>
+                        <span>__common.contact.segovia.address_lines__</span>
                     </a>
                 </div>
 
                 <div class="map-wrapper">
-                    <div class="map-container">
-                        <iframe
-                            src="__contact.map_embed__"
-                            width="600"
-                            height="450"
-                            style="border:0;"
-                            allowfullscreen=""
-                            loading="lazy"
-                            referrerpolicy="no-referrer-when-downgrade">
-                        </iframe>
+                    <div class="map-location">
+                        <h4>Consulta en Valdemoro</h4>
+                        <div class="map-container">
+                            <iframe
+                                src="__contact.map_embed_valdemoro__"
+                                title="Mapa de la consulta de Valdemoro"
+                                width="600"
+                                height="450"
+                                style="border:0;"
+                                allowfullscreen=""
+                                loading="lazy"
+                                referrerpolicy="no-referrer-when-downgrade">
+                            </iframe>
+                        </div>
+                    </div>
+                    <div class="map-location">
+                        <h4>Consulta en Segovia</h4>
+                        <div class="map-container">
+                            <iframe
+                                src="__contact.map_embed_segovia__"
+                                title="Mapa de la consulta de Segovia"
+                                width="600"
+                                height="450"
+                                style="border:0;"
+                                allowfullscreen=""
+                                loading="lazy"
+                                referrerpolicy="strict-origin-when-cross-origin">
+                            </iframe>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -342,8 +366,8 @@
                     <a href="__footer.legal_file__">__footer.legal_label__</a>
                 </div>
                 <div class="footer-links">
-                    <!-- __common.contact.address_lines__ -->
-                    <a href="__common.contact.maps_url__" class="neuro-address-link neuro-address"></a>
+                    <!-- __common.contact.valdemoro.address_lines__ -->
+                    <a href="__common.contact.valdemoro.maps_url__" class="neuro-address-link neuro-address"></a>
                     <!-- __common.contact.phone__ -->
                     <a href="__common.contact.phone__" class="neuro-phone-link neuro-phone"></a>
                     <!-- __common.contact.mail__ -->

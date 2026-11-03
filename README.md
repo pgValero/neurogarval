@@ -6,7 +6,7 @@ Live site: [neurogarval.es](https://neurogarval.es)
 
 This repository is the production site for that business: hero, services, care modalities
 (in-clinic / online / home visits), process, about the specialist, blog, FAQ, contact
-section with an embedded map, footer, and a standalone email signature template.
+section with two embedded maps, footer, and a standalone email signature template.
 
 ---
 

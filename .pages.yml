@@ -550,11 +550,16 @@ content:
         required: true
         options:
           format: markdown
-      - name: map_embed
-        label: Mapa de Google (src del iframe)
+      - name: map_embed_valdemoro
+        label: Mapa de Google de Valdemoro (src del iframe)
         type: text
         required: true
         description: "Pega únicamente la URL del atributo src del iframe, no todo el código. En Google Maps: Compartir > Insertar un mapa > copiar la URL del iframe."
+      - name: map_embed_segovia
+        label: Mapa de Google de Segovia (src del iframe)
+        type: text
+        required: true
+        description: "Pega únicamente la URL del atributo src del iframe de la consulta de Segovia, no todo el código. En Google Maps: Compartir > Insertar un mapa > copiar la URL del iframe."
       - name: instagram
         label: Instagram (tarjeta de contacto)
         type: object
@@ -619,7 +624,7 @@ content:
         label: Contacto
         type: object
         readonly: true
-        description: "Datos de contacto comunes, de solo lectura y editables únicamente en el repositorio. Son la fuente única para el hero, la sección Contacto, el footer y la firma; build.py los inserta directamente en el HTML generado, sin JavaScript."
+        description: "Datos de contacto comunes, de solo lectura y editables únicamente en el repositorio. El teléfono y el email se usan en el hero, la sección Contacto, el footer y la firma. Cada consulta (Valdemoro y Segovia) guarda su dirección y su enlace a Maps; la de Valdemoro es la que se usa además en el footer, la firma, los datos estructurados y los ficheros llms."
         fields:
           - name: phone
             label: Teléfono
@@ -632,19 +637,44 @@ content:
             type: string
             required: true
             pattern: "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$"
-          - name: address_lines
-            label: Dirección
-            type: string
-            required: true
-            list:
-              min: 2
-              max: 2
-            description: "Exactamente dos líneas fijas: 1) calle y número; 2) CP, ciudad y provincia. En la firma de email se unen con \" - \"; también se usan en el footer, en Contacto y en la dirección de los datos estructurados."
-          - name: maps_url
-            label: Enlace de Google Maps
-            type: string
-            required: true
-            description: "Enlace público de Google Maps. Se usa en el footer, en la firma y en los datos estructurados."
+          - name: valdemoro
+            label: Consulta de Valdemoro
+            type: object
+            readonly: true
+            description: "Datos de la consulta de Valdemoro. Su dirección y su enlace a Maps se usan en la sección Contacto, el footer, la firma, los datos estructurados y los ficheros llms."
+            fields:
+              - name: address_lines
+                label: Dirección (Valdemoro)
+                type: string
+                required: true
+                list:
+                  min: 2
+                  max: 2
+                description: "Exactamente dos líneas fijas: 1) calle y número; 2) CP, ciudad y provincia. En la firma de email se unen con \" - \"; también se usan en el footer, en Contacto y en la dirección de los datos estructurados."
+              - name: maps_url
+                label: Enlace de Google Maps (Valdemoro)
+                type: string
+                required: true
+                description: "Enlace público de Google Maps de Valdemoro. Se usa en el footer, en la firma y en los datos estructurados."
+          - name: segovia
+            label: Consulta de Segovia
+            type: object
+            readonly: true
+            description: "Datos de la consulta de Segovia. De momento solo se muestran en la sección Contacto; el footer, la firma, los datos estructurados y los ficheros llms siguen usando la dirección de Valdemoro."
+            fields:
+              - name: address_lines
+                label: Dirección (Segovia)
+                type: string
+                required: true
+                list:
+                  min: 2
+                  max: 2
+                description: "Exactamente dos líneas fijas: 1) calle y número; 2) CP y ciudad. Se muestran en la tarjeta de contacto de Segovia."
+              - name: maps_url
+                label: Enlace de Google Maps (Segovia)
+                type: string
+                required: true
+                description: "Enlace público de Google Maps de Segovia. Se usa en la tarjeta de contacto de Segovia."
 
   - name: metadata
     label: Metadatos (solo lectura)

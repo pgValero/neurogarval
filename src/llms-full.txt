@@ -6,8 +6,8 @@
 
 - Name: __metadata.schema.site_name__
 - Professional: __specialist.name__, __metadata.schema.job_title__. __specialist.license__.
-- Address: __common.contact.address_lines__.
-- How to get there (Google Maps): __common.contact.maps_url__
+- Address: __common.contact.valdemoro.address_lines__.
+- How to get there (Google Maps): __common.contact.valdemoro.maps_url__
 - Phone and WhatsApp: __common.contact.phone__
 - Email: __common.contact.mail__
 - Web: __metadata.site.url__

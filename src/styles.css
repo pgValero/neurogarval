@@ -483,10 +483,18 @@ nav {
 /* --- Compact Map Styling --- */
 .map-wrapper {
     width: 100%;
-    display: flex;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    align-items: start;
     padding-bottom: 20px;
     padding-top: 3rem;
+}
+
+.map-location h4 {
+    margin-bottom: 1rem;
+    font-size: 1.05rem;
+    color: var(--color-dark);
 }
 
 .map-container {
@@ -949,6 +957,7 @@ footer a:hover {
     .footer-info { display: flex; flex-direction: column; align-items: center; }
     .footer-links { text-align: center; }
 
-    .map-container { height: 240px; margin: 0 1rem; }
+    .map-wrapper { grid-template-columns: 1fr; }
+    .map-container { height: 240px; }
     .modality-gallery { grid-template-columns: 1fr; }
 }

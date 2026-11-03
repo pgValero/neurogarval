@@ -1,7 +1,13 @@
 contact:
   phone: "+34 711 233 888"
   mail: teresa@neurogarval.es
-  address_lines:
-    - C/ Diego de Almagro, 32
-    - 28342, Valdemoro, Madrid
-  maps_url: "https://maps.app.goo.gl/pwGjVP2YtA6mQypG9"
+  valdemoro:
+    address_lines:
+      - C/ Diego de Almagro, 32
+      - 28342, Valdemoro, Madrid
+    maps_url: "https://maps.app.goo.gl/pwGjVP2YtA6mQypG9"
+  segovia:
+    address_lines:
+      - C. Santo Domingo de Silos, 48
+      - 40002, Segovia, Segovia
+    maps_url: "https://maps.app.goo.gl/vbMjbqnNwMXa2VJv9"
