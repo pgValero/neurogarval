@@ -594,6 +594,7 @@ content:
         list:
           min: 2
           max: 2
+          collapsible: false
         description: "Exactamente dos líneas fijas de texto bajo el logo. En el HTML se unen con un salto de línea."
       - name: legal_label
         label: Texto del enlace legal
@@ -665,6 +666,7 @@ content:
                 list:
                   min: 2
                   max: 2
+                  collapsible: false
                 description: "Exactamente dos líneas fijas: 1) calle y número; 2) CP, ciudad y provincia. En la firma de email se unen con \" - \"; también se usan en el footer, en Contacto y en la dirección de los datos estructurados."
               - name: maps_url
                 label: Enlace de Google Maps (Valdemoro)
@@ -705,6 +707,7 @@ content:
                 list:
                   min: 2
                   max: 2
+                  collapsible: false
                 description: "Exactamente dos líneas fijas: 1) calle y número; 2) CP, ciudad y provincia. Se muestran en Contacto, el footer y los ficheros llms."
               - name: maps_url
                 label: Enlace de Google Maps (Segovia)
