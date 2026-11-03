@@ -1,6 +1,6 @@
 ### NeuroGarval
 
-**Landing page for NeuroGarval, a neuropsychology and health psychology practice in Valdemoro (Madrid, Spain).**
+**Landing page for NeuroGarval, a neuropsychology and health psychology practice in Valdemoro (Madrid) and Segovia (Spain).**
 
 Live site: [neurogarval.es](https://neurogarval.es)
 
@@ -55,8 +55,8 @@ service disappears.
 
 ### 🔄 Consistent everywhere
 
-Phone, WhatsApp, email, address and Maps link are edited once in [`content/common.yml`](content/common.yml)
-and written into the HTML, the JSON-LD and the signature. Sections can never disagree,
+Phone, WhatsApp and email, and the addresses and Maps links of both consultations, are edited once in [`content/common.yml`](content/common.yml)
+and written into the HTML, the JSON-LD and the llms files; the Valdemoro address also feeds the signature. Sections can never disagree,
 and crawlers need no JavaScript to see the contact data.
 
 ### 🛠️ For the maintainer

@@ -624,7 +624,7 @@ content:
         label: Contacto
         type: object
         readonly: true
-        description: "Datos de contacto comunes, de solo lectura y editables únicamente en el repositorio. El teléfono y el email se usan en el hero, la sección Contacto, el footer y la firma. Cada consulta (Valdemoro y Segovia) guarda su dirección y su enlace a Maps; la de Valdemoro es la que se usa además en el footer, la firma, los datos estructurados y los ficheros llms."
+        description: "Datos de contacto comunes, de solo lectura y editables únicamente en el repositorio. El teléfono y el email se usan en el hero, la sección Contacto, el footer y la firma. Cada consulta (Valdemoro y Segovia) guarda ciudad, provincia, código de región, dirección, enlace a Maps y municipios de influencia; son la fuente única para la web, los datos estructurados y los ficheros llms."
         fields:
           - name: phone
             label: Teléfono
@@ -641,8 +641,23 @@ content:
             label: Consulta de Valdemoro
             type: object
             readonly: true
-            description: "Datos de la consulta de Valdemoro. Su dirección y su enlace a Maps se usan en la sección Contacto, el footer, la firma, los datos estructurados y los ficheros llms."
+            description: "Datos de la consulta de Valdemoro: ciudad, provincia, dirección, Maps y municipios de influencia. Se usan en Contacto, el footer, la firma, los datos estructurados y los ficheros llms."
             fields:
+              - name: city
+                label: Ciudad (Valdemoro)
+                type: string
+                required: true
+                description: "Ciudad de la consulta. Alimenta geo.placename del <head> y addressLocality de los datos estructurados."
+              - name: region
+                label: Provincia (Valdemoro)
+                type: string
+                required: true
+                description: "Provincia de la consulta; se publica como addressRegion en los datos estructurados."
+              - name: region_code
+                label: Código de región (Valdemoro)
+                type: string
+                required: true
+                description: "Código ISO 3166-2, por ejemplo ES-MD. Alimenta la etiqueta geo.region del <head>."
               - name: address_lines
                 label: Dirección (Valdemoro)
                 type: string
@@ -656,12 +671,33 @@ content:
                 type: string
                 required: true
                 description: "Enlace público de Google Maps de Valdemoro. Se usa en el footer, en la firma y en los datos estructurados."
+              - name: area_served
+                label: Municipios de influencia (Valdemoro)
+                type: string
+                required: true
+                list: true
+                description: "Municipios de atención presencial de esta consulta. Se publican como areaServed en los datos estructurados y en los ficheros llms."
           - name: segovia
             label: Consulta de Segovia
             type: object
             readonly: true
-            description: "Datos de la consulta de Segovia. De momento solo se muestran en la sección Contacto; el footer, la firma, los datos estructurados y los ficheros llms siguen usando la dirección de Valdemoro."
+            description: "Datos de la consulta de Segovia: ciudad, provincia, dirección, Maps y municipios de influencia. Se usan en Contacto, el footer, los datos estructurados y los ficheros llms."
             fields:
+              - name: city
+                label: Ciudad (Segovia)
+                type: string
+                required: true
+                description: "Ciudad de la consulta. Se publica como addressLocality en los datos estructurados y se usa en los ficheros llms."
+              - name: region
+                label: Provincia (Segovia)
+                type: string
+                required: true
+                description: "Provincia de la consulta; se publica como addressRegion en los datos estructurados."
+              - name: region_code
+                label: Código de región (Segovia)
+                type: string
+                required: true
+                description: "Código ISO 3166-2, por ejemplo ES-SG. Se usa en los datos estructurados y en los ficheros llms."
               - name: address_lines
                 label: Dirección (Segovia)
                 type: string
@@ -669,12 +705,18 @@ content:
                 list:
                   min: 2
                   max: 2
-                description: "Exactamente dos líneas fijas: 1) calle y número; 2) CP y ciudad. Se muestran en la tarjeta de contacto de Segovia."
+                description: "Exactamente dos líneas fijas: 1) calle y número; 2) CP, ciudad y provincia. Se muestran en Contacto, el footer y los ficheros llms."
               - name: maps_url
                 label: Enlace de Google Maps (Segovia)
                 type: string
                 required: true
-                description: "Enlace público de Google Maps de Segovia. Se usa en la tarjeta de contacto de Segovia."
+                description: "Enlace público de Google Maps de Segovia. Se usa en Contacto, el footer y los datos estructurados."
+              - name: area_served
+                label: Municipios de influencia (Segovia)
+                type: string
+                required: true
+                list: true
+                description: "Municipios de atención presencial de esta consulta. Se publican como areaServed en los datos estructurados y en los ficheros llms."
 
   - name: metadata
     label: Metadatos (solo lectura)
@@ -695,7 +737,7 @@ content:
         type: object
         required: true
         readonly: true
-        description: "Datos fijos de identidad, idioma y ubicación, editables únicamente en el repositorio. El dominio y la URL base se obtienen de src/CNAME durante el build."
+        description: "Datos fijos de identidad e idioma, editables únicamente en el repositorio. El dominio y la URL base se obtienen de src/CNAME durante el build. La ubicación de cada consulta (ciudad, provincia, código de región y municipios) vive en Datos comunes."
         fields:
           - name: name
             label: Nombre
@@ -732,36 +774,12 @@ content:
             required: true
             readonly: true
             description: "Ruta pública del logo. build.py lo publica en la raíz de _site/ para conservar la ruta actual."
-          - name: locality
-            label: Población
-            type: string
-            required: true
-            readonly: true
-            description: "Población de la clínica. Alimenta la etiqueta geo.placename del <head> y addressLocality en los datos estructurados."
-          - name: region
-            label: Provincia
-            type: string
-            required: true
-            readonly: true
-            description: "Provincia o región de la clínica; se publica como addressRegion en los datos estructurados."
-          - name: region_code
-            label: Código de región
-            type: string
-            required: true
-            readonly: true
-            description: "Código de país y región, por ejemplo ES-MD. Alimenta la etiqueta geo.region del <head>."
           - name: country
             label: País
             type: string
             required: true
             readonly: true
             description: "Código de país de la clínica; se publica como addressCountry en los datos estructurados."
-          - name: geo_position
-            label: Coordenadas (ICBM)
-            type: string
-            required: true
-            readonly: true
-            description: "Latitud y longitud separadas por una coma (latitud,longitud) para la etiqueta ICBM del <head>."
       - name: seo
         label: SEO (description, keywords)
         type: object
@@ -943,13 +961,6 @@ content:
                 type: string
                 required: true
                 readonly: true
-      - name: area_served
-        label: Municipios de atención presencial
-        type: string
-        required: true
-        readonly: true
-        list: true
-        description: "Lista de municipios de atención presencial. Se publica como areaServed en los datos estructurados para el SEO local."
       - name: online_area
         label: Zona de la terapia online
         type: string

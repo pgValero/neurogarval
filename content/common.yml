@@ -2,12 +2,33 @@ contact:
   phone: "+34 711 233 888"
   mail: teresa@neurogarval.es
   valdemoro:
+    city: Valdemoro
+    region: Madrid
+    region_code: ES-MD
     address_lines:
       - C/ Diego de Almagro, 32
       - 28342, Valdemoro, Madrid
     maps_url: "https://maps.app.goo.gl/pwGjVP2YtA6mQypG9"
+    area_served:
+      - Valdemoro
+      - Pinto
+      - Parla
+      - Ciempozuelos
+      - San Martín de la Vega
+      - Getafe
+      - Aranjuez
+      - Seseña
   segovia:
+    city: Segovia
+    region: Segovia
+    region_code: ES-SG
     address_lines:
       - C. Santo Domingo de Silos, 48
       - 40002, Segovia, Segovia
     maps_url: "https://maps.app.goo.gl/vbMjbqnNwMXa2VJv9"
+    area_served:
+      - Segovia
+      - La Granja de San Ildefonso
+      - Palazuelos de Eresma
+      - San Cristóbal de Segovia
+      - La Lastrilla

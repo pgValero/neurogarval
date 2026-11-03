@@ -6,13 +6,9 @@ site:
   locale: es_ES
   currency: EUR
   logo: logo.svg
-  locality: Valdemoro
-  region: Madrid
-  region_code: ES-MD
   country: ES
-  geo_position: "40.199937, -3.693149"
 seo:
-  description: "Neuropsicología y Psicología sanitaria en Valdemoro y online. Teresa García Valero, colegiado M-42858. Primera consulta gratuita. Pide cita: +34 711 233 888."
+  description: "Neuropsicología y Psicología sanitaria en Valdemoro y Segovia, y online. Teresa García Valero, M-42858. Primera consulta gratuita."
   keywords:
     - NeuroGarval
     - Teresa García Valero
@@ -23,6 +19,11 @@ seo:
     - neuropsicóloga en Valdemoro
     - Valdemoro
     - Madrid
+    - neuropsicología Segovia
+    - psicología sanitaria Segovia
+    - psicóloga en Segovia
+    - neuropsicóloga en Segovia
+    - Segovia
     - rehabilitación cognitiva
     - evaluación neuropsicológica
     - dificultades de aprendizaje
@@ -37,13 +38,13 @@ social:
   image: media/image.png
   image_width: 1200
   image_height: 630
-  image_alt: "NeuroGarval, neuropsicología y psicología sanitaria en Valdemoro"
+  image_alt: "NeuroGarval, neuropsicología y psicología sanitaria en Valdemoro y Segovia"
   og_type: website
-  og_title: "NeuroGarval | Neuropsicología y Psicología sanitaria en Valdemoro"
-  og_description: "Neuropsicología y Psicología sanitaria en Valdemoro y online. Teresa García Valero, colegiado M-42858. Primera consulta gratuita."
+  og_title: "NeuroGarval | Neuropsicología y Psicología sanitaria en Valdemoro y Segovia"
+  og_description: "Neuropsicología y Psicología sanitaria en Valdemoro, Segovia y online. Teresa García Valero, colegiado M-42858. Primera consulta gratuita."
   twitter_card: summary_large_image
-  twitter_title: "NeuroGarval | Neuropsicología y Psicología en Valdemoro"
-  twitter_description: "Psicología y neuropsicología en Valdemoro y online. Primera consulta gratuita."
+  twitter_title: "NeuroGarval | Psicología y Neuropsicología en Valdemoro y Segovia"
+  twitter_description: "Psicología y neuropsicología en Valdemoro, Segovia y online. Primera consulta gratuita."
 llms:
   contact_heading: Datos de contacto
   specialist_heading: Sobre la especialista
@@ -51,7 +52,7 @@ llms:
   session_length: entre 45 y 60 minutos
 schema:
   site_name: "NeuroGarval | Psicología y Neuropsicología Clínica"
-  description: "Consulta de neuropsicología y psicología sanitaria en Valdemoro y online, dirigida a niños, adolescentes y adultos."
+  description: "Consulta de neuropsicología y psicología sanitaria en Valdemoro (Madrid) y Segovia, y online, dirigida a niños, adolescentes y adultos."
   role: Neuropsicóloga
   job_title: "Neuropsicóloga y psicóloga general sanitaria"
   credential_category: Colegiado/a
@@ -73,14 +74,5 @@ schema:
     person: teresa
     faq: faq
     blog: blog
-area_served:
-  - Valdemoro
-  - Pinto
-  - Parla
-  - Ciempozuelos
-  - San Martín de la Vega
-  - Getafe
-  - Aranjuez
-  - Seseña
 online_area: España
 price_range: "$"

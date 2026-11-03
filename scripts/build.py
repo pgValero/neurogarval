@@ -22,9 +22,9 @@ What it does
 3. Reads the domain from src/CNAME and fills the header of src/index.html from
    content/metadata.yml (read-only): <title>, description, keywords,
    canonical, geo tags, Open Graph and Twitter, language, logo and menu labels.
-4. Generates the JSON-LD block (schema.org) announcing the clinic, the
-   professional, the service catalog, the FAQ and the articles, with the data
-   of metadata.yml and the other sections.
+4. Generates the JSON-LD block (schema.org) announcing the clinic with its two
+   locations, the professional, the service catalog, the FAQ and the articles,
+   with the data of metadata.yml and the other sections.
 5. Writes the contact data of content/common.yml (single source of truth)
    straight into the generated index.html: the .neuro-* slots (phone,
    WhatsApp and email) are resolved without JavaScript.
@@ -404,6 +404,7 @@ DERIVED_FIELDS = frozenset(
     {
         "metadata.site.url",
         "common.contact.phone_tel",
+        "common.contact.valdemoro.geo_position",
         "signature.web_label",
         "signature.web_url",
     }
@@ -764,26 +765,60 @@ def jsonld_graph() -> str:
     contact = c["common"]["contact"]
     specialist = c["specialist"]
     instagram = (c["contact"].get("instagram") or {}).get("url", "")
-    valdemoro = contact.get("valdemoro") or {}
-    same_as = [u for u in (instagram, valdemoro.get("maps_url", "")) if u]
-
-    address_lines = list(valdemoro.get("address_lines") or [])
-    address = {
-        "@type": "PostalAddress",
-        "streetAddress": address_lines[0] if address_lines else "",
-        "addressLocality": site["locality"],
-        "addressRegion": site["region"],
-        "addressCountry": site["country"],
+    locations = {
+        key: value for key, value in contact.items() if isinstance(value, dict)
     }
-    if len(address_lines) > 1:
-        m = re.match(r"(\d{5})", address_lines[1])
-        if m:
-            address["postalCode"] = m.group(1)
 
-    # In-person municipalities + country for the online therapy.
-    area_served = [
-        {"@type": "City", "name": city} for city in info.get("area_served") or []
+    def location_node(key: str, location: dict) -> dict:
+        """One MedicalClinic node: address, coordinates, map and area."""
+        address_lines = list(location.get("address_lines") or [])
+        address = {
+            "@type": "PostalAddress",
+            "streetAddress": address_lines[0] if address_lines else "",
+            "addressLocality": location.get("city", ""),
+            "addressRegion": location.get("region", ""),
+            "addressCountry": site["country"],
+        }
+        if len(address_lines) > 1:
+            m = re.match(r"(\d{5})", address_lines[1])
+            if m:
+                address["postalCode"] = m.group(1)
+        node = {
+            "@type": "MedicalClinic",
+            "@id": f"{clinic_id}-{key}",
+            "name": site_name,
+            "parentOrganization": {"@id": clinic_id},
+            "telephone": contact.get("phone", ""),
+            "email": contact.get("mail", ""),
+            "address": address,
+            "hasMap": location.get("maps_url", ""),
+            "areaServed": [
+                {"@type": "City", "name": city}
+                for city in location.get("area_served") or []
+            ],
+        }
+        geo_position = location.get("geo_position", "")
+        if geo_position:
+            latitude, longitude = (part.strip() for part in geo_position.split(",", 1))
+            node["geo"] = {
+                "@type": "GeoCoordinates",
+                "latitude": float(latitude),
+                "longitude": float(longitude),
+            }
+        return node
+
+    clinic_locations = [
+        location_node(key, location) for key, location in locations.items()
     ]
+
+    # In-person municipalities (both locations) + country for the online therapy.
+    area_served = []
+    seen_cities: set[str] = set()
+    for location in locations.values():
+        for city in location.get("area_served") or []:
+            if city not in seen_cities:
+                area_served.append({"@type": "City", "name": city})
+                seen_cities.add(city)
     online_area = info.get("online_area")
     if online_area:
         area_served.append({"@type": "Country", "name": online_area})
@@ -816,13 +851,13 @@ def jsonld_graph() -> str:
         "logo": logo,
         "telephone": contact.get("phone", ""),
         "email": contact.get("mail", ""),
-        "address": address,
         "priceRange": info.get("price_range", ""),
         "currenciesAccepted": site["currency"],
         "availableLanguage": [language],
         "areaServed": area_served,
         "knowsAbout": schema["knows_about"],
         "employee": {"@id": person_id},
+        "location": [{"@id": node["@id"]} for node in clinic_locations],
         "hasOfferCatalog": {
             "@type": "OfferCatalog",
             "name": schema["catalog_name"],
@@ -841,15 +876,8 @@ def jsonld_graph() -> str:
             ],
         },
     }
-    if same_as:
-        clinic["sameAs"] = same_as
-    coords = maps_coordinates(c["contact"].get("map_embed_valdemoro", ""))
-    if coords:
-        clinic["geo"] = {
-            "@type": "GeoCoordinates",
-            "latitude": coords[0],
-            "longitude": coords[1],
-        }
+    if instagram:
+        clinic["sameAs"] = [instagram]
 
     graph: list[dict] = [
         {
@@ -861,6 +889,7 @@ def jsonld_graph() -> str:
             "publisher": {"@id": base},
         },
         clinic,
+        *clinic_locations,
         person,
     ]
 
@@ -946,7 +975,6 @@ SPECIALS: dict[str, dict] = {
     "src/llms.txt": {
         # YAML lists (covered services, municipalities, topics...) in a single
         # line of plain text separated by commas.
-        "metadata.area_served": render_comma_list,
         "metadata.schema.knows_about": render_comma_list,
         # The summarized process is the titles of its steps.
         "process.steps": render_comma_list,
@@ -955,7 +983,6 @@ SPECIALS: dict[str, dict] = {
         "*": render_plain,
     },
     "src/llms-full.txt": {
-        "metadata.area_served": render_comma_list,
         "metadata.schema.knows_about": render_comma_list,
         "process.steps": render_comma_list,
         # Full Markdown of each section, as plain text.
@@ -1137,6 +1164,31 @@ def build_context() -> dict:
     context["signature"]["web_url"] = base_url.rstrip("/")
     contact = context["common"]["contact"]
     contact["phone_tel"] = f"tel:{raw_phone(contact['phone'])}"
+    for key, location in contact.items():
+        if not isinstance(location, dict):
+            continue
+        for field in (
+            "city",
+            "region",
+            "region_code",
+            "address_lines",
+            "maps_url",
+            "area_served",
+        ):
+            if not location.get(field):
+                sys.exit(f"content/common.yml: contact.{key}.{field} is required.")
+        if len(location["address_lines"]) != 2:
+            sys.exit(
+                f"content/common.yml: contact.{key}.address_lines must have "
+                "exactly 2 lines."
+            )
+        coords = maps_coordinates(context["contact"].get(f"map_embed_{key}", ""))
+        if not coords:
+            sys.exit(
+                f"content/contact.yml: map_embed_{key} has no coordinates "
+                "(expected !2d<lon>!3d<lat> in the Google Maps embed URL)."
+            )
+        location["geo_position"] = f"{coords[0]}, {coords[1]}"
     return context
 
 
