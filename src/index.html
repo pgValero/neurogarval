@@ -60,9 +60,10 @@
          current element (e.g. services.items.n.title) and
          loop.index / loop.index0 is the position. Adding or removing entries
          in the CMS requires no change in this template. The .neuro-* slots
-         (phone, WhatsApp, email, address and Maps) are filled from
-         content/common.yml; there is no JavaScript involved. Do not edit the
-         marked texts by hand: edit them in Pages CMS. -->
+         (phone, WhatsApp and email) are filled from content/common.yml; the
+         addresses and their Maps links use markers; there is no JavaScript
+         involved. Do not edit the marked texts by hand: edit them in Pages
+         CMS. -->
 
     <div class="mobile-overlay" id="mobileMenu">
         <button class="close-btn" onclick="toggleMenu()">&times;</button>
@@ -307,11 +308,10 @@
                         <!-- __common.contact.mail__ -->
                         <span class="neuro-mail"></span>
                     </a>
-                    <a href="__common.contact.valdemoro.maps_url__" target="_blank" class="contact-item neuro-address-link">
+                    <a href="__common.contact.valdemoro.maps_url__" target="_blank" class="contact-item">
                         <div class="contact-icon"><i class="bi bi-geo-alt"></i></div>
                         <h4>Consulta en Valdemoro</h4>
-                        <!-- __common.contact.valdemoro.address_lines__ -->
-                        <span class="neuro-address"></span>
+                        <span>__common.contact.valdemoro.address_lines__</span>
                     </a>
                     <a href="__common.contact.segovia.maps_url__" target="_blank" class="contact-item">
                         <div class="contact-icon"><i class="bi bi-geo-alt"></i></div>
@@ -366,8 +366,8 @@
                     <a href="__footer.legal_file__">__footer.legal_label__</a>
                 </div>
                 <div class="footer-links">
-                    <!-- __common.contact.valdemoro.address_lines__ -->
-                    <a href="__common.contact.valdemoro.maps_url__" class="neuro-address-link neuro-address"></a>
+                    <a href="__common.contact.valdemoro.maps_url__">__common.contact.valdemoro.address_lines__</a>
+                    <a href="__common.contact.segovia.maps_url__">__common.contact.segovia.address_lines__</a>
                     <!-- __common.contact.phone__ -->
                     <a href="__common.contact.phone__" class="neuro-phone-link neuro-phone"></a>
                     <!-- __common.contact.mail__ -->

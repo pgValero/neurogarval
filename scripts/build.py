@@ -27,7 +27,7 @@ What it does
    of metadata.yml and the other sections.
 5. Writes the contact data of content/common.yml (single source of truth)
    straight into the generated index.html: the .neuro-* slots (phone,
-   WhatsApp, email, address and Maps) are resolved without JavaScript.
+   WhatsApp and email) are resolved without JavaScript.
 6. Writes the full content of services, modalities and articles in the HTML
    itself (hidden .card-full blocks); script.js copies it into the modals.
 7. Converts the media/ images that are still PNG or JPEG (photos uploaded from
@@ -1019,9 +1019,9 @@ def load_pages_types() -> dict[str, list]:
 def fill_contact(doc: str, contact: dict) -> str:
     """Resolves every .neuro-* slot of the template in the HTML.
 
-    Attributes: href of phone/WhatsApp/email/Maps.
-    Text:       phone, email and address. The hero, the contact section and
-                the footer all come from the same common.yml.
+    Attributes: href of phone/WhatsApp/email.
+    Text:       phone and email. The hero, the contact section and the footer
+                all come from the same common.yml.
     """
     c = contact
     attrs = {
@@ -1031,14 +1031,10 @@ def fill_contact(doc: str, contact: dict) -> str:
             f"https://wa.me/{raw_phone(c['phone']).lstrip('+')}",
         ),
         "neuro-mail-link": ("href", f"mailto:{c['mail']}"),
-        "neuro-address-link": ("href", c["valdemoro"]["maps_url"]),
     }
     texts = {
         "neuro-phone": esc(c["phone"]),
         "neuro-mail": esc(c["mail"]),
-        "neuro-address": "<br>".join(
-            esc(line) for line in c["valdemoro"]["address_lines"]
-        ),
     }
 
     def repl_tag(m: re.Match) -> str:
