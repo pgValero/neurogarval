@@ -405,6 +405,7 @@ DERIVED_FIELDS = frozenset(
         "metadata.site.url",
         "common.contact.phone_tel",
         "common.contact.valdemoro.geo_position",
+        "common.contact.segovia.geo_position",
         "signature.web_label",
         "signature.web_url",
     }
@@ -962,6 +963,9 @@ SPECIALS: dict[str, dict] = {
         "metadata.site.logo": render_site_logo,
         # The signature shows the address on a single line.
         "common.contact.valdemoro.address_lines": lambda v, parent: " - ".join(
+            esc(line) for line in v
+        ),
+        "common.contact.segovia.address_lines": lambda v, parent: " - ".join(
             esc(line) for line in v
         ),
     },
