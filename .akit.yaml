@@ -1,0 +1,5 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/ftschindler/federated-agent-kits/v0.24.0/schema/akit-manifest.schema.json
+version: 1
+skills:
+  https://github.com/coreyhaines31/marketingskills#1f837447b20bb6f0e72d87b80ece1c221c362c7d: seo-audit  # frozen: main, 2026-11-13
+  https://github.com/vercel-labs/agent-skills#1a2c79d4e6c4a2283dc2c614b6538cbe1ed5ca62: web-design-guidelines # frozen: main, 2026-11-13
