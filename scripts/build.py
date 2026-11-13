@@ -25,9 +25,9 @@ What it does
 4. Generates the JSON-LD block (schema.org) announcing the clinic with its two
    locations, the professional, the service catalog, the FAQ and the articles,
    with the data of metadata.yml and the other sections.
-5. Writes the contact data of content/common.yml (single source of truth)
-   straight into the generated index.html: the .neuro-* slots (phone,
-   WhatsApp and email) are resolved without JavaScript.
+5. The contact data of content/common.yml (single source of truth) is
+   substituted into the generated index.html with markers (phone, WhatsApp
+   and email), resolved without JavaScript.
 6. Writes the full content of services, modalities and articles in the HTML
    itself (hidden .card-full blocks); script.js copies it into the modals.
 7. Converts the media/ images that are still PNG or JPEG (photos uploaded from
@@ -168,7 +168,11 @@ STATIC_FILES = [
     (ROOT / "media/aviso_legal.pdf", "aviso_legal.pdf"),
     (ROOT / "media/tarjeta.pdf", "tarjeta.pdf"),
 ]
-MEDIA_EXCLUDES = ("favicon.svg", "logo.svg", "aviso_legal.pdf", "tarjeta.pdf")
+# The media/ files that STATIC_FILES publishes at the _site/ root: they must
+# not be published again under media/.
+MEDIA_EXCLUDES = frozenset(
+    name for src, name in STATIC_FILES if src.parent == ROOT / "media"
+)
 
 # Formats the build converts to WebP when publishing: the originals are not
 # published, so every image of the site ends up in WebP.
@@ -324,6 +328,15 @@ def img_tag(
     return f'<img src="{esc(src)}"{dim} alt="{esc(alt)}"{attrs}>'
 
 
+def published_webp(path: str) -> tuple[str, tuple[int, int] | None]:
+    """Published path of an image and its size: the WebP converted from a
+    PNG/JPEG of the CMS, or the original path if it was not converted."""
+    converted = WEBP_SUBSTITUTES.get(path)
+    if converted:
+        return converted[0], converted[1]
+    return path, None
+
+
 def image_html(path: str, alt: str, attrs: str = "") -> str:
     """<img> with the WebP version of the image and its dimensions.
 
@@ -334,11 +347,8 @@ def image_html(path: str, alt: str, attrs: str = "") -> str:
     src = media_url(path)
     if not src:
         return ""
-    converted = WEBP_SUBSTITUTES.get(src)
-    if converted:
-        webp, size = converted
-        return img_tag(webp, alt, attrs, size)
-    return img_tag(src, alt, attrs)
+    webp, size = published_webp(src)
+    return img_tag(webp, alt, attrs, size)
 
 
 def icon_html(key: str | None) -> str:
@@ -410,6 +420,7 @@ DERIVED_FIELDS = frozenset(
         "metadata.site.url",
         "metadata.site.lastmod",
         "common.contact.phone_tel",
+        "common.contact.whatsapp_url",
         "common.contact.valdemoro.geo_position",
         "common.contact.segovia.geo_position",
         "signature.web_label",
@@ -687,6 +698,12 @@ def render_comma_list(value, parent: dict) -> str:
     return render_plain(value, parent)
 
 
+def strip_inline_md(text: str) -> str:
+    """Removes **bold** and [label](url) from Markdown, keeping the text."""
+    text = re.sub(r"\*\*(.+?)\*\*", r"\1", text, flags=re.S)
+    return re.sub(r"\[([^\]]*)\]\([^)]*\)", r"\1", text)
+
+
 def markdown_text(value, parent: dict) -> str:
     """Markdown -> plain text keeping paragraphs and lists (.txt files).
 
@@ -695,22 +712,18 @@ def markdown_text(value, parent: dict) -> str:
     """
     source = "" if value is None else str(value)
     source = source.replace("\r\n", "\n").replace("\r", "\n").strip()
-    source = re.sub(r"\*\*(.+?)\*\*", r"\1", source, flags=re.S)
-    source = re.sub(r"\[([^\]]*)\]\([^)]*\)", r"\1", source)
-    return source
+    return strip_inline_md(source)
 
 
 def render_sitemap_image(value, parent: dict) -> str:
     """<image:loc> of the sitemap: absolute URL of the published image.
 
-    prepare_media() leaves the WebP version in WEBP_SUBSTITUTES, so that is
-    what gets published; if the article has no cover, the site image is used.
+    If the image was converted to WebP, that is what gets published; if the
+    article has no cover, the site image is used.
     """
     path = media_url(value)
-    substitute = WEBP_SUBSTITUTES.get(path)
-    if substitute:
-        path = substitute[0]
-    return site_url() + (path or media_url(CONTEXT["metadata"]["social"]["image"]))
+    published, _ = published_webp(path)
+    return site_url() + (published or media_url(CONTEXT["metadata"]["social"]["image"]))
 
 
 # ---------------------------------------------------------------------------
@@ -728,9 +741,8 @@ def render_sitemap_image(value, parent: dict) -> str:
 
 def plain_text(md: str) -> str:
     """Markdown -> plain text (schema.org does not allow Markdown)."""
-    text = re.sub(r"\*\*(.+?)\*\*", r"\1", str(md or ""))
+    text = strip_inline_md(str(md or ""))
     text = re.sub(r"^\s*[-*]\s+", "", text, flags=re.M)
-    text = re.sub(r"\[([^\]]*)\]\([^)]*\)", r"\1", text)
     text = re.sub(r"[#`_>]", "", text)
     return " ".join(text.split())
 
@@ -1048,66 +1060,6 @@ def load_pages_types() -> dict[str, list]:
 
 
 # ---------------------------------------------------------------------------
-# Contact — content/common.yml -> the .neuro-* slots of the generated
-# index.html. Single source of truth: the contact is written here, in the HTML;
-# script.js does not touch it (its only job with data is filling the service
-# and modality modals). The tel:/wa.me links of the signature use the derived
-# key __common.contact.phone_tel__ (see DERIVED_FIELDS).
-# ---------------------------------------------------------------------------
-def fill_contact(doc: str, contact: dict) -> str:
-    """Resolves every .neuro-* slot of the template in the HTML.
-
-    Attributes: href of phone/WhatsApp/email.
-    Text:       phone and email. The hero, the contact section and the footer
-                all come from the same common.yml.
-    """
-    c = contact
-    attrs = {
-        "neuro-phone-link": ("href", f"tel:{raw_phone(c['phone'])}"),
-        "neuro-whatsapp-link": (
-            "href",
-            f"https://wa.me/{raw_phone(c['phone']).lstrip('+')}",
-        ),
-        "neuro-mail-link": ("href", f"mailto:{c['mail']}"),
-    }
-    texts = {
-        "neuro-phone": esc(c["phone"]),
-        "neuro-mail": esc(c["mail"]),
-    }
-
-    def repl_tag(m: re.Match) -> str:
-        tag = m.group(0)
-        cm = re.search(r'class="([^"]*)"', tag)
-        if not cm:
-            return tag
-        classes = cm.group(1).split()
-        for cls, (attr, value) in attrs.items():
-            if cls in classes:
-                if re.search(rf'\s{attr}="', tag):
-                    tag = re.sub(
-                        rf'\s{attr}="[^"]*"', f' {attr}="{value}"', tag, count=1
-                    )
-                else:
-                    tag = tag[:-1].rstrip() + f' {attr}="{value}">'
-        return tag
-
-    def repl_elem(m: re.Match) -> str:
-        if m.group(1) != m.group(3):  # do not cross <a ...></span>
-            return m.group(0)
-        cm = re.search(r'class="([^"]*)"', m.group(2))
-        if not cm:
-            return m.group(0)
-        classes = cm.group(1).split()
-        for cls, text in texts.items():
-            if cls in classes:
-                return f"<{m.group(1)}{m.group(2)}>{text}</{m.group(3)}>"
-        return m.group(0)
-
-    doc = re.sub(r"<(?:a|img)\b[^>]*>", repl_tag, doc)
-    return re.sub(r"<(a|span)\b([^>]*)></(a|span)>", repl_elem, doc)
-
-
-# ---------------------------------------------------------------------------
 # Modals: their full content is written into the HTML (hidden .card-full
 # blocks of each card) so that search engines and AI assistants read it
 # without JavaScript; script.js only copies it into the modal. Services are
@@ -1176,6 +1128,7 @@ def build_context() -> dict:
     context["signature"]["web_url"] = base_url.rstrip("/")
     contact = context["common"]["contact"]
     contact["phone_tel"] = f"tel:{raw_phone(contact['phone'])}"
+    contact["whatsapp_url"] = f"https://wa.me/{raw_phone(contact['phone']).lstrip('+')}"
     for key, location in contact.items():
         if not isinstance(location, dict):
             continue
@@ -1284,8 +1237,6 @@ def main() -> None:
     for key, path in TEMPLATES.items():
         source = path.read_text(encoding="utf-8")
         doc = apply_template(key, source, context, fields_by_file)
-        if key == "src/index.html":
-            doc = fill_contact(doc, context["common"]["contact"])
         (OUT / path.name).write_text(doc, encoding="utf-8")
 
     for src, name in STATIC_FILES:
