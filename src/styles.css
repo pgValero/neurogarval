@@ -295,6 +295,36 @@ nav {
     width: 100%;
 }
 
+.about-photo-link {
+    position: relative;
+    display: block;
+    border-radius: 40px;
+    overflow: hidden;
+}
+
+.about-photo-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    padding: 1.5rem;
+    text-align: center;
+    background: rgba(15, 20, 30, 0.6);
+    color: #fff;
+    font-weight: 600;
+    font-size: 1.1rem;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+}
+
+.about-photo-link:hover .about-photo-overlay,
+.about-photo-link:focus-visible .about-photo-overlay {
+    opacity: 1;
+}
+
 .col-card {
     position: absolute;
     bottom: -30px;

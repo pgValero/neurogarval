@@ -766,6 +766,7 @@ def jsonld_graph() -> str:
     contact = c["common"]["contact"]
     specialist = c["specialist"]
     instagram = (c["contact"].get("instagram") or {}).get("url", "")
+    linkedin = (c["contact"].get("linkedin") or {}).get("url", "")
     locations = {
         key: value for key, value in contact.items() if isinstance(value, dict)
     }
@@ -831,7 +832,7 @@ def jsonld_graph() -> str:
         "jobTitle": schema["job_title"],
         "worksFor": {"@id": clinic_id},
         "knowsLanguage": [language],
-        "sameAs": [u for u in (instagram,) if u],
+        "sameAs": [u for u in (instagram, linkedin) if u],
     }
     credential = re.search(r"([A-Z]-\d+)", str(specialist.get("license", "")))
     if credential:
@@ -877,8 +878,8 @@ def jsonld_graph() -> str:
             ],
         },
     }
-    if instagram:
-        clinic["sameAs"] = [instagram]
+    if instagram or linkedin:
+        clinic["sameAs"] = [u for u in (instagram, linkedin) if u]
 
     graph: list[dict] = [
         {

@@ -574,6 +574,19 @@ content:
             type: string
             required: true
             pattern: "^@[A-Za-z0-9._]+$"
+      - name: linkedin
+        label: LinkedIn (perfil profesional)
+        type: object
+        description: "Perfil de LinkedIn de Teresa García Valero. Se enlaza en el pie de página y se usa en los datos estructurados para consolidar la identidad profesional."
+        fields:
+          - name: url
+            label: Perfil (URL)
+            type: string
+            required: true
+          - name: handle
+            label: Texto visible del enlace
+            type: string
+            required: true
 
   # ---------------------------------------------------------------------
   # 3) Shared read-only data: footer texts and common contact.

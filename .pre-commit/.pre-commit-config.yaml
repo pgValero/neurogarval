@@ -54,6 +54,7 @@ repos:
           # Sites that block bot requests (Google answers 403 to datacenter IPs):
           - "--exclude=https://instagram.com/neurogarval"
           - "--exclude=https://maps.app.goo.gl/"
+          - "--exclude=https://www.linkedin.com/in/"
 
       # 5) Security audit of the GitHub Actions workflows (unpinned actions,
       #    excessive permissions, template injection, credential persistence...)
