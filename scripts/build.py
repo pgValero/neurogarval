@@ -72,6 +72,7 @@ import re
 import shutil
 import struct
 import sys
+from datetime import date
 from fnmatch import fnmatch
 from pathlib import Path
 
@@ -172,6 +173,10 @@ MEDIA_EXCLUDES = ("favicon.svg", "logo.svg", "aviso_legal.pdf", "tarjeta.pdf")
 # Formats the build converts to WebP when publishing: the originals are not
 # published, so every image of the site ends up in WebP.
 RASTER_FORMATS = (".png", ".jpg", ".jpeg")
+
+# Photos are resized to this longest edge before the WebP conversion, so the
+# published images stay light (the originals are never modified).
+MAX_IMAGE_EDGE = 1600
 
 # Images published as they are even when they are PNG: image.png is the
 # og:image that WhatsApp, Facebook and other social networks read when the
@@ -403,6 +408,7 @@ class MissingFieldError(Exception):
 DERIVED_FIELDS = frozenset(
     {
         "metadata.site.url",
+        "metadata.site.lastmod",
         "common.contact.phone_tel",
         "common.contact.valdemoro.geo_position",
         "common.contact.segovia.geo_position",
@@ -1165,6 +1171,7 @@ def build_context() -> dict:
     context = {p.stem: load_yaml(p.stem) for p in sorted(CONTENT.glob("*.yml"))}
     base_url = f"https://{domain}/"
     context["metadata"]["site"]["url"] = base_url
+    context["metadata"]["site"]["lastmod"] = date.today().isoformat()
     context["signature"]["web_label"] = domain
     context["signature"]["web_url"] = base_url.rstrip("/")
     contact = context["common"]["contact"]
@@ -1200,8 +1207,9 @@ def build_context() -> dict:
 # ---------------------------------------------------------------------------
 # Images — media/ -> _site/media/
 # Photos uploaded from Pages CMS can arrive as PNG or JPEG. When building
-# (locally and on every publish) they are converted to WebP and only that
-# version is published, which weighs much less; the original is not published.
+# (locally and on every publish) they are converted to WebP (capped at
+# MAX_IMAGE_EDGE px on the longest side) and only that version is published,
+# which weighs much less; the original is not published.
 # This way the site always serves light images without anyone converting files
 # by hand. Requires Pillow (pip install pillow).
 # ---------------------------------------------------------------------------
@@ -1221,7 +1229,10 @@ def pillow_image():
 
 
 def convert_to_webp(src: Path, dst: Path) -> tuple[int, int]:
-    """Converts a PNG/JPEG from media/ to WebP and writes it to dst."""
+    """Converts a PNG/JPEG from media/ to WebP and writes it to dst.
+
+    Images larger than MAX_IMAGE_EDGE are scaled down keeping the aspect ratio.
+    """
     image = pillow_image()
     with image.open(src) as original:
         if original.mode not in ("RGB", "RGBA"):
@@ -1229,6 +1240,8 @@ def convert_to_webp(src: Path, dst: Path) -> tuple[int, int]:
             converted = original.convert(mode)
         else:
             converted = original
+        if max(converted.size) > MAX_IMAGE_EDGE:
+            converted.thumbnail((MAX_IMAGE_EDGE, MAX_IMAGE_EDGE))
         size = converted.size
         converted.save(dst, "WEBP", quality=82, method=6)
     return size

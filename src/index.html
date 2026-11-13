@@ -3,17 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Basic SEO (the values come from content/clinic_info.yml) -->
+    <!-- Basic SEO (the values come from content/header.yml and content/metadata.yml) -->
     <title>__header.title__</title>
     <meta name="description" content="__metadata.seo.description__">
     <meta name="keywords" content="__metadata.seo.keywords__">
     <link rel="canonical" href="__metadata.site.url__">
-    <meta name="geo.region" content="__common.contact.valdemoro.region_code__">
-    <meta name="geo.placename" content="__common.contact.valdemoro.city__">
-    <meta name="ICBM" content="__common.contact.valdemoro.geo_position__">
-    <meta name="geo.region" content="__common.contact.segovia.region_code__">
-    <meta name="geo.placename" content="__common.contact.segovia.city__">
-    <meta name="ICBM" content="__common.contact.segovia.geo_position__">
 
     <!-- Open Graph / social networks -->
     <meta property="og:type" content="__metadata.social.og_type__">
@@ -35,7 +29,7 @@
 
     <!-- Structured data (Schema.org)
          build.py generates the whole JSON-LD block (schema.org) from
-         content/clinic_info.yml and the rest of content/*.yml: clinic and
+         content/metadata.yml and the rest of content/*.yml: clinic and
          professional, service catalog, FAQ and articles.
          Do not edit it by hand: change the YAML. -->
     <script type="application/ld+json">__metadata.structured_data__</script>
@@ -53,7 +47,8 @@
     <!-- SITE TEMPLATE. The domain is read from src/CNAME; the logo, the
          language, the SEO, the social networks, the menus and the structured
          data are fixed configuration: their values come from
-         content/clinic_info.yml (read-only). The markers filled in by
+         content/metadata.yml, content/header.yml and content/common.yml
+         (read-only). The markers filled in by
          build.py (format: file.path.field, without the underscores here so
          the build does not confuse them) are read from content/*.yml
          (Pages CMS, one file per section), using the types declared in
