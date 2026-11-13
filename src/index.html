@@ -3,13 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Basic SEO (the values come from content/header.yml and content/metadata.yml) -->
     <title>__header.title__</title>
     <meta name="description" content="__metadata.seo.description__">
     <meta name="keywords" content="__metadata.seo.keywords__">
     <link rel="canonical" href="__metadata.site.url__">
 
-    <!-- Open Graph / social networks -->
     <meta property="og:type" content="__metadata.social.og_type__">
     <meta property="og:locale" content="__metadata.site.locale__">
     <meta property="og:site_name" content="__metadata.site.name__">
@@ -21,17 +19,11 @@
     <meta property="og:image:height" content="__metadata.social.image_height__">
     <meta property="og:url" content="__metadata.site.url__">
 
-    <!-- Twitter / X -->
     <meta name="twitter:card" content="__metadata.social.twitter_card__">
     <meta name="twitter:title" content="__metadata.social.twitter_title__">
     <meta name="twitter:description" content="__metadata.social.twitter_description__">
     <meta name="twitter:image" content="__metadata.social.image__">
 
-    <!-- Structured data (Schema.org)
-         build.py generates the whole JSON-LD block (schema.org) from
-         content/metadata.yml and the rest of content/*.yml: clinic and
-         professional, service catalog, FAQ and articles.
-         Do not edit it by hand: change the YAML. -->
     <script type="application/ld+json">__metadata.structured_data__</script>
 
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -43,26 +35,6 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
-    <!-- SITE TEMPLATE. The domain is read from src/CNAME; the logo, the
-         language, the SEO, the social networks, the menus and the structured
-         data are fixed configuration: their values come from
-         content/metadata.yml, content/header.yml and content/common.yml
-         (read-only). The markers filled in by
-         build.py (format: file.path.field, without the underscores here so
-         the build does not confuse them) are read from content/*.yml
-         (Pages CMS, one file per section), using the types declared in
-         .pages.yml. Cards and list items (services, modalities, process,
-         blog and FAQ) are repeated with @foreach:file.path ...
-         @endforeach:file.path blocks: inside a block, "n" in a marker is the
-         current element (e.g. services.items.n.title) and
-         loop.index / loop.index0 is the position. Adding or removing entries
-         in the CMS requires no change in this template. The .neuro-* slots
-         (phone, WhatsApp and email) are filled from content/common.yml; the
-         addresses and their Maps links use markers; there is no JavaScript
-         involved. Do not edit the marked texts by hand: edit them in Pages
-         CMS. -->
-
     <div class="mobile-overlay" id="mobileMenu">
         <button class="close-btn" onclick="toggleMenu()">&times;</button>
         <div class="mobile-links">
@@ -102,7 +74,6 @@
     </header>
 
     <main>
-        <!-- HERO -->
         <section id="inicio" class="hero">
             <div class="container hero-grid">
                 <div class="hero-text">
@@ -123,7 +94,6 @@
                         </a>
                         <a href="__common.contact.phone_tel__" class="btn neuro-phone-link">
                             <i class="bi bi-telephone" style="margin-right: 10px;"></i>
-                            <!-- __common.contact.phone__ -->
                             <span class="neuro-phone">__common.contact.phone__</span>
                         </a>
                     </div>
@@ -134,7 +104,6 @@
             </div>
         </section>
 
-        <!-- SERVICES -->
         <section id="servicios" class="section-padding services">
             <div class="container">
                 <div class="section-header">
@@ -157,7 +126,6 @@
             </div>
         </section>
 
-        <!-- CARE MODALITIES -->
         <section id="modalidades" class="section-padding modalities-section">
             <div class="container">
                 <div class="section-header">
@@ -182,7 +150,6 @@
             </div>
         </section>
 
-        <!-- PROCESS -->
         <section id="proceso" class="section-padding">
             <div class="container">
                 <div class="section-header">
@@ -206,7 +173,6 @@
             </div>
         </section>
 
-        <!-- SPECIALIST -->
         <section id="especialista" class="section-padding">
             <div class="container about-grid">
                 <div class="about-image">
@@ -228,7 +194,6 @@
             </div>
         </section>
 
-        <!-- BLOG -->
         <section id="blog" class="section-padding">
             <div class="container">
                 <div class="section-header">
@@ -253,7 +218,6 @@
             </div>
         </section>
 
-        <!-- FAQ -->
         <section id="faq" class="section-padding">
             <div class="container">
                 <div class="section-header">
@@ -273,7 +237,6 @@
             </div>
         </section>
 
-        <!-- CONTACT -->
         <section id="contacto" class="section-padding contact">
             <div class="container">
                 <div class="section-header">
@@ -287,13 +250,11 @@
                     <a href="__common.contact.phone_tel__" target="_blank" class="contact-item neuro-phone-link">
                         <div class="contact-icon"><i class="bi bi-telephone"></i></div>
                         <h4>Teléfono</h4>
-                        <!-- __common.contact.phone__ -->
                         <span class="neuro-phone">__common.contact.phone__</span>
                     </a>
                     <a href="__common.contact.whatsapp_url__" target="_blank" class="contact-item neuro-whatsapp-link">
                         <div class="contact-icon"><i class="bi bi-whatsapp"></i></div>
                         <h4>WhatsApp</h4>
-                        <!-- __common.contact.phone__ -->
                         <span class="neuro-phone">__common.contact.phone__</span>
                     </a>
                     <a href="__contact.instagram.url__" target="_blank" class="contact-item">
@@ -304,7 +265,6 @@
                     <a href="mailto:__common.contact.mail__" target="_blank" class="contact-item neuro-mail-link">
                         <div class="contact-icon"><i class="bi bi-envelope"></i></div>
                         <h4>Email</h4>
-                        <!-- __common.contact.mail__ -->
                         <span class="neuro-mail">__common.contact.mail__</span>
                     </a>
                 </div>
@@ -359,9 +319,7 @@
                 <div class="footer-links">
                     <a href="__common.contact.valdemoro.maps_url__">__common.contact.valdemoro.address_lines__</a>
                     <a href="__common.contact.segovia.maps_url__">__common.contact.segovia.address_lines__</a>
-                    <!-- __common.contact.phone__ -->
                     <a href="__common.contact.phone_tel__" class="neuro-phone-link neuro-phone">__common.contact.phone__</a>
-                    <!-- __common.contact.mail__ -->
                     <a href="mailto:__common.contact.mail__" class="neuro-mail-link neuro-mail">__common.contact.mail__</a>
                     <a href="__contact.linkedin.url__" target="_blank">__contact.linkedin.handle__</a>
                 </div>
