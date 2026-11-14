@@ -97,6 +97,38 @@ components:
           label: Casa (domicilio)
         - name: journal
           label: Libro (artículos)
+        - name: child
+          label: Cara de bebé (infantil)
+        - name: adult
+          label: Persona (adulto)
+        - name: senior
+          label: Persona mayor con bastón
+        - name: users
+          label: Familia o grupo
+        - name: clock
+          label: Reloj (horarios)
+        - name: shield
+          label: Escudo (confidencialidad)
+        - name: puzzle
+          label: Pieza de puzle
+        - name: sparkles
+          label: Destellos (bienestar)
+        - name: book
+          label: Libro (psicoeducación)
+        - name: moon
+          label: Luna (sueño)
+        - name: leaf
+          label: Hoja (calma)
+        - name: globe
+          label: Globo terráqueo (online)
+        - name: list-checks
+          label: Lista de verificación
+        - name: hand-heart
+          label: Mano con corazón (apoyo)
+        - name: graduation-cap
+          label: Birrete (formación)
+        - name: pen
+          label: Bolígrafo (escritura)
 
 # ---------------------------------------------------------------------------
 # CONTENT: editable files (one file per section + shared data).

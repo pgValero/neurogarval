@@ -4,7 +4,7 @@ lead: Trabajo en el ámbito de la neuropsicología y la psicología sanitaria,
 more_label: Más información
 items:
   - id: neuro-infantil
-    icon: brain
+    icon: child
     title: Neuropsicología infantojuvenil
     card_text: Evaluación neuropsicológica infantil e intervención en dificultades
       de aprendizaje, TDAH y otros trastornos del neurodesarrollo. Atención a
@@ -40,7 +40,7 @@ items:
       de las dificultades y facilitar estrategias que puedan aplicarse en el
       entorno familiar y escolar.
   - id: neuro-adultos
-    icon: brain
+    icon: adult
     title: Neuropsicología en adultos
     card_text: Evaluación neuropsicológica en adultos e intervención en dificultades
       de memoria, lenguaje, atención y funciones ejecutivas. Rehabilitación
@@ -82,7 +82,7 @@ items:
       con el propósito de favorecer su autonomía y participación en la vida
       diaria.
   - id: neuro-mayores
-    icon: brain
+    icon: senior
     title: Neuropsicología en adultos mayores
     card_text: Evaluación de la memoria y otras funciones cognitivas en personas
       mayores. Valoración del deterioro cognitivo y las demencias, y programas
